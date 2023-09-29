@@ -1,0 +1,20 @@
+---
+- name: Establish Rosenpass connection on sender
+  hosts: senders
+
+  tasks:
+  - name: Create folder for keys in home directories
+    ansible.builtin.file:
+      path: "{{ ansible_env.HOME }}/rp-keys"
+      state: directory
+      mode: '0755'
+  - name: Generate secret keys
+    ansible.builtin.shell:
+      cmd: rp genkey rp-keys/server.rosenpass-secret
+    args:
+      creates: rp-keys/server.rosenpass-secret
+  - name: Extract public keys
+    ansible.builtin.shell:
+      cmd: rp pubkey rp-keys/server.rosenpass-secret rp-keys/server.rosenpass-public
+    args:
+      creates: rp-keys/server.rosenpass-public
