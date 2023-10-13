@@ -35,38 +35,3 @@
       mode: a+x
     become: true
     become_user: root
-
-
-
-
-
-
-
-
-
-
-
-  #- name: Check latest Rosenpass
-  #  ansible.builtin.uri:
-  #    url: https://github.com/rosenpass/rosenpass/releases/latest
-  #    method: GET
-  #    return_content: yes
-  #  register: rosenpass_latest
-  # failed_when: rosenpass_latest is failed
-
-  #- name: Print returned json dictionary
-  #  debug:
-  #    var: rosenpass_latest.json
-
-  #- name: "Installing Rosenpass {{ rosenpass_latest.json.tag_name }}"
-  #  loop: "{{ rosenpass_latest.json.assets }}"
-  #  when: "'rosenpass-x86_64-linux-' in item.name"
-  #  unarchive:
-  #    remote_src: yes
-  #    src: "{{ item.browser_download_url }}"
-  #    dest: "{{ ansible_env.HOME }}/bin/"
-  #    keep_newer: yes
-      #extra_opts:
-      #- --strip=1
-      #- --no-anchored
-      #- watchexec
