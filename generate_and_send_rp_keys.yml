@@ -3,36 +3,36 @@
   hosts: all
 
   tasks:
-  - name: Create folder for keys in home directories
+  - name: create folder for keys in home directories
     ansible.builtin.file:
       path: "{{ ansible_env.HOME }}/rp-keys"
       state: directory
       mode: '0755'
 
-  - name: Generate secret keys
-    ansible.builtin.shell:
+  - name: generate secret keys
+    shell:
       cmd: rp genkey "rp-keys/{{ inventory_hostname }}.rosenpass-secret"
     args:
       creates: "rp-keys/{{ inventory_hostname }}.rosenpass-secret"
 
-  - name: Remove old public keys
+  - name: remove old public keys
     ansible.builtin.file:
       path: "{{ ansible_env.HOME }}/rp-keys/{{ inventory_hostname }}.rosenpass-public"
       state: absent
 
-  - name: Extract public keys
-    ansible.builtin.shell:
+  - name: extract public keys
+    shell:
       cmd: rp pubkey "rp-keys/{{ inventory_hostname }}.rosenpass-secret" "rp-keys/{{ inventory_hostname }}.rosenpass-public"
     args:
       creates: "rp-keys/{{ inventory_hostname }}.rosenpass-public"
 
-  - name: Fetch pqpk to master
+  - name: fetch pqpk to master
     ansible.builtin.fetch: 
       src: "rp-keys/{{ inventory_hostname }}.rosenpass-public/pqpk"
       dest: "/tmp/rp-keys/{{ inventory_hostname }}.rosenpass-public/"
       flat: yes
 
-  - name: Fetch wgpk to master
+  - name: fetch wgpk to master
     ansible.builtin.fetch: 
       src: "rp-keys/{{ inventory_hostname }}.rosenpass-public/wgpk"
       dest: "/tmp/rp-keys/{{ inventory_hostname }}.rosenpass-public/"
@@ -40,7 +40,7 @@
 
   # TODO: Remove existing files to avoid false keys
 
-  - name: Copy public keys from master to remotes
+  - name: copy public keys from master to remotes
     ansible.builtin.copy: 
       src: "/tmp/rp-keys/{{ hostvars[item]['inventory_hostname'] }}.rosenpass-public"
       dest: "rp-keys/"
