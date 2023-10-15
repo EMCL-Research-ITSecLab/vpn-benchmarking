@@ -32,6 +32,8 @@ class Monitoring:
         self.scr = Screen()
         self.cpu_percent = self.HardwareValue(psutil.cpu_times_percent, 0)
         self.ram_percent = self.HardwareValue(psutil.virtual_memory, 2)
+        self.initial_bytes_sent = psutil.net_io_counters().bytes_sent
+        self.initial_bytes_recv = psutil.net_io_counters().bytes_recv
     
     def run(self, func):
         monitor = threading.Thread(target=self.poll)
@@ -51,21 +53,33 @@ class Monitoring:
             # Hardware Performance
             printscr(0, 1, f"Performance:")
             printscr(2, 2, f"CPU:")
-            printscr(2, 10, f"{self.cpu_percent.get()} %  ")
+            printscr(2, 10, f"{self.cpu_percent.get()} %     ")
             printscr(3, 2, f"RAM:")
-            printscr(3, 10, f"{self.ram_percent.get()} %  ")
+            printscr(3, 10, f"{self.ram_percent.get()} %     ")
             
             # Network Performance
             printscr(0, 30, f"Network:")
             printscr(2, 31, f"PPS:")
-            printscr(2, 42, f"TODO packets per second")  # TODO: Add implementation
+            printscr(2, 42, f"TODO packets per second")         # TODO: Add implementation
             printscr(3, 31, f"Upload:")
-            printscr(3, 42, f"TODO Bytes")               # TODO: Add implementation
+            printscr(3, 42, f"{self.format_bytes(self.get_upload_bytes())}     ")
             printscr(4, 31, f"Download:")
-            printscr(4, 42, f"TODO Bytes")               # TODO: Add implementation
+            printscr(4, 42, f"{self.format_bytes(self.get_download_bytes())}     ")
             
             self.scr.win.refresh()
             time.sleep(interval)
+            
+    def format_bytes(self, bytes):
+        for unit in ['', 'K', 'M', 'G', 'T', 'P']:
+            if bytes < 1024:
+                return f"{bytes:.2f} {unit}B     "
+            bytes = bytes / 1024  
+    
+    def get_upload_bytes(self):
+        return psutil.net_io_counters().bytes_sent - self.initial_bytes_sent
+    
+    def get_download_bytes(self):
+        return psutil.net_io_counters().bytes_recv - self.initial_bytes_recv
         
     class HardwareValue:
         cut_off = 1     # number of cycles to ignore for average calculation
@@ -91,9 +105,6 @@ class Monitoring:
                 return "{:4.1f}".format(0)
             else:
                 return "{:4.1f}".format(self.sum / self.iterations)
-    
-    #class NetworkValue:
-        # TODO: Add implementation
                 
         
 # only for testing purposes     
