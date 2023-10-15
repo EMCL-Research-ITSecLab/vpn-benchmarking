@@ -10,8 +10,7 @@ global interval
 interval = 0.5
 
 
-class Screen:
-		
+class Screen:	
     def __init__(self) -> None:  
         self.win = curses.initscr()
     
@@ -47,21 +46,23 @@ class Monitoring:
         
     def poll(self):
         while not self.done.is_set():
+            printscr = lambda a, b, str : self.scr.win.addstr(a, b, str)
+            
             # Hardware Performance
-            self.scr.win.addstr(0, 1, f"Performance:")
-            self.scr.win.addstr(2, 2, f"CPU:")
-            self.scr.win.addstr(2, 10, f"{self.cpu_percent.get()} %")
-            self.scr.win.addstr(3, 2, f"RAM:")
-            self.scr.win.addstr(3, 10, f"{self.ram_percent.get()} %")
+            printscr(0, 1, f"Performance:")
+            printscr(2, 2, f"CPU:")
+            printscr(2, 10, f"{self.cpu_percent.get()} %  ")
+            printscr(3, 2, f"RAM:")
+            printscr(3, 10, f"{self.ram_percent.get()} %  ")
             
             # Network Performance
-            self.scr.win.addstr(0, 30, f"Network:")
-            self.scr.win.addstr(2, 31, f"PPS:")
-            self.scr.win.addstr(2, 42, f"TODO packets per second")  # TODO: Add implementation
-            self.scr.win.addstr(3, 31, f"Upload:")
-            self.scr.win.addstr(3, 42, f"TODO Bytes")               # TODO: Add implementation
-            self.scr.win.addstr(4, 31, f"Download:")
-            self.scr.win.addstr(4, 42, f"TODO Bytes")               # TODO: Add implementation
+            printscr(0, 30, f"Network:")
+            printscr(2, 31, f"PPS:")
+            printscr(2, 42, f"TODO packets per second")  # TODO: Add implementation
+            printscr(3, 31, f"Upload:")
+            printscr(3, 42, f"TODO Bytes")               # TODO: Add implementation
+            printscr(4, 31, f"Download:")
+            printscr(4, 42, f"TODO Bytes")               # TODO: Add implementation
             
             self.scr.win.refresh()
             time.sleep(interval)
@@ -92,7 +93,6 @@ class Monitoring:
                 return "{:4.1f}".format(self.sum / self.iterations)
     
     #class NetworkValue:
-        
         # TODO: Add implementation
                 
         
