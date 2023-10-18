@@ -36,7 +36,7 @@ class Monitoring:
         self.initial_bytes_recv = psutil.net_io_counters().bytes_recv
     
     def run(self, func):
-        monitor = threading.Thread(target=self.poll)
+        monitor = threading.Thread(target=self.__poll)
         target = threading.Thread(target=func)
         monitor.start()
         target.start()
@@ -46,7 +46,7 @@ class Monitoring:
             
         self.done.set()
         
-    def poll(self):
+    def __poll(self):
         while not self.done.is_set():
             printscr = lambda a, b, str : self.scr.win.addstr(a, b, str)
             
@@ -62,25 +62,29 @@ class Monitoring:
             printscr(2, 31, f"PPS:")
             printscr(2, 42, f"TODO packets per second")         # TODO: Add implementation
             printscr(3, 31, f"Upload:")
-            printscr(3, 42, f"{self.format_bytes(self.get_upload_bytes())}     ")
+            printscr(3, 42, f"{self.__format_bytes(self.__get_upload_bytes())}     ")
             printscr(4, 31, f"Download:")
-            printscr(4, 42, f"{self.format_bytes(self.get_download_bytes())}     ")
+            printscr(4, 42, f"{self.__format_bytes(self.__get_download_bytes())}     ")
             
             self.scr.win.refresh()
             time.sleep(interval)
             
-    def format_bytes(self, bytes):
+    def __format_bytes(self, bytes):
         for unit in ['', 'K', 'M', 'G', 'T', 'P']:
             if bytes < 1024:
                 return f"{bytes:.2f} {unit}B     "
             bytes = bytes / 1024  
     
-    def get_upload_bytes(self):
+    def __get_upload_bytes(self):
         return psutil.net_io_counters().bytes_sent - self.initial_bytes_sent
     
-    def get_download_bytes(self):
+    def __get_download_bytes(self):
         return psutil.net_io_counters().bytes_recv - self.initial_bytes_recv
         
+    def __get_packets_per_second():
+        # TODO: Implement
+        pass
+    
     class HardwareValue:
         cut_off = 1     # number of cycles to ignore for average calculation
         
