@@ -1,0 +1,23 @@
+---
+- name: Build a full Rosenpass connection
+  hosts: all
+
+  tasks:
+  - name: Add IP 1
+    when: inventory_hostname in groups['sender']
+    shell:
+      cmd: ip a add fe80::1/64 dev rosenpass0
+    become: true
+    become_user: root
+
+  - name: Add IP 2
+    when: inventory_hostname in groups['receiver']
+    shell:
+      cmd: ip a add fe80::2/64 dev rosenpass0
+    become: true
+    become_user: root
+
+  - name: Ping server
+    when: inventory_hostname in groups['receiver']
+    shell:
+      cmd: ping fe80::2%rosenpass0

@@ -1,0 +1,11 @@
+---
+- name: Establish and hold Rosenpass connection on the receivers
+  hosts: receiver
+
+  tasks:
+  - name: Build and keep connection
+    shell:
+      cmd: rp exchange "rp-keys/{{ inventory_hostname }}.rosenpass-secret" dev rosenpass0 peer "rp-keys/{{ hostvars[item]['inventory_hostname'] }}.rosenpass-public" endpoint "{{ hostvars[item]['ansible_host'] }}:9999" allowed-ips fe80::/64
+    with_items: "{{ groups['sender'] }}"
+    become: true
+    become_user: root
