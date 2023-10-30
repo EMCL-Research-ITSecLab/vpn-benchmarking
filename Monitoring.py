@@ -111,18 +111,4 @@ class Monitoring:
                 return "{:4.1f}".format(0)
             else:
                 return "{:4.1f}".format(self.sum / self.iterations)
-    
-    
-# Python:
-#   - pps (link)
-#   - https://github.com/githubixx/ansible-role-wireguard
-#   - Testdefinition (gleiches Prozessverhalten, gleiche Last zu Beginn, 
-#     in Loop exchange ausführen)
-#   - einlesen in Raspberry OS
-#   - Raspberry Pi OS Lite (oder Debian minimal)    
-#   - exchange (Cashing)
-#   - TCP handshake, Python HTTP Server starten, HTTP Paket senden in Loop
-#   - wg quick up, alles wieder abbauen
-
-# THREADING (Python bei Multithreading - Verhalten)
-    
+        
