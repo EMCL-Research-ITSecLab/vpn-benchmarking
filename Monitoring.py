@@ -1,28 +1,12 @@
-#!/usr/bin/env python3
-
-import curses
 import psutil
 import threading
 import time
 
+from Screen import Screen
+
 
 global interval
 interval = 0.5
-
-
-class Screen:	
-    def __init__(self) -> None:  
-        self.win = curses.initscr()
-    
-        curses.noecho()
-        curses.cbreak()
-        self.win.keypad(True)
-  
-    def __del__(self) -> None:
-        curses.nocbreak()
-        self.win.keypad(False)
-        curses.echo()
-        curses.endwin()
     
     
 class Monitoring:
@@ -94,13 +78,13 @@ class Monitoring:
         while not self.done.is_set():
             before = psutil.net_io_counters().packets_sent
             time.sleep(interval)
-            self.pps_sent = (psutil.net_io_counters().packets_sent - before) / interval
+            self.pps_sent = int((psutil.net_io_counters().packets_sent - before) / interval)
             
     def __update_packets_per_second_recv(self):
         while not self.done.is_set():
             before = psutil.net_io_counters().packets_recv
             time.sleep(interval)
-            self.pps_recv = (psutil.net_io_counters().packets_recv - before) / interval
+            self.pps_recv = int((psutil.net_io_counters().packets_recv - before) / interval)
         
     
     class HardwareValue:
@@ -127,18 +111,6 @@ class Monitoring:
                 return "{:4.1f}".format(0)
             else:
                 return "{:4.1f}".format(self.sum / self.iterations)
-                
-        
-# only for testing purposes     
-def test():
-    i = 0
-    for _ in range(499999999):
-        i += 1
-        
-    
-if __name__ == "__main__":
-    monitor = Monitoring()
-    monitor.run(test)
     
     
 # Python:
