@@ -11,12 +11,12 @@ class Server(BaseHTTPRequestHandler):
         self.end_headers()
 
 
-def serve_once():
-    server = HTTPServer((host_name, port), Server)
-    server.handle_request()
-    server.server_close()
+def run_test(reps):
+    for _ in range(reps):
+        server = HTTPServer((host_name, port), Server)
+        server.handle_request()
+        server.server_close()
 
 
 if __name__ == "__main__":        
-    for i in range(1000):
-        serve_once()
+    run_test(1000)
