@@ -1,3 +1,5 @@
+from Monitoring import Monitoring
+
 import http.client
 import time
 
@@ -12,7 +14,7 @@ def run_test(reps):
 	while i > 0:
 		try:
 			connection = http.client.HTTPConnection(host_name, port, timeout=10)
-			
+				
 			connection.request("GET", "/")
 			response = connection.getresponse()
 
@@ -23,4 +25,6 @@ def run_test(reps):
 
 
 if __name__ == "__main__":
-	run_test(1000)
+	#monitor = Monitoring()
+	#monitor.run(run_test(100000))
+ 	run_test(1000)
