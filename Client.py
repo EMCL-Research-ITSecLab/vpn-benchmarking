@@ -25,6 +25,5 @@ def run_test(reps):
 
 
 if __name__ == "__main__":
-	#monitor = Monitoring()
-	#monitor.run(run_test(100000))
- 	run_test(1000)
+	monitor = Monitoring()
+	monitor.run(run_test(1500))

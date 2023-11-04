@@ -1,3 +1,5 @@
+from Monitoring import Monitoring
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
@@ -14,9 +16,11 @@ class Server(BaseHTTPRequestHandler):
 def run_test(reps):
     for _ in range(reps):
         server = HTTPServer((host_name, port), Server)
-        server.handle_request()
+        # server.handle_request()
         server.server_close()
+        continue
 
 
 if __name__ == "__main__":        
-    run_test(1000)
+    monitor = Monitoring()
+    monitor.run(run_test(1500))
