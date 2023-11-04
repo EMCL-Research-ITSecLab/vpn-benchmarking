@@ -3,6 +3,7 @@ import threading
 import time
 
 from Screen import Screen
+from DataHandling import DataHandling
 
 
 global interval
@@ -14,6 +15,7 @@ class Monitoring:
     
     def __init__(self) -> None:
         self.scr = Screen()
+        self.data_handler = DataHandling()
         self.cpu_percent = self.HardwareValue(psutil.cpu_times_percent, 0)
         self.ram_percent = self.HardwareValue(psutil.virtual_memory, 2)
         self.initial_bytes_sent = psutil.net_io_counters().bytes_sent
@@ -31,6 +33,7 @@ class Monitoring:
             time.sleep(interval)
             
         self.done.set()
+        self.data_handler.write_data()
         
     def __poll(self):
         while not self.done.is_set():
@@ -47,6 +50,15 @@ class Monitoring:
             printscr(2, 10, f"{self.cpu_percent.get()} %     ")
             printscr(3, 2, f"RAM:")
             printscr(3, 10, f"{self.ram_percent.get()} %     ")
+            self.data_handler.add_data(
+                time="TODO", 
+                cpu_perc=self.cpu_percent.get(), 
+                ram_perc=self.ram_percent.get(), 
+                pps_sent=self.pps_sent, 
+                pps_recv=self.pps_recv, 
+                bytes_sent=self.__get_upload_bytes(), 
+                bytes_recv=self.__get_download_bytes()
+            )
             
             # Network Performance
             printscr(0, 30, f"Network:")

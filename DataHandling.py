@@ -12,6 +12,8 @@ import datetime
 #	 "bytes_recv": 5698
 #} 
 
+# TODO: Make sure folder data exists
+
 
 class DataHandling:
 	data = { "data": [] }
@@ -52,21 +54,3 @@ class DataHandling:
   
 		self.data["data"].append(new_data)
   
-dh = DataHandling()
-dh.add_data(
-    time="TODO", 
-    cpu_perc=22.4, 
-    ram_perc=34.1, 
-    pps_sent=1506, 
-    pps_recv=6, 
-    bytes_sent=13056, 
-    bytes_recv=5698)
-dh.add_data(
-    time="TODO", 
-    cpu_perc=10.5, 
-    ram_perc=36.9, 
-    pps_sent=120, 
-    pps_recv=2495, 
-    bytes_sent=15078, 
-    bytes_recv=7650)
-dh.write_data()
