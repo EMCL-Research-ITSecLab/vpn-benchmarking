@@ -14,12 +14,16 @@ import datetime
 
 
 class DataHandling:
+	data = { "data": [] }
+ 
 	def __init__(self) -> None:
 		self.timestamp = datetime.datetime.now()
-		self.file = open(f"data/data:{self.timestamp}.json", "w")
+  
+	def write_data(self):
+		with open(f"data/data:{self.timestamp}.json", "w") as file:
+			json.dump(self.data, indent=2, sort_keys=True, fp=file)
         
-    # save the data to the json file
-	def save_data(self, 
+	def add_data(self, 
         time, 
         cpu_perc, 
         ram_perc, 
@@ -28,7 +32,7 @@ class DataHandling:
         bytes_sent, 
         bytes_recv
     ):
-		data = {
+		new_data = {
 			"time": time, 
 			"hardware": [
 				{
@@ -46,11 +50,10 @@ class DataHandling:
 			]
 		}
   
-		#self.file_data["data"].append(data)
-		self.file.write(json.dumps(data, indent=4, sort_keys=True))
+		self.data["data"].append(new_data)
   
 dh = DataHandling()
-dh.save_data(
+dh.add_data(
     time="TODO", 
     cpu_perc=22.4, 
     ram_perc=34.1, 
@@ -58,3 +61,12 @@ dh.save_data(
     pps_recv=6, 
     bytes_sent=13056, 
     bytes_recv=5698)
+dh.add_data(
+    time="TODO", 
+    cpu_perc=10.5, 
+    ram_perc=36.9, 
+    pps_sent=120, 
+    pps_recv=2495, 
+    bytes_sent=15078, 
+    bytes_recv=7650)
+dh.write_data()
