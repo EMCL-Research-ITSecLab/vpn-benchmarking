@@ -1,6 +1,7 @@
 import psutil
 import threading
 import time
+import datetime
 
 from DataHandling import DataHandling
 
@@ -38,7 +39,7 @@ class Monitoring:
             pps_sent.start()
             pps_recv.start()
             self.data_handler.add_data(
-                time="TODO", 
+                time=datetime.datetime.now(), 
                 cpu_perc=self.cpu_percent.get(), 
                 ram_perc=self.ram_percent.get(), 
                 pps_sent=self.pps_sent, 

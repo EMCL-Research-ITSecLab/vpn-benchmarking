@@ -1,18 +1,19 @@
 import json
 import datetime
 from pathlib import Path
+from json import JSONEncoder
 
 
 class DataHandling:
 	data = { "data": [] }
  
 	def __init__(self) -> None:
-		self.timestamp = datetime.datetime.now()
+		self.timestamp = datetime.datetime.now().isoformat()
 		Path("data").mkdir(parents=True, exist_ok=True)
   
 	def write_data(self):
 		with open(f"data/data:{self.timestamp}.json", "w") as file:
-			json.dump(self.data, indent=2, sort_keys=True, fp=file)
+			json.dump(self.data, indent=2, sort_keys=True, fp=file, cls=DateTimeEncoder)
         
 	def add_data(self, 
         time, 
@@ -42,4 +43,10 @@ class DataHandling:
 		}
   
 		self.data["data"].append(new_data)
+  
+  
+class DateTimeEncoder(JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, (datetime.date, datetime.datetime)):
+                return obj.isoformat()
   
