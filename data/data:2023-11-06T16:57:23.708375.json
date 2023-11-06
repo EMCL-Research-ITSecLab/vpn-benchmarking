@@ -1,0 +1,1483 @@
+{
+  "data": [
+    {
+      "hardware": [
+        {
+          "cpu_percent": 4.0,
+          "ram_percent": 31.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 121,
+          "bytes_sent": 121,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:23.717072"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 28.0,
+          "ram_percent": 31.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 438,
+          "bytes_sent": 438,
+          "pps_recv": 50,
+          "pps_sent": 50
+        }
+      ],
+      "time": "2023-11-06T16:57:23.820768"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 37.0,
+          "ram_percent": 31.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 438,
+          "bytes_sent": 438,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:23.926321"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 21.0,
+          "ram_percent": 31.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 561,
+          "bytes_sent": 561,
+          "pps_recv": 20,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2023-11-06T16:57:24.027814"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 21.0,
+          "ram_percent": 31.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 561,
+          "bytes_sent": 561,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:24.133489"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 24.0,
+          "ram_percent": 31.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1248,
+          "bytes_sent": 943,
+          "pps_recv": 60,
+          "pps_sent": 50
+        }
+      ],
+      "time": "2023-11-06T16:57:24.241814"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 24.0,
+          "ram_percent": 31.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1367,
+          "bytes_sent": 1062,
+          "pps_recv": 20,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2023-11-06T16:57:24.345181"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 19.0,
+          "ram_percent": 31.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1367,
+          "bytes_sent": 1062,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:24.446696"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 28.0,
+          "ram_percent": 31.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1367,
+          "bytes_sent": 1062,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:24.549611"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 26.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1367,
+          "bytes_sent": 1062,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:24.653877"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 29.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1367,
+          "bytes_sent": 1062,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:24.756847"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 21.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1675,
+          "bytes_sent": 1370,
+          "pps_recv": 40,
+          "pps_sent": 40
+        }
+      ],
+      "time": "2023-11-06T16:57:24.860014"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 28.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 4611,
+          "bytes_sent": 4306,
+          "pps_recv": 70,
+          "pps_sent": 70
+        }
+      ],
+      "time": "2023-11-06T16:57:24.964649"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 10444,
+          "bytes_sent": 10139,
+          "pps_recv": 160,
+          "pps_sent": 160
+        }
+      ],
+      "time": "2023-11-06T16:57:25.077150"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 31.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 10801,
+          "bytes_sent": 10191,
+          "pps_recv": 20,
+          "pps_sent": 10
+        }
+      ],
+      "time": "2023-11-06T16:57:25.180261"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 20.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 10801,
+          "bytes_sent": 10191,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2023-11-06T16:57:25.284010"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 29.0,
+          "ram_percent": 31.8
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 11357,
+          "bytes_sent": 10747,
+          "pps_recv": 30,
+          "pps_sent": 30
+        }
+      ],
+      "time": "2023-11-06T16:57:25.391097"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 24.0,
+          "ram_percent": 31.9
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 16275,
+          "bytes_sent": 15665,
+          "pps_recv": 110,
+          "pps_sent": 110
+        }
+      ],
+      "time": "2023-11-06T16:57:25.493643"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 25.0,
+          "ram_percent": 31.9
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 22695,
+          "bytes_sent": 22085,
+          "pps_recv": 90,
+          "pps_sent": 90
+        }
+      ],
+      "time": "2023-11-06T16:57:25.600313"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 29.0,
+          "ram_percent": 31.9
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 23614,
+          "bytes_sent": 23004,
+          "pps_recv": 140,
+          "pps_sent": 110
+        }
+      ],
+      "time": "2023-11-06T16:57:25.703206"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 27.0,
+          "ram_percent": 31.9
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 24670,
+          "bytes_sent": 24060,
+          "pps_recv": 70,
+          "pps_sent": 70
+        }
+      ],
+      "time": "2023-11-06T16:57:25.808522"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 36.0,
+          "ram_percent": 32.0
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 172030924,
+          "bytes_sent": 172030314,
+          "pps_recv": 11088050,
+          "pps_sent": 11088050
+        }
+      ],
+      "time": "2023-11-06T16:57:25.910228"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 33.0,
+          "ram_percent": 32.0
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 172040049,
+          "bytes_sent": 172039339,
+          "pps_recv": 1070,
+          "pps_sent": 730
+        }
+      ],
+      "time": "2023-11-06T16:57:26.026587"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 36.0,
+          "ram_percent": 32.1
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 860217847,
+          "bytes_sent": 860217037,
+          "pps_recv": 33283640,
+          "pps_sent": 33283310
+        }
+      ],
+      "time": "2023-11-06T16:57:26.132324"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 27.0,
+          "ram_percent": 32.1
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1376533934,
+          "bytes_sent": 1376533019,
+          "pps_recv": 33305040,
+          "pps_sent": 33304680
+        }
+      ],
+      "time": "2023-11-06T16:57:26.240427"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 37.0,
+          "ram_percent": 32.1
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 1720825836,
+          "bytes_sent": 1720824921,
+          "pps_recv": 22215990,
+          "pps_sent": 11108610
+        }
+      ],
+      "time": "2023-11-06T16:57:26.373051"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 37.0,
+          "ram_percent": 32.1
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 3614768113,
+          "bytes_sent": 3614764874,
+          "pps_recv": 88894770,
+          "pps_sent": 88894690
+        }
+      ],
+      "time": "2023-11-06T16:57:26.480141"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 23.0,
+          "ram_percent": 32.1
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 5853708242,
+          "bytes_sent": 5853707327,
+          "pps_recv": 111206790,
+          "pps_sent": 144558140
+        }
+      ],
+      "time": "2023-11-06T16:57:26.591177"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 41.2,
+          "ram_percent": 32.1
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 8437876063,
+          "bytes_sent": 8437875028,
+          "pps_recv": 77914440,
+          "pps_sent": 89046750
+        }
+      ],
+      "time": "2023-11-06T16:57:26.741092"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 25.0,
+          "ram_percent": 32.1
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 8782639124,
+          "bytes_sent": 8782637851,
+          "pps_recv": 22285100,
+          "pps_sent": 22285400
+        }
+      ],
+      "time": "2023-11-06T16:57:26.845065"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 36.0,
+          "ram_percent": 32.2
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 11023907549,
+          "bytes_sent": 11023906634,
+          "pps_recv": 122619860,
+          "pps_sent": 122619780
+        }
+      ],
+      "time": "2023-11-06T16:57:26.963625"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 43.9,
+          "ram_percent": 32.2
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 12576304528,
+          "bytes_sent": 12576303613,
+          "pps_recv": 89278190,
+          "pps_sent": 55794450
+        }
+      ],
+      "time": "2023-11-06T16:57:27.096259"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 39.6,
+          "ram_percent": 32.2
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 14992011184,
+          "bytes_sent": 14992009964,
+          "pps_recv": 111692820,
+          "pps_sent": 111692470
+        }
+      ],
+      "time": "2023-11-06T16:57:27.230884"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 34.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 15854962635,
+          "bytes_sent": 15854961415,
+          "pps_recv": 33531280,
+          "pps_sent": 22354920
+        }
+      ],
+      "time": "2023-11-06T16:57:27.345130"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 31.0,
+          "ram_percent": 32.2
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 17063474339,
+          "bytes_sent": 17063473119,
+          "pps_recv": 55915770,
+          "pps_sent": 55915760
+        }
+      ],
+      "time": "2023-11-06T16:57:27.451285"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 27.0,
+          "ram_percent": 32.2
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 18444995366,
+          "bytes_sent": 18444994042,
+          "pps_recv": 89502830,
+          "pps_sent": 78325300
+        }
+      ],
+      "time": "2023-11-06T16:57:27.564533"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 43.0,
+          "ram_percent": 32.2
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 21036059619,
+          "bytes_sent": 21036058399,
+          "pps_recv": 123146300,
+          "pps_sent": 134343880
+        }
+      ],
+      "time": "2023-11-06T16:57:27.671020"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 33.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 23627961516,
+          "bytes_sent": 23627959704,
+          "pps_recv": 156859350,
+          "pps_sent": 134446470
+        }
+      ],
+      "time": "2023-11-06T16:57:27.781741"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 36.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 27084868579,
+          "bytes_sent": 27084867159,
+          "pps_recv": 201832130,
+          "pps_sent": 190624260
+        }
+      ],
+      "time": "2023-11-06T16:57:27.897211"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 29505318262,
+          "bytes_sent": 29505317042,
+          "pps_recv": 123427560,
+          "pps_sent": 157082680
+        }
+      ],
+      "time": "2023-11-06T16:57:28.012163"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 38.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 36594504658,
+          "bytes_sent": 35211222710,
+          "pps_recv": 325460210,
+          "pps_sent": 314237820
+        }
+      ],
+      "time": "2023-11-06T16:57:28.147644"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 30.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 37286230658,
+          "bytes_sent": 36940369953,
+          "pps_recv": 134686620,
+          "pps_sent": 22453420
+        }
+      ],
+      "time": "2023-11-06T16:57:28.281540"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 37.6,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 40917916693,
+          "bytes_sent": 40917915168,
+          "pps_recv": 202093740,
+          "pps_sent": 224549380
+        }
+      ],
+      "time": "2023-11-06T16:57:28.415552"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 28.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 41609750863,
+          "bytes_sent": 41609749338,
+          "pps_recv": 44922640,
+          "pps_sent": 44922640
+        }
+      ],
+      "time": "2023-11-06T16:57:28.535536"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 35.6,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 47145317922,
+          "bytes_sent": 46107368395,
+          "pps_recv": 269625920,
+          "pps_sent": 258391270
+        }
+      ],
+      "time": "2023-11-06T16:57:28.713172"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.0,
+          "ram_percent": 32.3
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 49221223643,
+          "bytes_sent": 49221222118,
+          "pps_recv": 89885960,
+          "pps_sent": 101121470
+        }
+      ],
+      "time": "2023-11-06T16:57:28.832699"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 25.0,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 52335229406,
+          "bytes_sent": 52335227881,
+          "pps_recv": 202262420,
+          "pps_sent": 202262420
+        }
+      ],
+      "time": "2023-11-06T16:57:28.936415"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 38.8,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 59302516045,
+          "bytes_sent": 59083409091,
+          "pps_recv": 361536420,
+          "pps_sent": 393448810
+        }
+      ],
+      "time": "2023-11-06T16:57:29.074946"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 35.2,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 67733588258,
+          "bytes_sent": 66697101984,
+          "pps_recv": 269842400,
+          "pps_sent": 258600080
+        }
+      ],
+      "time": "2023-11-06T16:57:29.451612"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 34.2,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 71886871612,
+          "bytes_sent": 71542561730,
+          "pps_recv": 202421560,
+          "pps_sent": 202421600
+        }
+      ],
+      "time": "2023-11-06T16:57:29.652654"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 28.0,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 77770988715,
+          "bytes_sent": 76388257556,
+          "pps_recv": 292408910,
+          "pps_sent": 281162420
+        }
+      ],
+      "time": "2023-11-06T16:57:29.766209"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 29.2,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 84866936972,
+          "bytes_sent": 84522627038,
+          "pps_recv": 416179310,
+          "pps_sent": 292451300
+        }
+      ],
+      "time": "2023-11-06T16:57:29.934696"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 35.1,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 92655540365,
+          "bytes_sent": 92311230483,
+          "pps_recv": 416239960,
+          "pps_sent": 281250620
+        }
+      ],
+      "time": "2023-11-06T16:57:30.099429"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 29.6,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 99091225868,
+          "bytes_sent": 98715614644,
+          "pps_recv": 472864820,
+          "pps_sent": 360053560
+        }
+      ],
+      "time": "2023-11-06T16:57:30.316183"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 30.0,
+          "ram_percent": 32.4
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 101687661611,
+          "bytes_sent": 101312050387,
+          "pps_recv": 168785420,
+          "pps_sent": 168785420
+        }
+      ],
+      "time": "2023-11-06T16:57:30.421145"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 34.3,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 107227284118,
+          "bytes_sent": 106851672894,
+          "pps_recv": 292628140,
+          "pps_sent": 303883600
+        }
+      ],
+      "time": "2023-11-06T16:57:30.559494"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 37.9,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 116056662992,
+          "bytes_sent": 114815398887,
+          "pps_recv": 326461190,
+          "pps_sent": 281437940
+        }
+      ],
+      "time": "2023-11-06T16:57:30.717629"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 39.2,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 121423979657,
+          "bytes_sent": 121048368433,
+          "pps_recv": 236448300,
+          "pps_sent": 180154310
+        }
+      ],
+      "time": "2023-11-06T16:57:31.016000"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 41.3,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 130254610877,
+          "bytes_sent": 129878999653,
+          "pps_recv": 472940020,
+          "pps_sent": 472940760
+        }
+      ],
+      "time": "2023-11-06T16:57:31.143743"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 31.0,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 140644238985,
+          "bytes_sent": 132822690920,
+          "pps_recv": 157663100,
+          "pps_sent": 135140520
+        }
+      ],
+      "time": "2023-11-06T16:57:31.261041"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 28.2,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 143934372731,
+          "bytes_sent": 143558761150,
+          "pps_recv": 33790300,
+          "pps_sent": 180203330
+        }
+      ],
+      "time": "2023-11-06T16:57:31.522404"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 35.2,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 152246670132,
+          "bytes_sent": 151871058603,
+          "pps_recv": 439297090,
+          "pps_sent": 529406380
+        }
+      ],
+      "time": "2023-11-06T16:57:31.678382"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 31.8,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 159346975165,
+          "bytes_sent": 158798183426,
+          "pps_recv": 405534550,
+          "pps_sent": 450592700
+        }
+      ],
+      "time": "2023-11-06T16:57:31.877286"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 38.8,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 169218316933,
+          "bytes_sent": 168842705233,
+          "pps_recv": 247840870,
+          "pps_sent": 236575540
+        }
+      ],
+      "time": "2023-11-06T16:57:32.044132"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 39.2,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 176567212332,
+          "bytes_sent": 175596869034,
+          "pps_recv": 445101500,
+          "pps_sent": 518224340
+        }
+      ],
+      "time": "2023-11-06T16:57:32.287954"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 29.9,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 185399646826,
+          "bytes_sent": 184429303699,
+          "pps_recv": 506968940,
+          "pps_sent": 608361640
+        }
+      ],
+      "time": "2023-11-06T16:57:32.458197"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 29.2,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 197695976419,
+          "bytes_sent": 193954606840,
+          "pps_recv": 439388220,
+          "pps_sent": 506987210
+        }
+      ],
+      "time": "2023-11-06T16:57:32.739934"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.7,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 207221440795,
+          "bytes_sent": 206251097668,
+          "pps_recv": 473209930,
+          "pps_sent": 394342000
+        }
+      ],
+      "time": "2023-11-06T16:57:32.941074"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 34.9,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 222552069454,
+          "bytes_sent": 220799177222,
+          "pps_recv": 897647900,
+          "pps_sent": 304212450
+        }
+      ],
+      "time": "2023-11-06T16:57:33.351186"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 34.5,
+          "ram_percent": 32.5
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 223591224232,
+          "bytes_sent": 221838332000,
+          "pps_recv": 56336180,
+          "pps_sent": 45068910
+        }
+      ],
+      "time": "2023-11-06T16:57:33.566248"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 35.5,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 236927210121,
+          "bytes_sent": 232922778781,
+          "pps_recv": 507039650,
+          "pps_sent": 518307170
+        }
+      ],
+      "time": "2023-11-06T16:57:33.853273"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 35.2,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 260983100546,
+          "bytes_sent": 247817711781,
+          "pps_recv": 455553890,
+          "pps_sent": 439454870
+        }
+      ],
+      "time": "2023-11-06T16:57:34.170758"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 34.3,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 271375265299,
+          "bytes_sent": 269121536650,
+          "pps_recv": 315529000,
+          "pps_sent": 495830780
+        }
+      ],
+      "time": "2023-11-06T16:57:34.663104"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 33.2,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 281767504650,
+          "bytes_sent": 279513775949,
+          "pps_recv": 405685120,
+          "pps_sent": 326802190
+        }
+      ],
+      "time": "2023-11-06T16:57:34.925384"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 37.6,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 296644452251,
+          "bytes_sent": 293889881569,
+          "pps_recv": 383152410,
+          "pps_sent": 360614270
+        }
+      ],
+      "time": "2023-11-06T16:57:35.206084"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 39.6,
+          "ram_percent": 32.6
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 316227439507,
+          "bytes_sent": 310344676065,
+          "pps_recv": 123967100,
+          "pps_sent": 123967090
+        }
+      ],
+      "time": "2023-11-06T16:57:35.394035"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 28.7,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 335107539887,
+          "bytes_sent": 321430169291,
+          "pps_recv": 56349140,
+          "pps_sent": 33809540
+        }
+      ],
+      "time": "2023-11-06T16:57:35.767504"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 36.9,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 345153937952,
+          "bytes_sent": 341522896270,
+          "pps_recv": 383194710,
+          "pps_sent": 405735530
+        }
+      ],
+      "time": "2023-11-06T16:57:36.152172"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 30.8,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 361292126351,
+          "bytes_sent": 357285449960,
+          "pps_recv": 462698480,
+          "pps_sent": 721317560
+        }
+      ],
+      "time": "2023-11-06T16:57:36.438197"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.1,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 378094206145,
+          "bytes_sent": 374087529550,
+          "pps_recv": 563541610,
+          "pps_sent": 529728720
+        }
+      ],
+      "time": "2023-11-06T16:57:36.670813"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.8,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 402278179547,
+          "bytes_sent": 397125777102,
+          "pps_recv": 340556340,
+          "pps_sent": 304326610
+        }
+      ],
+      "time": "2023-11-06T16:57:37.033781"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.4,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 420293251342,
+          "bytes_sent": 410983504677,
+          "pps_recv": 146528380,
+          "pps_sent": 146528380
+        }
+      ],
+      "time": "2023-11-06T16:57:37.632829"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 32.5,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 448226069950,
+          "bytes_sent": 443029866923,
+          "pps_recv": 315915170,
+          "pps_sent": 270525600
+        }
+      ],
+      "time": "2023-11-06T16:57:38.490801"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 36.2,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 463643176953,
+          "bytes_sent": 458446973926,
+          "pps_recv": 574880690,
+          "pps_sent": 879224810
+        }
+      ],
+      "time": "2023-11-06T16:57:38.973488"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 36.2,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 469186449682,
+          "bytes_sent": 463990246655,
+          "pps_recv": 315624990,
+          "pps_sent": 371986140
+        }
+      ],
+      "time": "2023-11-06T16:57:39.199172"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 35.3,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 487732288804,
+          "bytes_sent": 480966661108,
+          "pps_recv": 203206450,
+          "pps_sent": 236721480
+        }
+      ],
+      "time": "2023-11-06T16:57:39.386789"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 33.3,
+          "ram_percent": 32.7
+        }
+      ],
+      "network": [
+        {
+          "bytes_recv": 505748280502,
+          "bytes_sent": 494825082093,
+          "pps_recv": 518546730,
+          "pps_sent": 563637450
+        }
+      ],
+      "time": "2023-11-06T16:57:39.726981"
+    }
+  ]
+}

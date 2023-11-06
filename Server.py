@@ -23,5 +23,5 @@ def run_test(reps):
 if __name__ == "__main__":        
     monitor = Monitoring()
     monitor.start()
-    run_test(100)
+    run_test(1000)
     monitor.stop()
