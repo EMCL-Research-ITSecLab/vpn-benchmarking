@@ -1,18 +1,6 @@
 import json
 import datetime
-
-### data is saved as
-#{
-#    "time": TODO, 
-#    "cpu_percent": 22.4, 
-#    "ram_percent": 34.1,
-#	 "pps_sent": 1506,
-#	 "pps_recv": 6,
-#	 "bytes_sent": 13056,
-#	 "bytes_recv": 5698
-#} 
-
-# TODO: Make sure folder data exists
+from pathlib import Path
 
 
 class DataHandling:
@@ -20,6 +8,7 @@ class DataHandling:
  
 	def __init__(self) -> None:
 		self.timestamp = datetime.datetime.now()
+		Path("data").mkdir(parents=True, exist_ok=True)
   
 	def write_data(self):
 		with open(f"data/data:{self.timestamp}.json", "w") as file:
