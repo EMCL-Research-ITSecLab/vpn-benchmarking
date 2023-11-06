@@ -8,7 +8,8 @@ host_name = "localhost"
 port = 8080
 
 
-def run_test(reps):
+def run_test():
+	reps = 100
 	i = reps
 	
 	while i > 0:
@@ -26,4 +27,6 @@ def run_test(reps):
 
 if __name__ == "__main__":
 	monitor = Monitoring()
-	monitor.run(run_test(1500))
+	monitor.start()
+	run_test()
+	monitor.stop()

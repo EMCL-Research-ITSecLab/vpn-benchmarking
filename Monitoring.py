@@ -7,7 +7,7 @@ from DataHandling import DataHandling
 
 
 global interval
-interval = 0.5
+interval = 0.1
     
     
 class Monitoring:
@@ -23,19 +23,27 @@ class Monitoring:
         self.pps_sent = 0
         self.pps_recv = 0
     
-    def run(self, func):
-        monitor = threading.Thread(target=self.__poll)
-        target = threading.Thread(target=func)
-        monitor.start()
-        target.start()
+    def start(self):
+        self.monitor = threading.Thread(target=self.poll)
+        self.monitor.start()
         
-        while target.is_alive():
-            time.sleep(interval)
-            
+    def stop(self):
         self.done.set()
         self.data_handler.write_data()
+    
+    # def run(self, func):
+    #     monitor = Process(target=self.poll)
+    #     target = Process(target=func)
+    #     monitor.start()
+    #     target.start()
         
-    def __poll(self):
+    #     while target.is_alive():
+    #         time.sleep(interval)
+            
+    #     self.done.set()
+    #     self.data_handler.write_data()
+        
+    def poll(self):
         while not self.done.is_set():
             # printscr = lambda a, b, str : self.scr.win.addstr(a, b, str)
             pps_sent = threading.Thread(target=self.__update_packets_per_second_sent)
@@ -73,7 +81,6 @@ class Monitoring:
             
             #self.scr.win.refresh()
             time.sleep(interval)
-            print(threading.active_count())
             
     def __format_bytes(self, bytes):
         for unit in ['', 'K', 'M', 'G', 'T', 'P']:
