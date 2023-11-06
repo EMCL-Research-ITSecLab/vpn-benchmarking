@@ -2,7 +2,6 @@ import psutil
 import threading
 import time
 
-from Screen import Screen
 from DataHandling import DataHandling
 
 
@@ -14,8 +13,8 @@ class Monitoring:
     done = threading.Event()
     
     def __init__(self) -> None:
-        # self.scr = Screen()
         self.data_handler = DataHandling()
+        
         self.cpu_percent = self.HardwareValue(psutil.cpu_times_percent, 0)
         self.ram_percent = self.HardwareValue(psutil.virtual_memory, 2)
         self.initial_bytes_sent = psutil.net_io_counters().bytes_sent
@@ -30,34 +29,14 @@ class Monitoring:
     def stop(self):
         self.done.set()
         self.data_handler.write_data()
-    
-    # def run(self, func):
-    #     monitor = Process(target=self.poll)
-    #     target = Process(target=func)
-    #     monitor.start()
-    #     target.start()
-        
-    #     while target.is_alive():
-    #         time.sleep(interval)
-            
-    #     self.done.set()
-    #     self.data_handler.write_data()
         
     def poll(self):
         while not self.done.is_set():
-            # printscr = lambda a, b, str : self.scr.win.addstr(a, b, str)
             pps_sent = threading.Thread(target=self.__update_packets_per_second_sent)
             pps_recv = threading.Thread(target=self.__update_packets_per_second_recv)
             
             pps_sent.start()
             pps_recv.start()
-            
-            # Hardware Performance
-            # printscr(0, 1, f"Performance:")
-            # printscr(2, 2, f"CPU:")
-            # printscr(2, 10, f"{self.cpu_percent.get()} %     ")
-            # printscr(3, 2, f"RAM:")
-            # printscr(3, 10, f"{self.ram_percent.get()} %     ")
             self.data_handler.add_data(
                 time="TODO", 
                 cpu_perc=self.cpu_percent.get(), 
@@ -67,21 +46,9 @@ class Monitoring:
                 bytes_sent=self.__get_upload_bytes(), 
                 bytes_recv=self.__get_download_bytes()
             )
-            
-            # Network Performance
-            # printscr(0, 30, f"Network:")
-            # printscr(2, 31, f"PPS (sent):")
-            # printscr(2, 50, f"{self.pps_sent} packets per second     ")
-            # printscr(3, 31, f"PPS (received):")
-            # printscr(3, 50, f"{self.pps_recv} packets per second     ")
-            # printscr(4, 31, f"Upload:")
-            # printscr(4, 50, f"{self.__format_bytes(self.__get_upload_bytes())}     ")
-            # printscr(5, 31, f"Download:")
-            # printscr(5, 50, f"{self.__format_bytes(self.__get_download_bytes())}     ")
-            
-            #self.scr.win.refresh()
             time.sleep(interval)
-            
+         
+    # might be useful for later
     def __format_bytes(self, bytes):
         for unit in ['', 'K', 'M', 'G', 'T', 'P']:
             if bytes < 1024:
