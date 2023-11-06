@@ -13,8 +13,7 @@ class Server(BaseHTTPRequestHandler):
         self.end_headers()
 
 
-def run_test():
-    reps = 100
+def run_test(reps):
     for _ in range(reps):
         server = HTTPServer((host_name, port), Server)
         server.handle_request()
@@ -24,5 +23,5 @@ def run_test():
 if __name__ == "__main__":        
     monitor = Monitoring()
     monitor.start()
-    run_test()
+    run_test(100)
     monitor.stop()
