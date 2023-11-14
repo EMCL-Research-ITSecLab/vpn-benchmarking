@@ -16,6 +16,7 @@ class DataHandling:
 			json.dump(self.data, indent=2, sort_keys=True, fp=file, cls=DateTimeEncoder)
         
 	def add_data(self, 
+        name,
         time, 
         cpu_perc, 
         ram_perc, 
@@ -25,7 +26,8 @@ class DataHandling:
         bytes_recv
     ):
 		new_data = {
-			"time": time, 
+			"name": name,
+   			"time": time, 
 			"hardware": [
 				{
 					"cpu_percent": cpu_perc, 

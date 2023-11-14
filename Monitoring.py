@@ -38,8 +38,9 @@ class Monitoring:
         self.done.set()
         self.data_handler.write_data()
         
-    def poll(self):
+    def poll(self, name):
         self.data_handler.add_data(
+            name=name,
             time=datetime.datetime.now(), 
             cpu_perc=self.cpu_percent.get(), 
             ram_perc=self.ram_percent.get(), 
@@ -52,6 +53,7 @@ class Monitoring:
     def __updating_poll(self):
         while not self.done.is_set():
             self.data_handler.add_data(
+                name="automatic poll",
                 time=datetime.datetime.now(), 
                 cpu_perc=self.cpu_percent.get(), 
                 ram_perc=self.ram_percent.get(), 

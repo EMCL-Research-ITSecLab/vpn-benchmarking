@@ -9,7 +9,7 @@ class HTTPExchange:
     class OnServer: 
         def run(self, reps, monitor):
             for _ in range(reps):
-                monitor.poll()
+                monitor.poll("onServer: before creating server")
                 server = HTTPServer((host_name, port), HTTPExchange.OnServer.Server)
                 server.handle_request()
                 server.server_close()
@@ -25,7 +25,7 @@ class HTTPExchange:
             i = reps
             while i > 0:
                 try:
-                    monitor.poll()
+                    monitor.poll("onClient: before connecting")
                     connection = http.client.HTTPConnection(host_name, port, timeout=10)
                     connection.request("GET", "/")
                     # currently unused
