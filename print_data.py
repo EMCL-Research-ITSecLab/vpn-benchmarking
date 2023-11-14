@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 list = []
 
-with open("data/data:2023-11-06T16:57:23.708375.json") as file:
+with open("data/data:2023-11-09T11:05:48.739616.json") as file:
     data = json.load(file)
 
 for i in range(len(data["data"])):

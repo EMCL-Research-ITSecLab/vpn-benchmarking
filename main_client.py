@@ -5,8 +5,8 @@ from HTTPExchange import HTTPExchange
 if __name__ == "__main__":
 	monitor = Monitoring()
 	client = HTTPExchange.OnClient()
-	monitor.start()
+	monitor.start(auto=False)
 	### start test
-	client.run(1000)
+	client.run(reps=1000, monitor=monitor)
     ### end test
 	monitor.stop()

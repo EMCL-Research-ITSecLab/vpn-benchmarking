@@ -7,8 +7,9 @@ port = 8080
 
 class HTTPExchange:
     class OnServer: 
-        def run(self, reps):
+        def run(self, reps, monitor):
             for _ in range(reps):
+                monitor.poll()
                 server = HTTPServer((host_name, port), HTTPExchange.OnServer.Server)
                 server.handle_request()
                 server.server_close()
@@ -20,10 +21,11 @@ class HTTPExchange:
 
     
     class OnClient:
-        def run(self, reps):
+        def run(self, reps, monitor):
             i = reps
             while i > 0:
                 try:
+                    monitor.poll()
                     connection = http.client.HTTPConnection(host_name, port, timeout=10)
                     connection.request("GET", "/")
                     # currently unused

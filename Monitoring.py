@@ -23,21 +23,34 @@ class Monitoring:
         self.pps_sent = 0
         self.pps_recv = 0
     
-    def start(self):
-        self.monitor = threading.Thread(target=self.poll)
-        self.monitor.start()
+    def start(self, auto=True):
+        pps_sent = threading.Thread(target=self.__update_packets_per_second_sent)
+        pps_recv = threading.Thread(target=self.__update_packets_per_second_recv)
+            
+        pps_sent.start()
+        pps_recv.start()
+        
+        if auto == True:
+            self.monitor = threading.Thread(target=self.__updating_poll)
+            self.monitor.start()
         
     def stop(self):
         self.done.set()
         self.data_handler.write_data()
         
     def poll(self):
+        self.data_handler.add_data(
+            time=datetime.datetime.now(), 
+            cpu_perc=self.cpu_percent.get(), 
+            ram_perc=self.ram_percent.get(), 
+            pps_sent=self.pps_sent, 
+            pps_recv=self.pps_recv, 
+            bytes_sent=self.__get_upload_bytes(), 
+            bytes_recv=self.__get_download_bytes()
+        )
+        
+    def __updating_poll(self):
         while not self.done.is_set():
-            pps_sent = threading.Thread(target=self.__update_packets_per_second_sent)
-            pps_recv = threading.Thread(target=self.__update_packets_per_second_recv)
-            
-            pps_sent.start()
-            pps_recv.start()
             self.data_handler.add_data(
                 time=datetime.datetime.now(), 
                 cpu_perc=self.cpu_percent.get(), 
