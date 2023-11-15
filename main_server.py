@@ -3,7 +3,7 @@ from HTTPExchange import HTTPExchange
 
 
 if __name__ == "__main__":        
-    monitor = Monitoring()
+    monitor = Monitoring("novpn-exchange")
     server = HTTPExchange.OnServer()
     monitor.start(auto=False)
     ### start test

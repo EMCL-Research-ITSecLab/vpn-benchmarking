@@ -13,8 +13,8 @@ interval = 0.1
 class Monitoring:
     done = threading.Event()
     
-    def __init__(self) -> None:
-        self.data_handler = DataHandling()
+    def __init__(self, folder_name) -> None:
+        self.data_handler = DataHandling(folder_name)
         
         self.cpu_percent = self.HardwareValue(psutil.cpu_times_percent, 0)
         self.ram_percent = self.HardwareValue(psutil.virtual_memory, 2)
