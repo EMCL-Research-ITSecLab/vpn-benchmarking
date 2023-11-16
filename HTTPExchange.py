@@ -1,6 +1,7 @@
 import http.client
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
+import time
 
 
 host_name = "localhost"
@@ -15,24 +16,16 @@ class HTTPExchange:
                 server.handle_request()
                 server.server_close()
                 
-        # def gen_keys(self, iterations):
-        #     print(f"Generating {iterations} rosenpass and wireguard keys...")
-        #     os.system("mkdir rp-exchange")
-        #     os.system("mkdir rp-exchange/rp-server-keys")
-        #     os.system("mkdir rp-exchange/rp-server-keys/tmp")
-        #     os.system("cd rp-exchange/rp-server-keys/tmp")
-        #     os.system("rp genkey server.rosenpass-secret")
-            
-        #     keys = { "keys": [] }
-        #     for i in range(iterations):
-        #         new_key = {
-        #             "number": i,
-        #             "key_file": 
-        #         }
-        #         keys["keys"].append(new_key)
-                    
-        #     with open(f"rp-exchange/all-rp-server-keys.json", "w") as all_keys:
-        #         pass
+        def gen_keys(self, iterations):
+            print(f"Generating {iterations} rosenpass and wireguard keys for server...")
+
+            home_path = os.getcwd()
+            os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
+
+            for i in range(iterations):
+                formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
+                os.system(f"rp genkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret")
+                os.system(f"rp pubkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public")
                 
         class Server(BaseHTTPRequestHandler):
             def do_GET(self):
@@ -55,3 +48,27 @@ class HTTPExchange:
                 # in case the server was not ready yet
                 except:
                     continue
+                
+        def gen_keys(self, iterations):
+            print(f"Generating {iterations} rosenpass and wireguard keys for client...")
+
+            home_path = os.getcwd()
+            os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
+
+            for i in range(iterations):
+                formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
+                os.system(f"rp genkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret")
+                os.system(f"rp pubkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
+
+
+test_server = HTTPExchange.OnServer()
+test_client = HTTPExchange.OnClient()
+
+start = time.time()
+test_server.gen_keys(500)
+end = time.time()
+print(end - start)
+# start = time.time()
+# test_client.gen_keys(500)
+# end = time.time()
+# print(end - start)

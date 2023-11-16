@@ -1,15 +1,16 @@
 import os
 import subprocess
 
-print(f"Generating {8} rosenpass and wireguard keys...")
-iterations = 5
+iterations = 10
+print(f"Generating {iterations} rosenpass and wireguard keys...")
 
 home_path = os.getcwd()
 os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
 
 for i in range(iterations):
-    formatted_number = '{num:0>{len}}'.format(num=i, len=len(str(iterations)))
+    formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
     os.system(f"rp genkey rp-exchange/rp-keys/tmp/{formatted_number}_server.rosenpass-secret")
+    os.system(f"rp pubkey rp-exchange/rp-keys/tmp/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/tmp/{formatted_number}_server.rosenpass-public")
 
 #   rp-exchange
 #       rp-keys
