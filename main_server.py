@@ -5,8 +5,9 @@ from HTTPExchange import HTTPExchange
 if __name__ == "__main__":        
     monitor = Monitoring("novpn-exchange")
     server = HTTPExchange.OnServer()
-    monitor.start(auto=False)
+    # monitor.start(auto=False)
     ### start test
-    server.run(reps=1000, monitor=monitor)
+    # server.run(reps=1000, monitor=monitor)
+    server.run_with_rp(None)
     ### end test
-    monitor.stop()
+    # monitor.stop()

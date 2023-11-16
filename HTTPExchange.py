@@ -17,17 +17,17 @@ class HTTPExchange:
                 server.server_close()
                 
         def run_with_rp(self, monitor):
+            iterations = self.count_rp_keys()
             
-            iterations = 0
+            if iterations == -1:
+                print("An error occurred. Number of keys in directories is not consistent. Generate new keys to proceed.")
+                return
             
-            for path in os.listdir(dir_path):
-                # check if current path is a file
-                if os.path.isfile(os.path.join(dir_path, path)):
-                    count += 1
-                    
-            print('File count:', count)
-            for _ in range(iterations):
-                pass
+            for i in range(iterations):
+                formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
+                server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret")
+                client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
+                os.system(f"sudo rp exchange {server_key_path} dev rosenpass0 listen localhost:9999 peer {client_key_path} allowed-ips fe80::/64")
                 
         def gen_keys(self, iterations):
             print(f"Generating {iterations} rosenpass and wireguard keys for server...")
@@ -39,6 +39,8 @@ class HTTPExchange:
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 os.system(f"rp genkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret")
                 os.system(f"rp pubkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public")
+                
+        # TODO: Add function to send the keys via ssh
                 
         def count_rp_keys(self):
             exchange = HTTPExchange()
@@ -118,8 +120,3 @@ class HTTPExchange:
                 return -1
                             
         return s_pub_count
-
-
-test_server = HTTPExchange.OnServer()
-
-print(test_server.count_rp_keys())
