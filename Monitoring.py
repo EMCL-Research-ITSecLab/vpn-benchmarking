@@ -4,10 +4,6 @@ import time
 import datetime
 
 from DataHandling import DataHandling
-
-
-global interval
-interval = 0.1
     
     
 class Monitoring:
@@ -23,7 +19,9 @@ class Monitoring:
         self.pps_sent = 0
         self.pps_recv = 0
     
-    def start(self, auto=True):
+    def start(self, auto=True, interval=0.1):        
+        self.interval = interval
+        
         pps_sent = threading.Thread(target=self.__update_packets_per_second_sent)
         pps_recv = threading.Thread(target=self.__update_packets_per_second_recv)
             
@@ -62,7 +60,7 @@ class Monitoring:
                 bytes_sent=self.__get_upload_bytes(), 
                 bytes_recv=self.__get_download_bytes()
             )
-            time.sleep(interval)
+            time.sleep(self.interval)
          
     # might be useful for later
     def __format_bytes(self, bytes):
@@ -80,14 +78,14 @@ class Monitoring:
     def __update_packets_per_second_sent(self):
         while not self.done.is_set():
             before = psutil.net_io_counters().packets_sent
-            time.sleep(interval)
-            self.pps_sent = int((psutil.net_io_counters().packets_sent - before) / interval)
+            time.sleep(self.interval)
+            self.pps_sent = int((psutil.net_io_counters().packets_sent - before) / self.interval)
             
     def __update_packets_per_second_recv(self):
         while not self.done.is_set():
             before = psutil.net_io_counters().packets_recv
-            time.sleep(interval)
-            self.pps_recv = int((psutil.net_io_counters().packets_recv - before) / interval)
+            time.sleep(self.interval)
+            self.pps_recv = int((psutil.net_io_counters().packets_recv - before) / self.interval)
         
     
     class HardwareValue:
