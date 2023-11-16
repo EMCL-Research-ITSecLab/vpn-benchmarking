@@ -10,7 +10,7 @@ class DataHandling:
 	def __init__(self, folder_name) -> None:
 		self.timestamp = datetime.datetime.now().isoformat()
 		self.folder = folder_name
-		Path("data").mkdir(parents=True, exist_ok=True)
+		Path(f"{self.folder}/data").mkdir(parents=True, exist_ok=True)
   
 	def write_data(self):
 		with open(f"{self.folder}/data/data:{self.timestamp}.json", "w") as file:
