@@ -162,3 +162,5 @@ hosts
 testing/
 data/
 rp-exchange/
+.vscode/settings.json
+ansible_files/hosts copy

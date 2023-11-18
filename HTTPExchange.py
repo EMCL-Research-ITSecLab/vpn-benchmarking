@@ -1,7 +1,9 @@
 import http.client
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from multiprocessing import Process
 import os
 import time
+import subprocess
 
 
 host_name = "localhost"
@@ -23,12 +25,24 @@ class HTTPExchange:
                 print("An error occurred. Number of keys in directories is not consistent. Generate new keys to proceed.")
                 return
             
+            subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
             for i in range(iterations):
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret")
                 client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
-                os.system(f"sudo rp exchange {server_key_path} dev rosenpass0 listen localhost:9999 peer {client_key_path} allowed-ips fe80::/64")
-                
+                # only for debugging
+                print(f"running: sudo rp exchange {server_key_path} dev rosenpass0 listen localhost:9999 peer {client_key_path} allowed-ips fe80::/64")
+                proc = subprocess.Popen(['sudo', 'rp', 'exchange', server_key_path, 'dev', f'rosenpass0', 'listen', 'localhost:9999', 'peer', client_key_path, 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
+                time.sleep(5)
+                # only for debugging
+                print(f"running: sudo ip a add fe80::0/64 dev rosenpass0")
+                subprocess.run(['sudo', 'ip', 'a', 'add', f'fe80::0/64', 'dev', f'rosenpass0'])
+                # time.sleep(2)
+                # self.run(1, None)
+                time.sleep(5)
+                proc.kill()
+                time.sleep(1)
+                            
         def gen_keys(self, iterations):
             print(f"Generating {iterations} rosenpass and wireguard keys for server...")
 
