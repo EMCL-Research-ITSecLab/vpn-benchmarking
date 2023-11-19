@@ -5,11 +5,12 @@ import os
 import time
 import subprocess
 import datetime
+from matplotlib.pyplot import jet
 import pycurl
 
 
 host_name = "localhost"
-port = 8080
+port = 9999
 
 class HTTPExchange:
     class OnServer: 
@@ -31,29 +32,33 @@ class HTTPExchange:
             subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
 
             for i in range(iterations):
+                print("starting iteration", i, "with key", i+1)
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret")
                 client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
                 proc = subprocess.Popen(['sudo', 'rp', 'exchange', server_key_path, 'dev', 'rosenpass0', 'listen', 'localhost:9999', 'peer', client_key_path, 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
 
                 # try to add an ip address
-                i = 10      # number of attempts
-                while i > 0:
+                j = 10      # number of attempts
+                while j > 0:
                     try:
                         subprocess.check_output(['sudo', 'ip', 'a', 'add', 'fe80::1/64', 'dev', 'rosenpass0'], stderr=subprocess.PIPE)
                         break
                     except:
-                        i -= 1
+                        j -= 1
 
                 # if adding an ip address failed
-                if i == 0:
+                if j == 0:
                     print(f"[{datetime.datetime.now().isoformat()} ERROR] Too many attempts for key exchange {i + 1}! Please try again.")
                     proc.kill()
                     return
 
+                print(f"exchange {i} is ready...")
+
                 # else
-                time.sleep(10)
+                self.run(1, None)
                 proc.kill()
+                print("ending iteration", i, "with key", i+1)
                             
         def gen_keys(self, iterations):
             print(f"Generating {iterations} rosenpass and wireguard keys for server...")
@@ -102,29 +107,34 @@ class HTTPExchange:
 
             # TODO: Change localhost to the servers actual ip address
             for i in range(iterations):
+                print("starting iteration", i, "with key", i+1)
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret")
                 server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public")
                 proc = subprocess.Popen(['sudo', 'rp', 'exchange', client_key_path, 'dev', 'rosenpass0', 'peer', server_key_path, 'endpoint', 'localhost:9999', 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
 
                 # try to add an ip address
-                i = 10      # number of attempts
-                while i > 0:
+                j = 10      # number of attempts
+                while j > 0:
                     try:
                         subprocess.check_output(['sudo', 'ip', 'a', 'add', 'fe80::2/64', 'dev', 'rosenpass0'], stderr=subprocess.PIPE)
                         break
                     except:
-                        i -= 1
+                        j -= 1
 
                 # if adding an ip address failed
-                if i == 0:
+                if j == 0:
                     print(f"[{datetime.datetime.now().isoformat()} ERROR] Too many attempts for key exchange {i + 1}! Please try again.")
                     proc.kill()
                     return
+                
+                print(f"exchange {i} is ready...")
 
                 # else
-                time.sleep(2)
+                self.run(1, None)
+                # subprocess.run(["wg"])
                 proc.kill()
+                print("ending iteration", i, "with key", i+1)
                 
         def gen_keys(self, iterations):
             print(f"Generating {iterations} rosenpass and wireguard keys for client...")
