@@ -20,6 +20,7 @@ class HTTPExchange:
                 server.server_close()
                 
         def run_with_rp(self, monitor):
+            # check if the number of keys is consistent
             iterations = self.count_rp_keys()
             
             if iterations == -1:
@@ -27,17 +28,18 @@ class HTTPExchange:
                 return
             
             subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
+
             for i in range(iterations):
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret")
                 client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
-                proc = subprocess.Popen(['sudo', 'rp', 'exchange', server_key_path, 'dev', f'rosenpass0', 'listen', 'localhost:9999', 'peer', client_key_path, 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
+                proc = subprocess.Popen(['sudo', 'rp', 'exchange', server_key_path, 'dev', 'rosenpass0', 'listen', 'localhost:9999', 'peer', client_key_path, 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
 
                 # try to add an ip address
                 i = 10      # number of attempts
                 while i > 0:
                     try:
-                        subprocess.check_output(['sudo', 'ip', 'a', 'add', f'fe80::0/64', 'dev', f'rosenpass0'], stderr=subprocess.PIPE)
+                        subprocess.check_output(['sudo', 'ip', 'a', 'add', 'fe80::1/64', 'dev', 'rosenpass0'], stderr=subprocess.PIPE)
                         break
                     except:
                         i -= 1
@@ -49,7 +51,7 @@ class HTTPExchange:
                     return
 
                 # else
-                time.sleep(5)
+                time.sleep(10)
                 proc.kill()
                             
         def gen_keys(self, iterations):
@@ -90,6 +92,41 @@ class HTTPExchange:
                 # in case the server was not ready yet
                 except:
                     continue
+
+        def run_with_rp(self, monitor):
+            # check if the number of keys is consistent
+            iterations = self.count_rp_keys()
+            
+            if iterations == -1:
+                print(f"[{datetime.datetime.now().isoformat()} ERROR] An error occurred. Number of keys in directories is not consistent. Generate new keys to proceed.")
+                return
+            
+            subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
+
+            for i in range(iterations):
+                formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
+                client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret")
+                server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public")
+                proc = subprocess.Popen(['sudo', 'rp', 'exchange', client_key_path, 'dev', 'rosenpass0', 'peer', server_key_path, 'endpoint', 'localhost:9999', 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
+
+                # try to add an ip address
+                i = 10      # number of attempts
+                while i > 0:
+                    try:
+                        subprocess.check_output(['sudo', 'ip', 'a', 'add', 'fe80::2/64', 'dev', 'rosenpass0'], stderr=subprocess.PIPE)
+                        break
+                    except:
+                        i -= 1
+
+                # if adding an ip address failed
+                if i == 0:
+                    print(f"[{datetime.datetime.now().isoformat()} ERROR] Too many attempts for key exchange {i + 1}! Please try again.")
+                    proc.kill()
+                    return
+
+                # else
+                time.sleep(2)
+                proc.kill()
                 
         def gen_keys(self, iterations):
             print(f"Generating {iterations} rosenpass and wireguard keys for client...")
