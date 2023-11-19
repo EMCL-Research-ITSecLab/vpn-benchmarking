@@ -7,6 +7,8 @@ if __name__ == "__main__":
 	client = HTTPExchange.OnClient()
 	monitor.start(auto=False)
 	### start test
-	client.run(reps=1000, monitor=monitor)
+	client.run(reps=5, monitor=monitor)
+
+	client.run_with_rp(monitor=monitor)
     ### end test
 	monitor.stop()

@@ -16,7 +16,7 @@ class HTTPExchange:
     class OnServer: 
         def run(self, reps, monitor):
             for _ in range(reps):
-                # monitor.poll("onServer: before creating server")
+                monitor.poll("onServer: before creating server")
                 server = HTTPServer((host_name, port), HTTPExchange.OnServer.Server)
                 server.handle_request()
                 server.server_close()
@@ -56,7 +56,7 @@ class HTTPExchange:
                 print(f"exchange {i} is ready...")
 
                 # else
-                self.run(1, None)
+                self.run(1, monitor)
                 proc.kill()
                 print("ending iteration", i, "with key", i+1)
                             
@@ -88,7 +88,7 @@ class HTTPExchange:
             i = reps
             while i > 0:
                 try:
-                    # monitor.poll("onClient: before connecting")
+                    monitor.poll("onClient: before connecting")
                     self.__http_get(f"http://{host_name}:{port}")
                     i -= 1
                 # in case the server was not ready yet
@@ -131,8 +131,7 @@ class HTTPExchange:
                 print(f"exchange {i} is ready...")
 
                 # else
-                self.run(1, None)
-                # subprocess.run(["wg"])
+                self.run(1, monitor)
                 proc.kill()
                 print("ending iteration", i, "with key", i+1)
                 
