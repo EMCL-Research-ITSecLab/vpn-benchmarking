@@ -1,0 +1,187 @@
+{
+
+  "data": [
+
+    {
+
+      "hardware": [
+
+        {
+
+          "cpu_percent": 31.2,
+
+          "ram_percent": 52.6
+
+        }
+
+      ],
+
+      "name": "onServer: before creating server",
+
+      "network": [
+
+        {
+
+          "bytes_recv": 0,
+
+          "bytes_sent": 66,
+
+          "pps_recv": 0,
+
+          "pps_sent": 0
+
+        }
+
+      ],
+
+      "time": "2023-11-19T11:16:08.432575"
+
+    },
+
+    {
+
+      "hardware": [
+
+        {
+
+          "cpu_percent": 12.0,
+
+          "ram_percent": 53.7
+
+        }
+
+      ],
+
+      "name": "onServer: before creating server",
+
+      "network": [
+
+        {
+
+          "bytes_recv": 2115,
+
+          "bytes_sent": 1146,
+
+          "pps_recv": 120,
+
+          "pps_sent": 120
+
+        }
+
+      ],
+
+      "time": "2023-11-19T11:16:09.734664"
+
+    },
+
+    {
+
+      "hardware": [
+
+        {
+
+          "cpu_percent": 21.0,
+
+          "ram_percent": 53.7
+
+        }
+
+      ],
+
+      "name": "onServer: before creating server",
+
+      "network": [
+
+        {
+
+          "bytes_recv": 3434,
+
+          "bytes_sent": 2160,
+
+          "pps_recv": 10,
+
+          "pps_sent": 0
+
+        }
+
+      ],
+
+      "time": "2023-11-19T11:16:09.922412"
+
+    },
+
+    {
+
+      "hardware": [
+
+        {
+
+          "cpu_percent": 17.5,
+
+          "ram_percent": 54.3
+
+        }
+
+      ],
+
+      "name": "onServer: before creating server",
+
+      "network": [
+
+        {
+
+          "bytes_recv": 262085,
+
+          "bytes_sent": 260506,
+
+          "pps_recv": 41960,
+
+          "pps_sent": 41960
+
+        }
+
+      ],
+
+      "time": "2023-11-19T11:16:10.558781"
+
+    },
+
+    {
+
+      "hardware": [
+
+        {
+
+          "cpu_percent": 17.0,
+
+          "ram_percent": 54.3
+
+        }
+
+      ],
+
+      "name": "onServer: before creating server",
+
+      "network": [
+
+        {
+
+          "bytes_recv": 264509,
+
+          "bytes_sent": 262784,
+
+          "pps_recv": 410,
+
+          "pps_sent": 390
+
+        }
+
+      ],
+
+      "time": "2023-11-19T11:16:10.719225"
+
+    }
+
+  ]
+
+}
