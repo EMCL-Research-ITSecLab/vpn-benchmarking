@@ -7,12 +7,13 @@ from json import JSONEncoder
 class DataHandling:
 	data = { "data": [] }
  
-	def __init__(self) -> None:
+	def __init__(self, name) -> None:
 		self.timestamp = datetime.datetime.now().isoformat()
+  	self.name = name
 		Path("data").mkdir(parents=True, exist_ok=True)
   
 	def write_data(self):
-		with open(f"data/data:{self.timestamp}.json", "w") as file:
+		with open(f"data/{self.name}:{self.timestamp}.json", "w") as file:
 			json.dump(self.data, indent=2, sort_keys=True, fp=file, cls=DateTimeEncoder)
         
 	def add_data(self, 
