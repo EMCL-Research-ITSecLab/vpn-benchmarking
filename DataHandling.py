@@ -9,7 +9,7 @@ class DataHandling:
  
 	def __init__(self, name) -> None:
 		self.timestamp = datetime.datetime.now().isoformat()
-  	self.name = name
+		self.name = name
 		Path("data").mkdir(parents=True, exist_ok=True)
   
 	def write_data(self):
