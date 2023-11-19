@@ -5,6 +5,7 @@ import os
 import time
 import subprocess
 import datetime
+import pycurl
 
 
 host_name = "localhost"
@@ -14,14 +15,14 @@ class HTTPExchange:
     class OnServer: 
         def run(self, reps, monitor):
             for _ in range(reps):
-                monitor.poll("onServer: before creating server")
+                # monitor.poll("onServer: before creating server")
                 server = HTTPServer((host_name, port), HTTPExchange.OnServer.Server)
                 server.handle_request()
                 server.server_close()
                 
         def run_with_rp(self, monitor):
             # check if the number of keys is consistent
-            iterations = self.count_rp_keys()
+            iterations = self.__count_rp_keys()
             
             if iterations == -1:
                 print(f"[{datetime.datetime.now().isoformat()} ERROR] An error occurred. Number of keys in directories is not consistent. Generate new keys to proceed.")
@@ -67,7 +68,7 @@ class HTTPExchange:
                 
         # TODO: Add function to send the keys via ssh
                 
-        def count_rp_keys(self):
+        def __count_rp_keys(self):
             exchange = HTTPExchange()
             return exchange.count_rp_keys()
                 
@@ -82,12 +83,8 @@ class HTTPExchange:
             i = reps
             while i > 0:
                 try:
-                    monitor.poll("onClient: before connecting")
-                    connection = http.client.HTTPConnection(host_name, port, timeout=10)
-                    connection.request("GET", "/")
-                    # currently unused
-                    response = connection.getresponse()
-                    connection.close()
+                    # monitor.poll("onClient: before connecting")
+                    self.__http_get(f"http://{host_name}:{port}")
                     i -= 1
                 # in case the server was not ready yet
                 except:
@@ -95,7 +92,7 @@ class HTTPExchange:
 
         def run_with_rp(self, monitor):
             # check if the number of keys is consistent
-            iterations = self.count_rp_keys()
+            iterations = self.__count_rp_keys()
             
             if iterations == -1:
                 print(f"[{datetime.datetime.now().isoformat()} ERROR] An error occurred. Number of keys in directories is not consistent. Generate new keys to proceed.")
@@ -103,6 +100,7 @@ class HTTPExchange:
             
             subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
 
+            # TODO: Change localhost to the servers actual ip address
             for i in range(iterations):
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret")
@@ -139,10 +137,19 @@ class HTTPExchange:
                 os.system(f"rp genkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret")
                 os.system(f"rp pubkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
                 
-        def count_rp_keys(self):
+        def __count_rp_keys(self):
             exchange = HTTPExchange()
             return exchange.count_rp_keys()
         
+        def __http_get(self, url, iface=None):
+            c = pycurl.Curl()
+            c.setopt(pycurl.URL, url)
+            c.setopt(pycurl.HTTPGET, True)
+            c.setopt(pycurl.TIMEOUT, 10)
+            if iface:
+                c.setopt(pycurl.INTERFACE, iface)
+            c.perform()
+            c.close()
                 
     def count_rp_keys(self):
         path = os.path.join(os.getcwd(), "rp-exchange/rp-keys/")
