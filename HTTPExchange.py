@@ -7,6 +7,8 @@ import subprocess
 import datetime
 from matplotlib.pyplot import jet
 import pycurl
+from error_messages import print_err
+from error_messages import print_warn
 
 
 host_name = "localhost"
@@ -26,7 +28,7 @@ class HTTPExchange:
             iterations = self.__count_rp_keys()
             
             if iterations == -1:
-                print(f"[{datetime.datetime.now().isoformat()} ERROR] An error occurred. Number of keys in directories is not consistent. Generate new keys to proceed.")
+                print_err("Number of keys in directories is not consistent. Generate new keys to proceed.")
                 return
             
             subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
@@ -49,7 +51,7 @@ class HTTPExchange:
 
                 # if adding an ip address failed
                 if j == 0:
-                    print(f"[{datetime.datetime.now().isoformat()} ERROR] Too many attempts for key exchange {i + 1}! Please try again.")
+                    print_err(f"Too many attempts for key exchange {i + 1}! Please try again.")
                     proc.kill()
                     return
 
@@ -100,7 +102,7 @@ class HTTPExchange:
             iterations = self.__count_rp_keys()
             
             if iterations == -1:
-                print(f"[{datetime.datetime.now().isoformat()} ERROR] An error occurred. Number of keys in directories is not consistent. Generate new keys to proceed.")
+                print_err("Number of keys in directories is not consistent. Generate new keys to proceed.")
                 return
             
             subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
@@ -143,6 +145,7 @@ class HTTPExchange:
 
             for i in range(iterations):
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
+                # TODO: Change os.system to subprocess.run
                 os.system(f"rp genkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret")
                 os.system(f"rp pubkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
                 
