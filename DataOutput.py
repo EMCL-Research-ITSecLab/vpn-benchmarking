@@ -2,6 +2,9 @@ import json
 import matplotlib.pyplot as plt
 import os
 from pathlib import Path
+import datetime
+from error_messages import print_err
+from error_messages import print_warn
 
 
 class DataOutput:
@@ -12,11 +15,27 @@ class DataOutput:
         "bytes_sent": []
     }
     
-    def make_graphs_for_directory(self):
-        # TODO: check if dir_path is a directory
-        file_path = "data/client_rp_exchange_2023-11-19T13_23_40_608278.json"
-        self.make_graphs_for_file(file_path)
-        self.data = json.load(self.file)
+    def make_graphs_for_directory(self, 
+        dir_path,
+        cpu_percent=False,
+        ram_percent=False,
+        pps_sent=False,
+        bytes_sent=False
+    ):
+        try:
+            for file in os.listdir(dir_path):
+                if file[-5:] == ".json":
+                    file_path = dir_path + "/" + file
+                    self.make_graphs_for_file(
+                        file_path,
+                        cpu_percent=cpu_percent,
+                        ram_percent=ram_percent,
+                        pps_sent=pps_sent,
+                        bytes_sent=bytes_sent
+                    )
+                    plt.close()
+        except NotADirectoryError:
+            print_err("The given path is not a directory!")
     
     def make_graphs_for_file(self,
         file_path,
@@ -25,10 +44,16 @@ class DataOutput:
         pps_sent=False,
         bytes_sent=False
     ):
-        self.file = open("data/client_rp_exchange_2023-11-19T13_23_40_608278.json")
+        self.file = open(file_path)
         self.data = json.load(self.file)
-        # TODO: check if file_path is a file
+        file_name = os.path.basename(file_path)
+        
+        if file_name[-5:] != ".json":
+            print_warn(f"Skipping {file_name}. Not a json file!")
+            return
+        
         self.__make_graph(
+            file_name=file_name,
             cpu_percent=cpu_percent,
             ram_percent=ram_percent,
             pps_sent=pps_sent,
@@ -36,11 +61,14 @@ class DataOutput:
         )
     
     def __make_graph(self,
+        file_name,
         cpu_percent,
         ram_percent,
         pps_sent,
         bytes_sent
     ):
+        self.__reset_lists()
+        
         for i in range(len(self.data["data"])):
             if cpu_percent == True: self.lists["cpu_percent"].append(self.__get_cpu_percent(i))
             if ram_percent == True: self.lists["ram_percent"].append(self.__get_ram_percent(i))
@@ -51,7 +79,7 @@ class DataOutput:
         no_data = True
         for l in self.lists:
             if self.lists[l] != []:
-                short_path = f"data_graphs/test"
+                short_path = f"data_graphs/{file_name[:-5]}"
                 file_path = os.path.join(os.getcwd(), short_path)
                 Path(file_path).mkdir(parents=True, exist_ok=True)
                 
@@ -63,7 +91,14 @@ class DataOutput:
                 print(f"File saved as {short_path}/{l}.png.")
         if no_data == True:
             print("No data. Not printing any graphs.")
+        
+        # reset data lists
+        self.__reset_lists()
     
+    def __reset_lists(self):
+        for l in self.lists:
+            self.lists[l] = []
+
     def __get_cpu_percent(self, entry):
         return self.data["data"][entry]["hardware"][0]["cpu_percent"]
     
@@ -82,12 +117,12 @@ if __name__ == "__main__":
     # if len(args) == 0:
     #     print("Usage: python3 DataOutput.py [file_path]")
     # else:
-        output = DataOutput()
-        output.make_graphs_for_file(
-            file_path=None,
-            cpu_percent=True,
-            ram_percent=True,
-            pps_sent=True,
-            bytes_sent=True
-        )
+    output = DataOutput()
+    output.make_graphs_for_directory(
+        dir_path="data",
+        cpu_percent=True,
+        ram_percent=True,
+        pps_sent=True,
+        bytes_sent=True
+    )
     
