@@ -1,6 +1,7 @@
 import json
 import matplotlib.pyplot as plt
-import sys
+import os
+from pathlib import Path
 
 
 class DataOutput:
@@ -11,11 +12,30 @@ class DataOutput:
         "bytes_sent": []
     }
     
-    def __init__(self, file_path) -> None:
-        self.file = open(file_path)
+    def make_graphs_for_directory(self):
+        # TODO: check if dir_path is a directory
+        file_path = "data/client_rp_exchange_2023-11-19T13_23_40_608278.json"
+        self.make_graphs_for_file(file_path)
         self.data = json.load(self.file)
     
-    def make_graph(self,
+    def make_graphs_for_file(self,
+        file_path,
+        cpu_percent=False,
+        ram_percent=False,
+        pps_sent=False,
+        bytes_sent=False
+    ):
+        self.file = open("data/client_rp_exchange_2023-11-19T13_23_40_608278.json")
+        self.data = json.load(self.file)
+        # TODO: check if file_path is a file
+        self.__make_graph(
+            cpu_percent=cpu_percent,
+            ram_percent=ram_percent,
+            pps_sent=pps_sent,
+            bytes_sent=bytes_sent
+        )
+    
+    def __make_graph(self,
         cpu_percent,
         ram_percent,
         pps_sent,
@@ -27,19 +47,22 @@ class DataOutput:
             if pps_sent == True: self.lists["pps_sent"].append(self.__get_pps_sent(i))
             if bytes_sent == True: self.lists["bytes_sent"].append(self.__get_bytes_sent(i))
         
+        # TODO: Add way to plot multiple graphs into one graphic
         no_data = True
         for l in self.lists:
-            if l != []:
+            if self.lists[l] != []:
+                short_path = f"data_graphs/test"
+                file_path = os.path.join(os.getcwd(), short_path)
+                Path(file_path).mkdir(parents=True, exist_ok=True)
+                
+                plt.plot(self.lists[l])
+                plt.savefig(os.path.join(file_path, l))
+                plt.clf()
+                
                 no_data = False
-        
-        if no_data:
-            print("No data. Not saving a file.")
-            return
-        else:
-            # TODO: Add way to plot multiple graphs into one graphic
-            plt.plot(self.lists["ram_percent"])
-            plt.savefig("new")
-            print("File saved as new.png.")
+                print(f"File saved as {short_path}/{l}.png.")
+        if no_data == True:
+            print("No data. Not printing any graphs.")
     
     def __get_cpu_percent(self, entry):
         return self.data["data"][entry]["hardware"][0]["cpu_percent"]
@@ -55,12 +78,13 @@ class DataOutput:
     
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
-    if len(args) == 0:
-        print("Usage: python3 DataOutput.py [file_path]")
-    else:
-        output = DataOutput(args[0])
-        output.make_graph(
+    # args = sys.argv[1:]
+    # if len(args) == 0:
+    #     print("Usage: python3 DataOutput.py [file_path]")
+    # else:
+        output = DataOutput()
+        output.make_graphs_for_file(
+            file_path=None,
             cpu_percent=True,
             ram_percent=True,
             pps_sent=True,
