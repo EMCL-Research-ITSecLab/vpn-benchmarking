@@ -145,8 +145,10 @@ if __name__ == "__main__":
                 dir_path=path,
                 cpu_percent=True,
                 ram_percent=True,
-                pps_sent=True,
-                bytes_sent=True
+                bytes_recv=True,
+                bytes_sent=True,
+                pps_recv=True,
+                pps_sent=True
             )
         # if path is json file
         elif os.path.isfile(path) and path[-5:] == ".json":
@@ -156,8 +158,10 @@ if __name__ == "__main__":
                 file_path=path,
                 cpu_percent=True,
                 ram_percent=True,
-                pps_sent=True,
-                bytes_sent=True
+                bytes_recv=True,
+                bytes_sent=True,
+                pps_recv=True,
+                pps_sent=True
             )
         # if path other file
         elif os.path.exists(path):
