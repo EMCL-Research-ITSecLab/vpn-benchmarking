@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 import os
 from pathlib import Path
-import datetime
+import sys
 from error_messages import print_err
 from error_messages import print_warn
 
@@ -113,16 +113,40 @@ class DataOutput:
     
 
 if __name__ == "__main__":
-    # args = sys.argv[1:]
-    # if len(args) == 0:
-    #     print("Usage: python3 DataOutput.py [file_path]")
-    # else:
-    output = DataOutput()
-    output.make_graphs_for_directory(
-        dir_path="data",
-        cpu_percent=True,
-        ram_percent=True,
-        pps_sent=True,
-        bytes_sent=True
-    )
+    args = sys.argv[1:]
+    if len(args) == 0:
+        print("Usage: python3 DataOutput.py [file_path/dir_path]")
+    elif len(args) == 1:
+        path = args[0]
+        # if path is directory
+        if os.path.isdir(path):
+            output = DataOutput()
+            print("Creating graphs for all json files in the directory...")
+            output.make_graphs_for_directory(
+                dir_path=path,
+                cpu_percent=True,
+                ram_percent=True,
+                pps_sent=True,
+                bytes_sent=True
+            )
+        # if path is json file
+        elif os.path.isfile(path) and path[-5:] == ".json":
+            output = DataOutput()
+            print("Creating graphs for the file...")
+            output.make_graphs_for_file(
+                file_path=path,
+                cpu_percent=True,
+                ram_percent=True,
+                pps_sent=True,
+                bytes_sent=True
+            )
+        # if path other file
+        elif os.path.exists(path):
+            print_err("The given file is not a json file.")
+        # path does not exist
+        else:
+            print_err("The given path does not exist.")
+    else:   # more than one argument
+        # TODO
+        pass
     
