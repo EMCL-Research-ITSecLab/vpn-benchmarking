@@ -2,10 +2,8 @@ import http.client
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from multiprocessing import Process
 import os
-import time
 import subprocess
 import datetime
-from matplotlib.pyplot import jet
 import pycurl
 from error_messages import print_err
 from error_messages import print_warn
@@ -126,7 +124,7 @@ class HTTPExchange:
 
                 # if adding an ip address failed
                 if j == 0:
-                    print(f"[{datetime.datetime.now().isoformat()} ERROR] Too many attempts for key exchange {i + 1}! Please try again.")
+                    print_err(f"Too many attempts for key exchange {i + 1}! Please try again.")
                     proc.kill()
                     return
                 
