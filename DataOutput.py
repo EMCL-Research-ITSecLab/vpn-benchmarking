@@ -108,10 +108,33 @@ class DataOutput:
                 file_path = os.path.join(os.getcwd(), short_path)
                 Path(file_path).mkdir(parents=True, exist_ok=True)
                 
-                plt.plot(time_stamps, self.lists[l])
-                # unit = self.__get_unit()
-                # plt.gca().yaxis.set_major_formatter(mticker.FormatStrFormatter(f'%.0f {unit}'))
-                # plt.ylabel(l)
+                plt.grid(True, 'both', 'y')
+                plt.xlabel("time [s]")
+                
+                if l == "bytes_recv" or l == "bytes_sent":
+                    # get the unit of the maximum value and use it for all values
+                    values = self.lists[l]
+                    unit = self.__get_unit(max(values))
+                    
+                    while max(values) > 1024:
+                        for v in range(len(values)):
+                            values[v] = values[v] / 1024
+                    
+                    plt.ylabel(f"{l} [{unit}]")
+                    
+                    plt.xlim([0, max(time_stamps)])
+                    plt.ylim([0, max(values) + 0.05 * max(values)])
+                    
+                    plt.plot(time_stamps, values)
+                elif l == "cpu_percent" or l == "ram_percent":
+                    plt.ylabel(f"{l} [%]")
+                    
+                    plt.xlim([0, max(time_stamps)])
+                    plt.ylim([0, 100])
+                    
+                    plt.plot(time_stamps, self.lists[l])
+                else:
+                    plt.plot(time_stamps, self.lists[l])
                 
                 plt.savefig(os.path.join(file_path, l))
                 plt.clf()
@@ -127,6 +150,16 @@ class DataOutput:
     def __reset_lists(self):
         for l in self.lists:
             self.lists[l] = []
+            
+    def __get_unit(self, bytes):
+        for unit in ['', 'K', 'M', 'G', 'T', 'P']:
+            if bytes < 1024:
+                if unit == '':
+                    return "B"
+                else:
+                    return f"{unit}iB"
+            bytes = bytes / 1024
+        print_err("Number of bytes is too large!")
 
     def __get_time_stamp(self, entry):
         return self.data["data"][entry]["time"]
