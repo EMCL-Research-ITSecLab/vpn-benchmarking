@@ -93,12 +93,12 @@ class DataOutput:
             if pps_recv == True: self.lists["pps_recv"].append(self.__get_pps_recv(i))
             if pps_sent == True: self.lists["pps_sent"].append(self.__get_pps_sent(i))
         
-            # get the times as difference from the initial time
-            time_stamps = [0]
-            initial_time = datetime.fromisoformat(self.lists["time"][0])
-            for i in range(1, len(self.lists["time"])):
-                cur_time = datetime.fromisoformat(self.lists["time"][i])
-                time_stamps.append((cur_time - initial_time).total_seconds())
+        # get the times as difference from the initial time
+        time_stamps = [0]
+        initial_time = datetime.fromisoformat(self.lists["time"][0])
+        for i in range(1, len(self.lists["time"])):
+            cur_time = datetime.fromisoformat(self.lists["time"][i])
+            time_stamps.append((cur_time - initial_time).total_seconds())
         
         # TODO: Add way to plot multiple graphs into one graphic
         no_data = True
