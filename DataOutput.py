@@ -122,9 +122,9 @@ class DataOutput:
                             values[v] = values[v] / 1024
                     
                     if l == "bytes_recv":
-                        plt.ylabel(f"total received bytes [{unit}]")
+                        plt.ylabel(f"total bytes (received) [{unit}]")
                     else:
-                        plt.ylabel(f"total sent bytes [{unit}]")
+                        plt.ylabel(f"total bytes (sent) [{unit}]")
                     
                     plt.xlim([0, max(time_stamps)])
                     plt.ylim([0, max(values) + 0.05 * max(values)])
@@ -143,9 +143,9 @@ class DataOutput:
                     plt.plot(time_stamps, self.lists[l])
                 elif l == "pps_recv" or l == "pps_sent":
                     if l == "pps_recv":
-                        plt.ylabel("received packets per second")
+                        plt.ylabel("packets per second (received)")
                     else:
-                        plt.ylabel("sent packets per second")
+                        plt.ylabel("packets per second (sent)")
                         
                     plt.xlim([0, max(time_stamps)])
                     plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
@@ -201,11 +201,11 @@ class DataOutput:
         return self.data["data"][entry]["network"][0]["pps_sent"]
 
 if __name__ == "__main__":
-    # args = sys.argv[1:]
-    # if len(args) == 0:
-    #     print("Usage: python3 DataOutput.py [file_path/dir_path]")
-    # elif len(args) == 1:
-        path = "data" # args[0]
+    args = sys.argv[1:]
+    if len(args) == 0:
+        print("Usage: python3 DataOutput.py [file_path/dir_path]")
+    elif len(args) == 1:
+        path = args[0]
         # if path is directory
         if os.path.isdir(path):
             output = DataOutput()
@@ -238,7 +238,7 @@ if __name__ == "__main__":
         # path does not exist
         else:
             print_err("The given path does not exist.")
-    # else:   # more than one argument
-    #     # TODO
-    #     pass
+    else:   # more than one argument
+        # TODO
+        pass
     
