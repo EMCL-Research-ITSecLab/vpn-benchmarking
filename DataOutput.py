@@ -120,18 +120,30 @@ class DataOutput:
                         for v in range(len(values)):
                             values[v] = values[v] / 1024
                     
-                    plt.ylabel(f"{l} [{unit}]")
+                    if l == "bytes_recv":
+                        plt.ylabel(f"total received bytes [{unit}]")
+                    else:
+                        plt.ylabel(f"total sent bytes [{unit}]")
                     
                     plt.xlim([0, max(time_stamps)])
                     plt.ylim([0, max(values) + 0.05 * max(values)])
                     
                     plt.plot(time_stamps, values)
                 elif l == "cpu_percent" or l == "ram_percent":
-                    plt.ylabel(f"{l} [%]")
+                    if l == "cpu_percent":
+                        plt.ylabel("CPU usage [%]")
+                    else:
+                        plt.ylabel("RAM usage [%]")
                     
                     plt.xlim([0, max(time_stamps)])
                     plt.ylim([0, 100])
                     
+                    plt.plot(time_stamps, self.lists[l])
+                elif l == "pps_recv" or l == "pps_sent":
+                    if l == "pps_recv":
+                        plt.ylabel("received packets per second")
+                    else:
+                        plt.ylabel("sent packets per second")
                     plt.plot(time_stamps, self.lists[l])
                 else:
                     plt.plot(time_stamps, self.lists[l])
