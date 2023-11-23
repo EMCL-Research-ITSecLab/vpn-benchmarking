@@ -110,6 +110,7 @@ class DataOutput:
                 
                 plt.grid(True, 'both', 'y')
                 plt.xlabel("time [s]")
+                plt.minorticks_on()
                 
                 if l == "bytes_recv" or l == "bytes_sent":
                     # get the unit of the maximum value and use it for all values
@@ -137,6 +138,7 @@ class DataOutput:
                     
                     plt.xlim([0, max(time_stamps)])
                     plt.ylim([0, 100])
+                    plt.yticks(ticks=range(0, 101, 10))
                     
                     plt.plot(time_stamps, self.lists[l])
                 elif l == "pps_recv" or l == "pps_sent":
@@ -144,6 +146,10 @@ class DataOutput:
                         plt.ylabel("received packets per second")
                     else:
                         plt.ylabel("sent packets per second")
+                        
+                    plt.xlim([0, max(time_stamps)])
+                    plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
+                    
                     plt.plot(time_stamps, self.lists[l])
                 else:
                     plt.plot(time_stamps, self.lists[l])
