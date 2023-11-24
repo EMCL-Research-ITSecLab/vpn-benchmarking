@@ -66,10 +66,13 @@ class DataOutput:
             return
         
         files = []
+        names = []
         
         for i in range(1, number_of_files + 1):
             file_path = prompt(f"File {i} path: ", completer=PathCompleter())
             files.append(file_path)
+            name = prompt("Enter a name: ")
+            names.append(name)
             
         self.__reset_lists()
         max_bytes_recv = 0
@@ -103,9 +106,9 @@ class DataOutput:
                         max_bytes_sent = cur_b_sent
             
             no_data = True
-            for f in files:
-                self.file = open(f)
-                file_name = os.path.basename(f)
+            for f in range(len(files)):
+                self.file = open(files[f])
+                file_name = os.path.basename(files[f])
                 self.data = json.load(self.file)
             
                 if self.lists["time"] == []:
@@ -129,7 +132,7 @@ class DataOutput:
                     Path(file_path).mkdir(parents=True, exist_ok=True)
             
                     plt.grid(True, 'both', 'y')
-                    plt.xlabel("time [s]")
+                    plt.xlabel(f"time [% of full exchange]")
                     plt.minorticks_on()
                     
                     if l == "bytes_recv":
@@ -144,10 +147,10 @@ class DataOutput:
                                 values[v] = values[v] / 1024
                             tmp_max = tmp_max / 1024
                         
-                        plt.xlim([0, max(timestamps)])
+                        plt.xlim([0, 100])
                         plt.ylim([0, tmp_max + 0.05 * tmp_max])
                         
-                        plt.plot(timestamps, values)
+                        plt.plot(timestamps, values, label=names[f])
                     elif l == "bytes_sent":
                         values = self.lists[l]
                         
@@ -160,33 +163,33 @@ class DataOutput:
                                 values[v] = values[v] / 1024
                             tmp_max = tmp_max / 1024
                                 
-                        plt.xlim([0, max(timestamps)])
+                        plt.xlim([0, 100])
                         plt.ylim([0, tmp_max + 0.05 * tmp_max])
                         
-                        plt.plot(timestamps, values)
+                        plt.plot(timestamps, values, label=names[f])
                     elif l == "cpu_percent" or l == "ram_percent":
                         if l == "cpu_percent":
                             plt.ylabel("CPU usage [%]")
                         else:
                             plt.ylabel("RAM usage [%]")
                         
-                        plt.xlim([0, max(timestamps)])
+                        plt.xlim([0, 100])
                         plt.ylim([0, 100])
                         plt.yticks(ticks=range(0, 101, 10))
                         
-                        plt.plot(timestamps, self.lists[l])
+                        plt.plot(timestamps, self.lists[l], label=names[f])
                     elif l == "pps_recv" or l == "pps_sent":
                         if l == "pps_recv":
                             plt.ylabel("packets per second (received)")
                         else:
                             plt.ylabel("packets per second (sent)")
                             
-                        plt.xlim([0, max(timestamps)])
+                        plt.xlim([0, 100])
                         plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
                         
-                        plt.plot(timestamps, self.lists[l])
+                        plt.plot(timestamps, self.lists[l], label=names[f])
                     else:
-                        plt.plot(timestamps, self.lists[l])
+                        plt.plot(timestamps, self.lists[l], label=names[f])
                                    
                 # reset data lists
                 self.__reset_lists()
@@ -194,6 +197,7 @@ class DataOutput:
                 if no_data == True:
                     print("No data. Not printing the graph.")
             
+            plt.legend()
             plt.savefig(os.path.join(file_path, l))
             plt.clf()
             print(f"File saved as {short_path}/{l}.png.")
@@ -305,7 +309,7 @@ class DataOutput:
         end_time = datetime.fromisoformat(max_time)
         for i in range(1, len(self.lists["time"])):
             cur_time = datetime.fromisoformat(self.lists["time"][i])
-            timestamps.append((cur_time - initial_time).total_seconds() / (end_time - initial_time).total_seconds())
+            timestamps.append(((cur_time - initial_time).total_seconds() / (end_time - initial_time).total_seconds()) * 100)
             
         return timestamps
  
