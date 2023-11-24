@@ -7,6 +7,9 @@ import sys
 from datetime import datetime
 from error_messages import print_err
 from error_messages import print_warn
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import PathCompleter
+# TODO: import and implement click
 
 
 class DataOutput:
@@ -20,41 +23,32 @@ class DataOutput:
         "pps_sent": []
     }
     
-    def make_graphs_for_directory(self, 
-        dir_path,
-        cpu_percent=False,
-        ram_percent=False,
-        bytes_recv=False,
-        bytes_sent=False,
-        pps_recv=False,
-        pps_sent=False
-    ):
+    def __init__(self,
+        cpu_percent=True,
+        ram_percent=True,
+        bytes_recv=True,
+        bytes_sent=True,
+        pps_recv=True,
+        pps_sent=True
+    ) -> None:
+        self.cpu_percent=cpu_percent
+        self.ram_percent=ram_percent
+        self.bytes_recv=bytes_recv
+        self.bytes_sent=bytes_sent
+        self.pps_recv=pps_recv
+        self.pps_sent=pps_sent
+    
+    def make_graphs_for_directory(self, dir_path):
         try:
             for file in os.listdir(dir_path):
                 if file[-5:] == ".json":
                     file_path = dir_path + "/" + file
-                    self.make_graphs_for_file(
-                        file_path,
-                        cpu_percent=cpu_percent,
-                        ram_percent=ram_percent,
-                        bytes_recv=bytes_recv,
-                        bytes_sent=bytes_sent,
-                        pps_recv=pps_recv,
-                        pps_sent=pps_sent
-                    )
+                    self.make_graphs_for_file(file_path)
                     plt.close()
         except NotADirectoryError:
             print_err("The given path is not a directory!")
     
-    def make_graphs_for_file(self,
-        file_path,
-        cpu_percent=False,
-        ram_percent=False,
-        bytes_recv=False,
-        bytes_sent=False,
-        pps_recv=False,
-        pps_sent=False
-    ):
+    def make_graphs_for_file(self, file_path):
         self.file = open(file_path)
         self.data = json.load(self.file)
         file_name = os.path.basename(file_path)
@@ -63,42 +57,153 @@ class DataOutput:
             print_warn(f"Skipping {file_name}. Not a json file!")
             return
         
-        self.__make_graph(
-            file_name=file_name,
-            cpu_percent=cpu_percent,
-            ram_percent=ram_percent,
-            bytes_recv=bytes_recv,
-            bytes_sent=bytes_sent,
-            pps_recv=pps_recv,
-            pps_sent=pps_sent
-        )
+        self.__make_graph(file_name)
     
-    def __make_graph(self,
-        file_name,
-        cpu_percent,
-        ram_percent,
-        bytes_recv,
-        bytes_sent,
-        pps_recv,
-        pps_sent
-    ):
+    def compare_graphs(self, number_of_files):
+        max_number_of_files = 6
+        if number_of_files < 2 or number_of_files > max_number_of_files:
+            print_err(f"Number of files too large! You can enter between 2 and {max_number_of_files} files.")
+            return
+        
+        files = []
+        
+        for i in range(1, number_of_files + 1):
+            file_path = prompt(f"File {i} path: ", completer=PathCompleter())
+            files.append(file_path)
+            
         self.__reset_lists()
+        max_bytes_recv = 0
+        max_bytes_sent = 0
+        for l in self.lists:
+            # skip this iteration if the graph for this value is not needed
+            if l == "time": continue
+            elif l == "cpu_percent" and self.cpu_percent == False: continue
+            elif l == "ram_percent" and self.ram_percent == False: continue
+            elif l == "bytes_recv" and self.bytes_recv == False: continue
+            elif l == "bytes_sent" and self.bytes_sent == False: continue
+            elif l == "pps_recv" and self.pps_recv == False: continue
+            elif l == "pps_sent" and self.pps_sent == False: continue
+            
+            for f in files:
+                self.file = open(f)
+                file_name = os.path.basename(f)
+                
+                if file_name[-5:] != ".json":
+                    print_err(f"At least one file was not a json file. Please try again.")
+                    return
+                
+                self.data = json.load(self.file)
+            
+                for i in range(len(self.data["data"])):
+                    cur_b_recv = self.__get_bytes_recv(i)
+                    cur_b_sent = self.__get_bytes_sent(i)
+                    if cur_b_recv > max_bytes_recv:
+                        max_bytes_recv = cur_b_recv
+                    if cur_b_sent > max_bytes_sent:
+                        max_bytes_sent = cur_b_sent
+            
+            no_data = True
+            for f in files:
+                self.file = open(f)
+                file_name = os.path.basename(f)
+                self.data = json.load(self.file)
+            
+                if self.lists["time"] == []:
+                    for i in range(len(self.data["data"])):
+                        self.lists["time"].append(self.__get_time_stamp(i))
+            
+                for i in range(len(self.data["data"])):
+                    if l == "cpu_percent": self.lists["cpu_percent"].append(self.__get_cpu_percent(i))
+                    if l == "ram_percent": self.lists["ram_percent"].append(self.__get_ram_percent(i))
+                    if l == "bytes_recv": self.lists["bytes_recv"].append(self.__get_bytes_recv(i))
+                    if l == "bytes_sent": self.lists["bytes_sent"].append(self.__get_bytes_sent(i))
+                    if l == "pps_recv": self.lists["pps_recv"].append(self.__get_pps_recv(i))
+                    if l == "pps_sent": self.lists["pps_sent"].append(self.__get_pps_sent(i))
         
-        for i in range(len(self.data["data"])):
-            self.lists["time"].append(self.__get_time_stamp(i))
-            if cpu_percent == True: self.lists["cpu_percent"].append(self.__get_cpu_percent(i))
-            if ram_percent == True: self.lists["ram_percent"].append(self.__get_ram_percent(i))
-            if bytes_recv == True: self.lists["bytes_recv"].append(self.__get_bytes_recv(i))
-            if bytes_sent == True: self.lists["bytes_sent"].append(self.__get_bytes_sent(i))
-            if pps_recv == True: self.lists["pps_recv"].append(self.__get_pps_recv(i))
-            if pps_sent == True: self.lists["pps_sent"].append(self.__get_pps_sent(i))
-        
-        # get the times as difference from the initial time
-        time_stamps = [0]
-        initial_time = datetime.fromisoformat(self.lists["time"][0])
-        for i in range(1, len(self.lists["time"])):
-            cur_time = datetime.fromisoformat(self.lists["time"][i])
-            time_stamps.append((cur_time - initial_time).total_seconds())
+                timestamps = self.__get_relative_timestamps()
+                
+                if self.lists[l] != [] and l != "time":
+                    no_data = False
+                    short_path = f"data_graphs/comparison"
+                    file_path = os.path.join(os.getcwd(), short_path)
+                    Path(file_path).mkdir(parents=True, exist_ok=True)
+            
+                    plt.grid(True, 'both', 'y')
+                    plt.xlabel("time [s]")
+                    plt.minorticks_on()
+                    
+                    if l == "bytes_recv":
+                        values = self.lists[l]
+                        
+                        unit = self.__get_unit(max_bytes_recv)
+                        plt.ylabel(f"total bytes (received) [{unit}]")
+                            
+                        tmp_max = max_bytes_recv
+                        while tmp_max > 1024:
+                            for v in range(len(values)):
+                                values[v] = values[v] / 1024
+                            tmp_max = tmp_max / 1024
+                        
+                        plt.xlim([0, max(timestamps)])
+                        plt.ylim([0, tmp_max + 0.05 * tmp_max])
+                        
+                        plt.plot(timestamps, values)
+                    elif l == "bytes_sent":
+                        values = self.lists[l]
+                        
+                        unit = self.__get_unit(max_bytes_sent)
+                        plt.ylabel(f"total bytes (sent) [{unit}]")
+                        
+                        tmp_max = max_bytes_sent
+                        while tmp_max > 1024:
+                            for v in range(len(values)):
+                                values[v] = values[v] / 1024
+                            tmp_max = tmp_max / 1024
+                                
+                        plt.xlim([0, max(timestamps)])
+                        plt.ylim([0, tmp_max + 0.05 * tmp_max])
+                        
+                        plt.plot(timestamps, values)
+                    elif l == "cpu_percent" or l == "ram_percent":
+                        if l == "cpu_percent":
+                            plt.ylabel("CPU usage [%]")
+                        else:
+                            plt.ylabel("RAM usage [%]")
+                        
+                        plt.xlim([0, max(timestamps)])
+                        plt.ylim([0, 100])
+                        plt.yticks(ticks=range(0, 101, 10))
+                        
+                        plt.plot(timestamps, self.lists[l])
+                    elif l == "pps_recv" or l == "pps_sent":
+                        if l == "pps_recv":
+                            plt.ylabel("packets per second (received)")
+                        else:
+                            plt.ylabel("packets per second (sent)")
+                            
+                        plt.xlim([0, max(timestamps)])
+                        plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
+                        
+                        plt.plot(timestamps, self.lists[l])
+                    else:
+                        plt.plot(timestamps, self.lists[l])
+                                   
+                # reset data lists
+                self.__reset_lists()
+                    
+                if no_data == True:
+                    print("No data. Not printing the graph.")
+            
+            plt.savefig(os.path.join(file_path, l))
+            plt.clf()
+            print(f"File saved as {short_path}/{l}.png.")
+            
+            
+    
+    def __make_graph(self, file_name):
+        self.__reset_lists()
+        self.__fill_lists()
+        timestamps = self.__get_timestamps()
         
         # TODO: Add way to plot multiple graphs into one graphic
         no_data = True
@@ -126,33 +231,33 @@ class DataOutput:
                     else:
                         plt.ylabel(f"total bytes (sent) [{unit}]")
                     
-                    plt.xlim([0, max(time_stamps)])
+                    plt.xlim([0, max(timestamps)])
                     plt.ylim([0, max(values) + 0.05 * max(values)])
                     
-                    plt.plot(time_stamps, values)
+                    plt.plot(timestamps, values)
                 elif l == "cpu_percent" or l == "ram_percent":
                     if l == "cpu_percent":
                         plt.ylabel("CPU usage [%]")
                     else:
                         plt.ylabel("RAM usage [%]")
                     
-                    plt.xlim([0, max(time_stamps)])
+                    plt.xlim([0, max(timestamps)])
                     plt.ylim([0, 100])
                     plt.yticks(ticks=range(0, 101, 10))
                     
-                    plt.plot(time_stamps, self.lists[l])
+                    plt.plot(timestamps, self.lists[l])
                 elif l == "pps_recv" or l == "pps_sent":
                     if l == "pps_recv":
                         plt.ylabel("packets per second (received)")
                     else:
                         plt.ylabel("packets per second (sent)")
                         
-                    plt.xlim([0, max(time_stamps)])
+                    plt.xlim([0, max(timestamps)])
                     plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
                     
-                    plt.plot(time_stamps, self.lists[l])
+                    plt.plot(timestamps, self.lists[l])
                 else:
-                    plt.plot(time_stamps, self.lists[l])
+                    plt.plot(timestamps, self.lists[l])
                 
                 plt.savefig(os.path.join(file_path, l))
                 plt.clf()
@@ -168,7 +273,42 @@ class DataOutput:
     def __reset_lists(self):
         for l in self.lists:
             self.lists[l] = []
+           
+    def __fill_lists(self):
+        for i in range(len(self.data["data"])):
+            self.lists["time"].append(self.__get_time_stamp(i))
+            if self.cpu_percent == True: self.lists["cpu_percent"].append(self.__get_cpu_percent(i))
+            if self.ram_percent == True: self.lists["ram_percent"].append(self.__get_ram_percent(i))
+            if self.bytes_recv == True: self.lists["bytes_recv"].append(self.__get_bytes_recv(i))
+            if self.bytes_sent == True: self.lists["bytes_sent"].append(self.__get_bytes_sent(i))
+            if self.pps_recv == True: self.lists["pps_recv"].append(self.__get_pps_recv(i))
+            if self.pps_sent == True: self.lists["pps_sent"].append(self.__get_pps_sent(i))
+ 
+    def __get_timestamps(self):
+        # get the times as difference from the initial time
+        timestamps = [0]
+        initial_time = datetime.fromisoformat(self.lists["time"][0])
+        for i in range(1, len(self.lists["time"])):
+            cur_time = datetime.fromisoformat(self.lists["time"][i])
+            timestamps.append((cur_time - initial_time).total_seconds())
             
+        return timestamps
+    
+    def __get_relative_timestamps(self):
+        # get the times as difference from the initial time
+        timestamps = [0]
+        
+        min_time = min(self.lists["time"])
+        max_time = max(self.lists["time"])
+        
+        initial_time = datetime.fromisoformat(min_time)
+        end_time = datetime.fromisoformat(max_time)
+        for i in range(1, len(self.lists["time"])):
+            cur_time = datetime.fromisoformat(self.lists["time"][i])
+            timestamps.append((cur_time - initial_time).total_seconds() / (end_time - initial_time).total_seconds())
+            
+        return timestamps
+ 
     def __get_unit(self, bytes):
         for unit in ['', 'K', 'M', 'G', 'T', 'P']:
             if bytes < 1024:
@@ -202,43 +342,50 @@ class DataOutput:
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    if len(args) == 0:
-        print("Usage: python3 DataOutput.py [file_path/dir_path]")
-    elif len(args) == 1:
-        path = args[0]
-        # if path is directory
-        if os.path.isdir(path):
-            output = DataOutput()
-            print("Creating graphs for all json files in the directory...")
-            output.make_graphs_for_directory(
-                dir_path=path,
-                cpu_percent=True,
-                ram_percent=True,
-                bytes_recv=True,
-                bytes_sent=True,
-                pps_recv=True,
-                pps_sent=True
-            )
-        # if path is json file
-        elif os.path.isfile(path) and path[-5:] == ".json":
-            output = DataOutput()
-            print("Creating graphs for the file...")
-            output.make_graphs_for_file(
-                file_path=path,
-                cpu_percent=True,
-                ram_percent=True,
-                bytes_recv=True,
-                bytes_sent=True,
-                pps_recv=True,
-                pps_sent=True
-            )
-        # if path other file
-        elif os.path.exists(path):
-            print_err("The given file is not a json file.")
-        # path does not exist
-        else:
-            print_err("The given path does not exist.")
-    else:   # more than one argument
-        # TODO
-        pass
+    
+    # usage for now: python3 DataOutput.py dir_path
+    output = DataOutput()
+    # output.compare_graphs(2)
+    output.compare_graphs(2)
+    
+    
+    # if len(args) == 0:
+    #     print("Usage: python3 DataOutput.py [file_path/dir_path]")
+    # elif len(args) == 1:
+    #     path = args[0]
+    #     # if path is directory
+    #     if os.path.isdir(path):
+    #         output = DataOutput()
+    #         print("Creating graphs for all json files in the directory...")
+    #         output.make_graphs_for_directory(
+    #             dir_path=path,
+    #             cpu_percent=True,
+    #             ram_percent=True,
+    #             bytes_recv=True,
+    #             bytes_sent=True,
+    #             pps_recv=True,
+    #             pps_sent=True
+    #         )
+    #     # if path is json file
+    #     elif os.path.isfile(path) and path[-5:] == ".json":
+    #         output = DataOutput()
+    #         print("Creating graphs for the file...")
+    #         output.make_graphs_for_file(
+    #             file_path=path,
+    #             cpu_percent=True,
+    #             ram_percent=True,
+    #             bytes_recv=True,
+    #             bytes_sent=True,
+    #             pps_recv=True,
+    #             pps_sent=True
+    #         )
+    #     # if path other file
+    #     elif os.path.exists(path):
+    #         print_err("The given file is not a json file.")
+    #     # path does not exist
+    #     else:
+    #         print_err("The given path does not exist.")
+    # else:   # more than one argument
+    #     # TODO
+    #     pass
     
