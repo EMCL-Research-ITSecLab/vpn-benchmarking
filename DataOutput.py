@@ -4,12 +4,13 @@ import matplotlib.ticker as mticker
 import os
 from pathlib import Path
 import sys
+import subprocess
 from datetime import datetime
 from error_messages import print_err
 from error_messages import print_warn
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
-# TODO: import and implement click
+import click
 
 
 class DataOutput:
@@ -59,7 +60,7 @@ class DataOutput:
         
         self.__make_graph(file_name)
     
-    def compare_graphs(self, number_of_files):
+    def compare_graphs(self, path, number_of_files):
         max_number_of_files = 6
         if number_of_files < 2 or number_of_files > max_number_of_files:
             print_err(f"Number of files too large! You can enter between 2 and {max_number_of_files} files.")
@@ -68,6 +69,12 @@ class DataOutput:
         files = []
         names = []
         
+        try:
+            os.chdir(path)
+        except:
+            print_err("The given path was not found.")
+            return
+            
         for i in range(1, number_of_files + 1):
             file_path = prompt(f"File {i} path: ", completer=PathCompleter())
             files.append(file_path)
@@ -200,9 +207,7 @@ class DataOutput:
             plt.legend()
             plt.savefig(os.path.join(file_path, l))
             plt.clf()
-            print(f"File saved as {short_path}/{l}.png.")
-            
-            
+            print(f"File saved as {short_path}/{l}.png.")       
     
     def __make_graph(self, file_name):
         self.__reset_lists()
@@ -344,52 +349,54 @@ class DataOutput:
     def __get_pps_sent(self, entry):
         return self.data["data"][entry]["network"][0]["pps_sent"]
 
+
+@click.command()
+@click.option("--compare", default=0, help="number of files to compare")
+@click.argument("path")
+def cli(compare, path):
+    if compare == 0 or compare == 1:
+        # if path is directory
+        if os.path.isdir(path):
+            output = DataOutput(
+                cpu_percent=True,
+                ram_percent=True,
+                bytes_recv=True,
+                bytes_sent=True,
+                pps_recv=True,
+                pps_sent=True
+            )
+            print("Creating graphs for all json files in the directory...")
+            output.make_graphs_for_directory(path)
+        # if path is json file
+        elif os.path.isfile(path) and path[-5:] == ".json":
+            output = DataOutput(
+                cpu_percent=True,
+                ram_percent=True,
+                bytes_recv=True,
+                bytes_sent=True,
+                pps_recv=True,
+                pps_sent=True
+            )
+            print("Creating graphs for the file...")
+            output.make_graphs_for_file(path)
+        # if path is other file
+        elif os.path.exists(path):
+            print_err("The given file is not a json file.")
+        # path does not exist
+        else:
+            print_err("The given path does not exist.")
+    else:
+        output = DataOutput(
+            cpu_percent=True,
+            ram_percent=True,
+            bytes_recv=True,
+            bytes_sent=True,
+            pps_recv=True,
+            pps_sent=True
+        )
+        output.compare_graphs(path, compare)
+
+
 if __name__ == "__main__":
-    args = sys.argv[1:]
-    
-    # usage for now: python3 DataOutput.py dir_path
-    output = DataOutput()
-    # output.compare_graphs(2)
-    output.compare_graphs(2)
-    
-    
-    # if len(args) == 0:
-    #     print("Usage: python3 DataOutput.py [file_path/dir_path]")
-    # elif len(args) == 1:
-    #     path = args[0]
-    #     # if path is directory
-    #     if os.path.isdir(path):
-    #         output = DataOutput()
-    #         print("Creating graphs for all json files in the directory...")
-    #         output.make_graphs_for_directory(
-    #             dir_path=path,
-    #             cpu_percent=True,
-    #             ram_percent=True,
-    #             bytes_recv=True,
-    #             bytes_sent=True,
-    #             pps_recv=True,
-    #             pps_sent=True
-    #         )
-    #     # if path is json file
-    #     elif os.path.isfile(path) and path[-5:] == ".json":
-    #         output = DataOutput()
-    #         print("Creating graphs for the file...")
-    #         output.make_graphs_for_file(
-    #             file_path=path,
-    #             cpu_percent=True,
-    #             ram_percent=True,
-    #             bytes_recv=True,
-    #             bytes_sent=True,
-    #             pps_recv=True,
-    #             pps_sent=True
-    #         )
-    #     # if path other file
-    #     elif os.path.exists(path):
-    #         print_err("The given file is not a json file.")
-    #     # path does not exist
-    #     else:
-    #         print_err("The given path does not exist.")
-    # else:   # more than one argument
-    #     # TODO
-    #     pass
+    cli()
     
