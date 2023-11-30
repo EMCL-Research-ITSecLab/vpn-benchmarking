@@ -355,9 +355,9 @@ class DataOutput:
 def cli(compare, path):
     questions = [
         inquirer.Checkbox("values",
-                        message="What graphs should be created?",
-                        choices=['all', 'cpu_percent', 'ram_percent', 'bytes_recv', 'bytes_sent', 'pps_recv', 'pps_sent'],
-                    ),
+            message="What graphs should be created?",
+            choices=['all', 'cpu_percent', 'ram_percent', 'bytes_recv', 'bytes_sent', 'pps_recv', 'pps_sent'],
+        ),
     ]
     answers = inquirer.prompt(questions)
     
