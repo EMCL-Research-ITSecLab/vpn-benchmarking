@@ -3,14 +3,13 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import os
 from pathlib import Path
-import sys
-import subprocess
 from datetime import datetime
 from error_messages import print_err
 from error_messages import print_warn
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
 import click
+import inquirer
 
 
 class DataOutput:
@@ -354,28 +353,39 @@ class DataOutput:
 @click.option("--compare", default=0, help="number of files to compare")
 @click.argument("path")
 def cli(compare, path):
+    questions = [
+        inquirer.Checkbox("values",
+                        message="What graphs should be created?",
+                        choices=['all', 'cpu_percent', 'ram_percent', 'bytes_recv', 'bytes_sent', 'pps_recv', 'pps_sent'],
+                    ),
+    ]
+    answers = inquirer.prompt(questions)
+    
+    if "all" in answers["values"]:
+        all = True
+    
     if compare == 0 or compare == 1:
         # if path is directory
         if os.path.isdir(path):
             output = DataOutput(
-                cpu_percent=True,
-                ram_percent=True,
-                bytes_recv=True,
-                bytes_sent=True,
-                pps_recv=True,
-                pps_sent=True
+                cpu_percent="cpu_percent" in answers["values"] or all,
+                ram_percent="ram_percent" in answers["values"] or all,
+                bytes_recv="bytes_recv" in answers["values"] or all,
+                bytes_sent="bytes_sent" in answers["values"] or all,
+                pps_recv="pps_recv" in answers["values"] or all,
+                pps_sent="pps_sent" in answers["values"] or all
             )
             print("Creating graphs for all json files in the directory...")
             output.make_graphs_for_directory(path)
         # if path is json file
         elif os.path.isfile(path) and path[-5:] == ".json":
             output = DataOutput(
-                cpu_percent=True,
-                ram_percent=True,
-                bytes_recv=True,
-                bytes_sent=True,
-                pps_recv=True,
-                pps_sent=True
+                cpu_percent="cpu_percent" in answers["values"] or all,
+                ram_percent="ram_percent" in answers["values"] or all,
+                bytes_recv="bytes_recv" in answers["values"] or all,
+                bytes_sent="bytes_sent" in answers["values"] or all,
+                pps_recv="pps_recv" in answers["values"] or all,
+                pps_sent="pps_sent" in answers["values"] or all
             )
             print("Creating graphs for the file...")
             output.make_graphs_for_file(path)
@@ -385,16 +395,18 @@ def cli(compare, path):
         # path does not exist
         else:
             print_err("The given path does not exist.")
-    else:
+    elif compare >= 2:
         output = DataOutput(
-            cpu_percent=True,
-            ram_percent=True,
-            bytes_recv=True,
-            bytes_sent=True,
-            pps_recv=True,
-            pps_sent=True
+            cpu_percent="cpu_percent" in answers["values"] or all,
+                ram_percent="ram_percent" in answers["values"] or all,
+                bytes_recv="bytes_recv" in answers["values"] or all,
+                bytes_sent="bytes_sent" in answers["values"] or all,
+                pps_recv="pps_recv" in answers["values"] or all,
+                pps_sent="pps_sent" in answers["values"] or all
         )
         output.compare_graphs(path, compare)
+    else:
+        return
 
 
 if __name__ == "__main__":
