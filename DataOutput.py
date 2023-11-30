@@ -398,11 +398,11 @@ def cli(compare, path):
     elif compare >= 2:
         output = DataOutput(
             cpu_percent="cpu_percent" in answers["values"] or all,
-                ram_percent="ram_percent" in answers["values"] or all,
-                bytes_recv="bytes_recv" in answers["values"] or all,
-                bytes_sent="bytes_sent" in answers["values"] or all,
-                pps_recv="pps_recv" in answers["values"] or all,
-                pps_sent="pps_sent" in answers["values"] or all
+            ram_percent="ram_percent" in answers["values"] or all,
+            bytes_recv="bytes_recv" in answers["values"] or all,
+            bytes_sent="bytes_sent" in answers["values"] or all,
+            pps_recv="pps_recv" in answers["values"] or all,
+            pps_sent="pps_sent" in answers["values"] or all
         )
         output.compare_graphs(path, compare)
     else:
