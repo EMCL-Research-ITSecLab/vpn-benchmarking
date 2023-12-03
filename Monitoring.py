@@ -61,7 +61,7 @@ class Monitoring:
 
     def __get_cpu_percent(self):
         return psutil.cpu_times_percent()[0]
-    
+
     def __get_ram_percent(self):
         return psutil.virtual_memory()[2]
 
