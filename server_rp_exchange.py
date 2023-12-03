@@ -2,7 +2,7 @@ from Monitoring import Monitoring
 from HTTPExchange import HTTPExchange
 
 
-if __name__ == "__main__":        
+if __name__ == "__main__":
     monitor = Monitoring("server_rp_exchange")
     server = HTTPExchange.OnServer()
 
