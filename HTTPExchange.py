@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import subprocess
 import pycurl
-from error_messages import print_err
+from error_messages import print_err, print_warn
 
 
 host_name = "localhost"
@@ -98,7 +98,11 @@ class HTTPExchange:
                 print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            print(f"Generating {iterations} rosenpass and wireguard keys for server...")
+            if iterations < 2:
+                # TODO: Implement for one key
+                return
+            
+            print(f"Generating {iterations} rosenpass and wireguard keys for server... ", end='')
 
             home_path = os.getcwd()
             os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
@@ -113,8 +117,13 @@ class HTTPExchange:
                 os.system(
                     f"rp pubkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public"
                 )
+            
+            print("done.")
 
         # TODO: Add function to send the keys via ssh
+        def __send_public_keys_to_host(self, host):
+            exchange = HTTPExchange()
+            # exchange.send_file_to_host("rp-exchange/rp-keys/server-public", )
 
         def __count_rp_keys(self):
             exchange = HTTPExchange()
@@ -220,7 +229,7 @@ class HTTPExchange:
                 print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            print(f"Generating {iterations} rosenpass and wireguard keys for client...")
+            print(f"Generating {iterations} rosenpass and wireguard keys for client... ", end='')
 
             home_path = os.getcwd()
             os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
@@ -244,6 +253,8 @@ class HTTPExchange:
                         f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
                     ]
                 )
+            
+            print("done.")
 
         def __count_rp_keys(self):
             exchange = HTTPExchange()
@@ -304,5 +315,5 @@ class HTTPExchange:
             )
         except:
             print_err(
-                "SSH Connection to send files could not be established. Check if the needed SSH keys are set up."
+                "SSH connection to send files could not be established. Check if the needed SSH keys are set up."
             )
