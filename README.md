@@ -1,5 +1,8 @@
 # rosenpass-benchmarking
 
+This project aims to measure and compare the performance overhead of using a post-quantum-secure Rosenpass VPN connection and to visualize the resulting data.
+
+For setting up the environment, you can use ansible files:
 For usage, the working directory must include a file `hosts` with the following content:
 ```
 [server_name] ansible_host=[server_ip] ansible_user=[server_user]
