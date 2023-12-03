@@ -198,7 +198,7 @@ class HTTPExchange:
                                 "dev",
                                 "rosenpass0",
                             ],
-                            stderr=subprocess.PIPE,
+                            stderr=subprocess.PIPE
                         )
                         break
                     except:
@@ -287,3 +287,10 @@ class HTTPExchange:
                 return -1
 
         return s_pub_count
+
+    def send_file_to_host(self, file, user, receiver, target_path):
+        try:
+            subprocess.check_output(["scp", file, f"{user}@{receiver}:{target_path}"], stderr=subprocess.PIPE)
+        except:
+            print_err("SSH Connection to send files could not be established. Check if the needed SSH keys are set up.")
+        
