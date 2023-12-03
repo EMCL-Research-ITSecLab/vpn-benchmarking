@@ -1,6 +1,5 @@
 import json
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
 import os
 from pathlib import Path
 from datetime import datetime

@@ -1,0 +1,15 @@
+{
+  "hosts": [
+    {
+      "role": "server",
+      "ip_addr": "ip",
+      "port": "port",
+      "user": "user"
+    },
+    {
+      "role": "client",
+      "ip_addr": "testip",
+      "user": "test"
+    }
+  ]
+}
