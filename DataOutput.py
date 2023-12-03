@@ -90,7 +90,7 @@ class DataOutput:
         self.__reset_lists()
         max_bytes_recv = 0
         max_bytes_sent = 0
-        
+
         for l in self.lists:
             # skip this iteration for all values that we will not compute a graph for
             if l == "time":
@@ -168,7 +168,9 @@ class DataOutput:
                 short_path = f"data_graphs/comparison"
                 full_path = os.path.join(os.getcwd(), short_path)
 
-                if self.lists[l] != [] and l != "time":     	# make sure the file contains data that is not timestamps
+                if (
+                    self.lists[l] != [] and l != "time"
+                ):  # make sure the file contains data that is not timestamps
                     data_exists = True
                     Path(full_path).mkdir(parents=True, exist_ok=True)
 
@@ -430,7 +432,7 @@ def cli(compare, path):
             ],
         ),
     ]
-    
+
     answers = inquirer.prompt(questions)
     # check if no boxes are checked
     if answers == None:
