@@ -198,7 +198,7 @@ class HTTPExchange:
                                 "dev",
                                 "rosenpass0",
                             ],
-                            stderr=subprocess.PIPE
+                            stderr=subprocess.PIPE,
                         )
                         break
                     except:
@@ -229,12 +229,20 @@ class HTTPExchange:
                 formatted_number = "{num:0>{len}}".format(
                     num=i + 1, len=len(str(iterations + 1))
                 )
-                # TODO: Change os.system to subprocess.run
-                os.system(
-                    f"rp genkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret"
+                subprocess.run(
+                    [
+                        "rp",
+                        "genkey",
+                        f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                    ]
                 )
-                os.system(
-                    f"rp pubkey rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public"
+                subprocess.run(
+                    [
+                        "rp",
+                        "pubkey",
+                        f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                        f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                    ]
                 )
 
         def __count_rp_keys(self):
@@ -290,7 +298,11 @@ class HTTPExchange:
 
     def send_file_to_host(self, file, user, receiver, target_path):
         try:
-            subprocess.check_output(["scp", file, f"{user}@{receiver}:{target_path}"], stderr=subprocess.PIPE)
+            subprocess.check_output(
+                ["scp", file, f"{user}@{receiver}:{target_path}"],
+                stderr=subprocess.PIPE,
+            )
         except:
-            print_err("SSH Connection to send files could not be established. Check if the needed SSH keys are set up.")
-        
+            print_err(
+                "SSH Connection to send files could not be established. Check if the needed SSH keys are set up."
+            )
