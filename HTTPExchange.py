@@ -28,9 +28,8 @@ class HTTPExchange:
                 )
                 return
 
-            subprocess.run(
-                ["sudo", "echo"], stdout=subprocess.PIPE
-            )  # enter sudo so it does not ask during the next commands
+            # enter sudo so it does not ask during the next commands
+            subprocess.run(["sudo", "echo"], stdout=subprocess.PIPE)
 
             for i in range(iterations):
                 print("starting iteration", i, "with key", i + 1)
