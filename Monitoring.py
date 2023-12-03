@@ -12,12 +12,9 @@ class Monitoring:
     def __init__(self, name) -> None:
         self.data_handler = DataHandling(name)
 
-        self.cpu_percent = self.HardwareValue(psutil.cpu_times_percent, 0)
-        self.ram_percent = self.HardwareValue(psutil.virtual_memory, 2)
         self.initial_bytes_sent = psutil.net_io_counters().bytes_sent
         self.initial_bytes_recv = psutil.net_io_counters().bytes_recv
-        self.pps_sent = 0
-        self.pps_recv = 0
+        self.pps_sent, self.pps_recv = 0, 0
 
     def start(self, auto=True, interval=0.1):
         self.interval = interval
@@ -40,8 +37,8 @@ class Monitoring:
         self.data_handler.add_data(
             name=name,
             time=datetime.datetime.now(),
-            cpu_perc=self.cpu_percent.get(),
-            ram_perc=self.ram_percent.get(),
+            cpu_perc=self.__get_cpu_percent(),
+            ram_perc=self.__get_ram_percent(),
             pps_sent=self.pps_sent,
             pps_recv=self.pps_recv,
             bytes_sent=self.__get_upload_bytes(),
@@ -53,8 +50,8 @@ class Monitoring:
             self.data_handler.add_data(
                 name="automatic poll",
                 time=datetime.datetime.now(),
-                cpu_perc=self.cpu_percent.get(),
-                ram_perc=self.ram_percent.get(),
+                cpu_perc=self.__get_cpu_percent(),
+                ram_perc=self.__get_ram_percent(),
                 pps_sent=self.pps_sent,
                 pps_recv=self.pps_recv,
                 bytes_sent=self.__get_upload_bytes(),
@@ -62,12 +59,11 @@ class Monitoring:
             )
             time.sleep(self.interval)
 
-    # might be useful for later
-    def __format_bytes(self, bytes):
-        for unit in ["", "K", "M", "G", "T", "P"]:
-            if bytes < 1024:
-                return f"{bytes:.2f} {unit}B     "
-            bytes = bytes / 1024
+    def __get_cpu_percent(self):
+        return psutil.cpu_times_percent()[0]
+    
+    def __get_ram_percent(self):
+        return psutil.virtual_memory()[2]
 
     def __get_upload_bytes(self):
         return psutil.net_io_counters().bytes_sent - self.initial_bytes_sent
@@ -90,19 +86,3 @@ class Monitoring:
             self.pps_recv = int(
                 (psutil.net_io_counters().packets_recv - before) / self.interval
             )
-
-    class HardwareValue:
-        def __init__(self, func, attr) -> None:
-            self.function = func
-            self.attribute = attr
-            self.sum = 0
-            self.iterations = 1
-
-        def get(self):
-            value = self.function()[self.attribute]
-
-            if self.iterations >= 1:
-                self.sum += value
-
-            self.iterations += 1
-            return value
