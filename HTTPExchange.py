@@ -36,10 +36,10 @@ class HTTPExchange:
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret")
                 client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public")
-                proc = subprocess.Popen(['sudo', 'rp', 'exchange', server_key_path, 'dev', 'rosenpass0', 'listen', 'localhost:9999', 'peer', client_key_path, 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
+                proc = subprocess.Popen(['sudo', 'rp', 'exchange', server_key_path, 'dev', 'rosenpass0', 'listen', f'{host_name}:{port}', 'peer', client_key_path, 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
 
                 # try to add an ip address
-                j = 10      # number of attempts
+                j = 1000      # number of attempts
                 while j > 0:
                     try:
                         subprocess.check_output(['sudo', 'ip', 'a', 'add', 'fe80::1/64', 'dev', 'rosenpass0'], stderr=subprocess.PIPE)
@@ -95,6 +95,8 @@ class HTTPExchange:
                 except:
                     continue
 
+        # when having errors try "sudo ip addr flush dev rosenpass0"
+
         def run_with_rp(self, monitor):
             # check if the number of keys is consistent
             iterations = self.__count_rp_keys()
@@ -105,16 +107,15 @@ class HTTPExchange:
             
             subprocess.run(['sudo', 'echo'], stdout=subprocess.PIPE)    # enter sudo so it does not ask during the next commands
 
-            # TODO: Change localhost to the servers actual ip address
             for i in range(iterations):
                 print("starting iteration", i, "with key", i+1)
                 formatted_number = '{num:0>{len}}'.format(num=i + 1, len=len(str(iterations + 1)))
                 client_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret")
                 server_key_path = os.path.join(os.getcwd(), f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public")
-                proc = subprocess.Popen(['sudo', 'rp', 'exchange', client_key_path, 'dev', 'rosenpass0', 'peer', server_key_path, 'endpoint', 'localhost:9999', 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
+                proc = subprocess.Popen(['sudo', 'rp', 'exchange', client_key_path, 'dev', 'rosenpass0', 'peer', server_key_path, 'endpoint', f'{host_name}:{port}', 'allowed-ips', 'fe80::/64'], stdout=subprocess.PIPE)
 
                 # try to add an ip address
-                j = 10      # number of attempts
+                j = 1000      # number of attempts
                 while j > 0:
                     try:
                         subprocess.check_output(['sudo', 'ip', 'a', 'add', 'fe80::2/64', 'dev', 'rosenpass0'], stderr=subprocess.PIPE)
