@@ -69,7 +69,7 @@ def cli(server, client):
         correct_data = False
 
         file = open("data/hosts.json")
-        try: 
+        try:
             existing_data = json.load(file)
             # check what data the old file contains
             for e in existing_data["hosts"]:
@@ -80,7 +80,7 @@ def cli(server, client):
                     client_data_exists = True
                 else:
                     other_data_exists = True
-        except:   
+        except:
             existing_data = {}
             if correct_data:
                 if not click.confirm("Delete existing file?"):
@@ -93,49 +93,82 @@ def cli(server, client):
             print_warn('The file "hosts.json" already exists.')
             if other_data_exists:
                 questions = [
-                    inquirer.List('keep',
-                        choices=['keep existing file and do not update the information', 'keep existing data and update server and client information', 'delete existing data and update server and client information'],
+                    inquirer.List(
+                        "keep",
+                        choices=[
+                            "keep existing file and do not update the information",
+                            "keep existing data and update server and client information",
+                            "delete existing data and update server and client information",
+                        ],
                     ),
                 ]
                 answers = inquirer.prompt(questions)
-                if answers != None: 
-                    if answers["keep"] == 'keep existing file and do not update the information':
+                if answers != None:
+                    if (
+                        answers["keep"]
+                        == "keep existing file and do not update the information"
+                    ):
                         print("The information was not updated.")
                         return
-                    elif answers["keep"] == 'keep existing data and update server and client information':
+                    elif (
+                        answers["keep"]
+                        == "keep existing data and update server and client information"
+                    ):
                         for e in existing_data["hosts"]:
                             if e["role"] != "server" and e["role"] != "client":
                                 hosts["hosts"].append(e)
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}.")
-                        print(f"The client's information was updated to {c_user}@{c_ip_addr}.")
-                    elif answers["keep"] == 'delete existing data and update server and client information':
+                        print(
+                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                        )
+                        print(
+                            f"The client's information was updated to {c_user}@{c_ip_addr}."
+                        )
+                    elif (
+                        answers["keep"]
+                        == "delete existing data and update server and client information"
+                    ):
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}.")
-                        print(f"The client's information was updated to {c_user}@{c_ip_addr}.")
+                        print(
+                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                        )
+                        print(
+                            f"The client's information was updated to {c_user}@{c_ip_addr}."
+                        )
                     else:
                         return
             else:
                 questions = [
-                    inquirer.List('keep',
-                        choices=['keep existing file and do not update the information', 'update server and client information'],
+                    inquirer.List(
+                        "keep",
+                        choices=[
+                            "keep existing file and do not update the information",
+                            "update server and client information",
+                        ],
                     ),
                 ]
-                answers = inquirer.prompt(questions)  
-                if answers != None: 
-                    if answers["keep"] == 'keep existing file and do not update the information':
+                answers = inquirer.prompt(questions)
+                if answers != None:
+                    if (
+                        answers["keep"]
+                        == "keep existing file and do not update the information"
+                    ):
                         print("The information was not updated.")
                         return
-                    elif answers["keep"] == 'update server and client information':
+                    elif answers["keep"] == "update server and client information":
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}.")
-                        print(f"The client's information was updated to {c_user}@{c_ip_addr}.")
+                        print(
+                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                        )
+                        print(
+                            f"The client's information was updated to {c_user}@{c_ip_addr}."
+                        )
                     else:
                         return
         # case 2: only one entry exists
@@ -143,92 +176,146 @@ def cli(server, client):
             print_warn('The file "hosts.json" already exists.')
             if other_data_exists:
                 questions = [
-                    inquirer.List('keep',
-                        choices=['keep existing file and do not update the information', 'keep existing data and update server information', 'delete existing data and update server information'],
+                    inquirer.List(
+                        "keep",
+                        choices=[
+                            "keep existing file and do not update the information",
+                            "keep existing data and update server information",
+                            "delete existing data and update server information",
+                        ],
                     ),
                 ]
                 answers = inquirer.prompt(questions)
-                if answers != None: 
-                    if answers["keep"] == 'keep existing file and do not update the information':
+                if answers != None:
+                    if (
+                        answers["keep"]
+                        == "keep existing file and do not update the information"
+                    ):
                         print("The information was not updated.")
                         return
-                    elif answers["keep"] == 'keep existing data and update server information':
+                    elif (
+                        answers["keep"]
+                        == "keep existing data and update server information"
+                    ):
                         for e in existing_data["hosts"]:
                             if e["role"] != "server":
                                 hosts["hosts"].append(e)
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}.")
-                    elif answers["keep"] == 'delete existing data and update server information':
+                        print(
+                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                        )
+                    elif (
+                        answers["keep"]
+                        == "delete existing data and update server information"
+                    ):
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}.")
+                        print(
+                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                        )
                     else:
                         return
             else:
                 questions = [
-                    inquirer.List('keep',
-                        choices=['keep existing file and do not update the information', 'update server information'],
+                    inquirer.List(
+                        "keep",
+                        choices=[
+                            "keep existing file and do not update the information",
+                            "update server information",
+                        ],
                     ),
                 ]
-                answers = inquirer.prompt(questions)  
-                if answers != None: 
-                    if answers["keep"] == 'keep existing file and do not update the information':
+                answers = inquirer.prompt(questions)
+                if answers != None:
+                    if (
+                        answers["keep"]
+                        == "keep existing file and do not update the information"
+                    ):
                         print("The information was not updated.")
                         return
-                    elif answers["keep"] == 'update server information':
+                    elif answers["keep"] == "update server information":
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}.")
+                        print(
+                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                        )
                     else:
                         return
         elif client_data_exists:
             print_warn('The file "hosts.json" already exists.')
             if other_data_exists:
                 questions = [
-                    inquirer.List('keep',
-                        choices=['keep existing file and do not update the information', 'keep existing data and update client information', 'delete existing data and update client information'],
+                    inquirer.List(
+                        "keep",
+                        choices=[
+                            "keep existing file and do not update the information",
+                            "keep existing data and update client information",
+                            "delete existing data and update client information",
+                        ],
                     ),
                 ]
                 answers = inquirer.prompt(questions)
-                if answers != None: 
-                    if answers["keep"] == 'keep existing file and do not update the information':
+                if answers != None:
+                    if (
+                        answers["keep"]
+                        == "keep existing file and do not update the information"
+                    ):
                         print("The information was not updated.")
                         return
-                    elif answers["keep"] == 'keep existing data and update client information':
+                    elif (
+                        answers["keep"]
+                        == "keep existing data and update client information"
+                    ):
                         for e in existing_data["hosts"]:
                             if e["role"] != "client":
                                 hosts["hosts"].append(e)
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The client's information was updated to {c_user}@{c_ip_addr}.")
-                    elif answers["keep"] == 'delete existing data and update client information':
+                        print(
+                            f"The client's information was updated to {c_user}@{c_ip_addr}."
+                        )
+                    elif (
+                        answers["keep"]
+                        == "delete existing data and update client information"
+                    ):
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The client's information was updated to {c_user}@{c_ip_addr}.")
+                        print(
+                            f"The client's information was updated to {c_user}@{c_ip_addr}."
+                        )
                     else:
                         return
             else:
                 questions = [
-                    inquirer.List('keep',
-                        choices=['keep existing file and do not update the information', 'update client information'],
+                    inquirer.List(
+                        "keep",
+                        choices=[
+                            "keep existing file and do not update the information",
+                            "update client information",
+                        ],
                     ),
                 ]
-                answers = inquirer.prompt(questions)  
-                if answers != None: 
-                    if answers["keep"] == 'keep existing file and do not update the information':
+                answers = inquirer.prompt(questions)
+                if answers != None:
+                    if (
+                        answers["keep"]
+                        == "keep existing file and do not update the information"
+                    ):
                         print("The information was not updated.")
                         return
-                    elif answers["keep"] == 'update client information':
+                    elif answers["keep"] == "update client information":
                         os.remove("data/hosts.json")
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
-                        print(f"The client's information was updated to {c_user}@{c_ip_addr}.")
+                        print(
+                            f"The client's information was updated to {c_user}@{c_ip_addr}."
+                        )
                     else:
                         return
         # case 3: no entries exist
