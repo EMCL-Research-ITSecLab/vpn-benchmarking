@@ -2,6 +2,13 @@
 
 This project aims to measure and compare the performance overhead of using a post-quantum-secure Rosenpass VPN connection and to visualize the resulting data.
 
+## Usage
+Start by executing
+```
+python set_hosts.py --server [user]@[ip_address]:[port] --client [user]@[ip_address]
+```
+to set the hosts.
+
 For setting up the environment, you can use ansible files:
 For usage, the working directory must include a file `hosts` with the following content:
 ```
