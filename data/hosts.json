@@ -2,14 +2,15 @@
   "hosts": [
     {
       "role": "server",
-      "ip_addr": "ip",
-      "port": "port",
-      "user": "user"
+      "ip_addr": "3215up",
+      "port": "0983245",
+      "user": "useasdjto"
     },
     {
-      "role": "client",
-      "ip_addr": "testip",
-      "user": "test"
+      "role": "other",
+      "ip_addr": "3215up",
+      "port": "0983245",
+      "user": "useasdjto"
     }
   ]
 }
