@@ -3,18 +3,28 @@ import os
 import subprocess
 import pycurl
 from error_messages import print_err, print_warn
+import json
 
-
-host_name = "localhost"
-port = 9999
 
 
 class HTTPExchange:
     class OnServer:
+        def __init__(self) -> None:
+            try:
+                file = open("data/hosts.json", "r")
+                hosts = json.load(file)
+                for e in hosts["hosts"]:
+                    if e["role"] == "server":
+                        self.host_name = e["ip_addr"]
+                        self.port = e["port"]
+            except:
+                print_err('File "hosts.json" does not exist. Create the file using set_hosts.py.')
+                return
+        
         def run(self, reps, monitor):
             for _ in range(reps):
                 monitor.poll("onServer: before creating server")
-                server = HTTPServer((host_name, port), HTTPExchange.OnServer.Server)
+                server = HTTPServer((self.host_name, self.port), HTTPExchange.OnServer.Server)
                 server.handle_request()
                 server.server_close()
 
@@ -53,7 +63,7 @@ class HTTPExchange:
                         "dev",
                         "rosenpass0",
                         "listen",
-                        f"{host_name}:{port}",
+                        f"{self.host_name}:{self.port}",
                         "peer",
                         client_key_path,
                         "allowed-ips",
@@ -135,12 +145,24 @@ class HTTPExchange:
                 self.end_headers()
 
     class OnClient:
+        def __init__(self) -> None:
+            try:
+                file = open("data/hosts.json", "r")
+                hosts = json.load(file)
+                for e in hosts["hosts"]:
+                    if e["role"] == "server":
+                        self.host_name = e["ip_addr"]
+                        self.port = e["port"]
+            except:
+                print_err('File "hosts.json" does not exist. Create the file using set_hosts.py.')
+                return
+        
         def run(self, reps, monitor):
             i = reps
             while i > 0:
                 try:
                     monitor.poll("onClient: before connecting")
-                    self.__http_get(f"http://{host_name}:{port}")
+                    self.__http_get(f"http://{self.host_name}:{self.port}")
                     i -= 1
                 # in case the server was not ready yet
                 except:
@@ -186,7 +208,7 @@ class HTTPExchange:
                         "peer",
                         server_key_path,
                         "endpoint",
-                        f"{host_name}:{port}",
+                        f"{self.host_name}:{self.port}",
                         "allowed-ips",
                         "fe80::/64",
                     ],
