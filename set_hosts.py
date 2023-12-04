@@ -71,7 +71,7 @@ def cli(server, client):
         file = open("data/hosts.json")
         try:
             existing_data = json.load(file)
-            # check what data the old file contains
+            # check what data the existing file contains
             for e in existing_data["hosts"]:
                 correct_data = True
                 if e["role"] == "server":
@@ -85,8 +85,6 @@ def cli(server, client):
             if correct_data:
                 if not click.confirm("Delete existing file?"):
                     return
-            else:
-                return
 
         # case 1: both entries exist
         if server_data_exists and client_data_exists:
