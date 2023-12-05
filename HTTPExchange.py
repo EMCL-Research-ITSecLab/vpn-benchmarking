@@ -118,6 +118,7 @@ class HTTPExchange:
             print(
                 f"Generating {iterations} rosenpass and wireguard keys for server... ",
                 end="",
+                flush=True,
             )
 
             home_path = os.getcwd()
@@ -262,6 +263,7 @@ class HTTPExchange:
             print(
                 f"Generating {iterations} rosenpass and wireguard keys for client... ",
                 end="",
+                flush=True,
             )
 
             home_path = os.getcwd()
