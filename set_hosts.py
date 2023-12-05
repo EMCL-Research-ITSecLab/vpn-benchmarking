@@ -34,7 +34,7 @@ def cli(server, client):
             s_user = server.split("@")[0]
             server = server.split("@")[1]
             s_ip_addr = server.split(":")[0]
-            s_port = server.split(":")[1]
+            s_port = int(server.split(":")[1])
 
             server = {
                 "role": "server",
@@ -328,6 +328,26 @@ def cli(server, client):
             json.dump(hosts, indent=2, fp=file)
         print(f"The server's information was set to {s_user}@{s_ip_addr}:{s_port}.")
         print(f"The client's information was set to {c_user}@{c_ip_addr}.")
+
+    if os.path.exists("ansible_files/hosts"):
+        if click.confirm(
+            "\nDerive ansible hosts file (this will overwrite the existing file)?"
+        ):
+            derive_ansible_hosts(s_user, s_ip_addr, c_user, c_ip_addr)
+    else:
+        if click.confirm("\nDerive ansible hosts file?"):
+            derive_ansible_hosts(s_user, s_ip_addr, c_user, c_ip_addr)
+
+
+def derive_ansible_hosts(s_user, s_ip_addr, c_user, c_ip_addr):
+    if os.path.exists("ansible_files/hosts"):
+        os.remove("ansible_files/hosts")
+
+    with open("ansible_files/hosts", "a") as file:
+        file.write("[senders]\n")
+        file.write(f"server ansible_host={s_ip_addr} ansible_user={s_user}\n\n")
+        file.write("[receivers]\n")
+        file.write(f"client ansible_host={c_ip_addr} ansible_user={c_user}")
 
 
 if __name__ == "__main__":
