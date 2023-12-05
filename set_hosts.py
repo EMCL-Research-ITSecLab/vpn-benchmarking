@@ -3,6 +3,7 @@ import json
 import os
 from error_messages import print_err, print_warn
 import inquirer
+import subprocess
 
 hosts = {"hosts": []}
 
@@ -350,5 +351,15 @@ def derive_ansible_hosts(s_user, s_ip_addr, c_user, c_ip_addr):
         file.write(f"client ansible_host={c_ip_addr} ansible_user={c_user}")
 
 
+def install_requirements():
+    print("Installing pip requirements... ", end="", flush=True)
+    try:
+        subprocess.check_output(["pip", "install", "-r", "requirements.txt"])
+        print("done.")
+    except:
+        print_err("Could not install requirements.")
+
+
 if __name__ == "__main__":
+    install_requirements()
     cli()
