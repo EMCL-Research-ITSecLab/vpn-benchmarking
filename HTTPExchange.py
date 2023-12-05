@@ -138,9 +138,13 @@ class HTTPExchange:
             print("done.")
 
         # TODO: Add function to send the keys via ssh
-        def __send_public_keys_to_host(self, host):
-            exchange = HTTPExchange()
+        def send_public_keys_to_host(self, remote_path):
+            # with open("data/hosts.json", "r") as file:
+            #     json.load()
+            
+            # exchange = HTTPExchange()
             # exchange.send_file_to_host("rp-exchange/rp-keys/server-public", )
+            pass
 
         def __count_rp_keys(self):
             exchange = HTTPExchange()

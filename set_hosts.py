@@ -3,7 +3,7 @@ import json
 import os
 from error_messages import print_err, print_warn
 import inquirer
-import subprocess
+from pathlib import Path
 
 hosts = {"hosts": []}
 
@@ -87,6 +87,8 @@ def cli(server, client):
                 if not click.confirm("Delete existing file?"):
                     return
 
+        file.close()
+
         # case 1: both entries exist
         if server_data_exists and client_data_exists:
             print_warn('The file "hosts.json" already exists.')
@@ -117,6 +119,7 @@ def cli(server, client):
                             if e["role"] != "server" and e["role"] != "client":
                                 hosts["hosts"].append(e)
                         os.remove("data/hosts.json")
+                        Path("data").mkdir(parents=True, exist_ok=True)
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
@@ -130,6 +133,7 @@ def cli(server, client):
                         == "delete existing data and update server and client information"
                     ):
                         os.remove("data/hosts.json")
+                        Path("data").mkdir(parents=True, exist_ok=True)
                         with open(f"data/hosts.json", "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
@@ -325,6 +329,7 @@ def cli(server, client):
             print(f"The server's information was set to {s_user}@{s_ip_addr}:{s_port}.")
             print(f"The client's information was set to {c_user}@{c_ip_addr}.")
     else:  # file does not exist
+        Path("data").mkdir(parents=True, exist_ok=True)
         with open(f"data/hosts.json", "a") as file:
             json.dump(hosts, indent=2, fp=file)
         print(f"The server's information was set to {s_user}@{s_ip_addr}:{s_port}.")
@@ -344,6 +349,7 @@ def derive_ansible_hosts(s_user, s_ip_addr, c_user, c_ip_addr):
     if os.path.exists("ansible_files/hosts"):
         os.remove("ansible_files/hosts")
 
+    Path("ansible_files").mkdir(parents=True, exist_ok=True)
     with open("ansible_files/hosts", "a") as file:
         file.write("[senders]\n")
         file.write(f"server ansible_host={s_ip_addr} ansible_user={s_user}\n\n")
@@ -351,15 +357,5 @@ def derive_ansible_hosts(s_user, s_ip_addr, c_user, c_ip_addr):
         file.write(f"client ansible_host={c_ip_addr} ansible_user={c_user}")
 
 
-def install_requirements():
-    print("Installing pip requirements... ", end="", flush=True)
-    try:
-        subprocess.check_output(["pip", "install", "-r", "requirements.txt"])
-        print("done.")
-    except:
-        print_err("Could not install requirements.")
-
-
 if __name__ == "__main__":
-    install_requirements()
     cli()
