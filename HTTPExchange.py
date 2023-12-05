@@ -6,7 +6,6 @@ from error_messages import print_err, print_warn
 import json
 
 
-
 class HTTPExchange:
     class OnServer:
         def __init__(self) -> None:
@@ -16,15 +15,19 @@ class HTTPExchange:
                 for e in hosts["hosts"]:
                     if e["role"] == "server":
                         self.host_name = e["ip_addr"]
-                        self.port = e["port"]
+                        self.port = int(e["port"])
             except:
-                print_err('File "hosts.json" does not exist. Create the file using set_hosts.py.')
+                print_err(
+                    'File "hosts.json" does not exist. Create the file using set_hosts.py.'
+                )
                 return
-        
+
         def run(self, reps, monitor):
             for _ in range(reps):
                 monitor.poll("onServer: before creating server")
-                server = HTTPServer((self.host_name, self.port), HTTPExchange.OnServer.Server)
+                server = HTTPServer(
+                    (self.host_name, self.port), HTTPExchange.OnServer.Server
+                )
                 server.handle_request()
                 server.server_close()
 
@@ -111,8 +114,11 @@ class HTTPExchange:
             if iterations < 2:
                 # TODO: Implement for one key
                 return
-            
-            print(f"Generating {iterations} rosenpass and wireguard keys for server... ", end='')
+
+            print(
+                f"Generating {iterations} rosenpass and wireguard keys for server... ",
+                end="",
+            )
 
             home_path = os.getcwd()
             os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
@@ -127,7 +133,7 @@ class HTTPExchange:
                 os.system(
                     f"rp pubkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public"
                 )
-            
+
             print("done.")
 
         # TODO: Add function to send the keys via ssh
@@ -152,11 +158,13 @@ class HTTPExchange:
                 for e in hosts["hosts"]:
                     if e["role"] == "server":
                         self.host_name = e["ip_addr"]
-                        self.port = e["port"]
+                        self.port = int(e["port"])
             except:
-                print_err('File "hosts.json" does not exist. Create the file using set_hosts.py.')
+                print_err(
+                    'File "hosts.json" does not exist. Create the file using set_hosts.py.'
+                )
                 return
-        
+
         def run(self, reps, monitor):
             i = reps
             while i > 0:
@@ -251,7 +259,10 @@ class HTTPExchange:
                 print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            print(f"Generating {iterations} rosenpass and wireguard keys for client... ", end='')
+            print(
+                f"Generating {iterations} rosenpass and wireguard keys for client... ",
+                end="",
+            )
 
             home_path = os.getcwd()
             os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
@@ -275,7 +286,7 @@ class HTTPExchange:
                         f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
                     ]
                 )
-            
+
             print("done.")
 
         def __count_rp_keys(self):
