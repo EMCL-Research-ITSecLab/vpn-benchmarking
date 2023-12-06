@@ -1,5 +1,6 @@
 from Monitoring import Monitoring
 from HTTPExchange import HTTPExchange
+from error_messages import print_err
 
 import click
 
@@ -81,8 +82,11 @@ def server_rp_exchange(iterations, auto=False):
 @click.option("--server", "role", flag_value="server")
 @click.option("--client", "role", flag_value="client")
 @click.option("-i", "--iterations", type=int, default=1, help="number of iterations")
+@click.option(
+    "-d", "--dir", type=str, help="directory to save the keys (only for keysend option)"
+)
 @click.argument("operation", type=str)
-def cli(role, iterations, operation):
+def cli(role, iterations, operation, dir):
     # TODO: Check if hosts file is correct
 
     if role == None:
@@ -91,7 +95,15 @@ def cli(role, iterations, operation):
         if operation == "keygen":
             server_genkeys(iterations)
         elif operation == "keysend":
-            server_share_keys("~")  # TODO: Add option to work in different directory
+            if dir != None:
+                try:
+                    server_share_keys(dir)
+                except:
+                    print_err("Directory could not be reached.")
+            else:
+                print_err(
+                    "Missing directory for the keys on the remote host (use option -d)."
+                )
         elif operation == "novpn":
             server_novpn_exchange(iterations)
         elif operation == "rp":
@@ -102,7 +114,15 @@ def cli(role, iterations, operation):
         if operation == "keygen":
             client_genkeys(iterations)
         elif operation == "keysend":
-            client_share_keys("~")  # TODO: Add option to work in different directory
+            if dir != None:
+                try:
+                    client_share_keys(dir)
+                except:
+                    print_err("Directory could not be reached.")
+            else:
+                print_err(
+                    "Missing directory for the keys on the remote host (use option -d)."
+                )
         elif operation == "novpn":
             client_novpn_exchange(iterations)
         elif operation == "rp":
