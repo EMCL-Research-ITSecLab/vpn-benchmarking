@@ -111,29 +111,57 @@ class HTTPExchange:
                 print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            if iterations < 2:
-                # TODO: Implement for one key
+            # TODO: Implement handling in other classes
+            if iterations == 1:
+                print(
+                    f"Generating rosenpass and wireguard key set for server... ",
+                    end="",
+                    flush=True,
+                )
+
+                home_path = os.getcwd()
+                os.makedirs(
+                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
+                )
+
+                try:
+                    subprocess.check_output(
+                        [
+                            "rp",
+                            "genkey",
+                            "rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
+                        ]
+                    )
+                except:
+                    print_err(
+                        "Something went wrong! Perhaps rosenpass is not installed."
+                    )
+                    return
+            elif iterations > 1:
+                print(
+                    f"Generating {iterations} rosenpass and wireguard key sets for server... ",
+                    end="",
+                    flush=True,
+                )
+
+                home_path = os.getcwd()
+                os.makedirs(
+                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
+                )
+
+                for i in range(iterations):
+                    formatted_number = "{num:0>{len}}".format(
+                        num=i + 1, len=len(str(iterations + 1))
+                    )
+                    os.system(
+                        f"rp genkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret"
+                    )
+                    os.system(
+                        f"rp pubkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public"
+                    )
+            else:
+                print_err("Number of iterations cannot be negative!")
                 return
-
-            print(
-                f"Generating {iterations} rosenpass and wireguard keys for server... ",
-                end="",
-                flush=True,
-            )
-
-            home_path = os.getcwd()
-            os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
-
-            for i in range(iterations):
-                formatted_number = "{num:0>{len}}".format(
-                    num=i + 1, len=len(str(iterations + 1))
-                )
-                os.system(
-                    f"rp genkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret"
-                )
-                os.system(
-                    f"rp pubkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public"
-                )
 
             print("done.")
 
@@ -141,7 +169,7 @@ class HTTPExchange:
         def send_public_keys_to_host(self, remote_path):
             # with open("data/hosts.json", "r") as file:
             #     json.load()
-            
+
             # exchange = HTTPExchange()
             # exchange.send_file_to_host("rp-exchange/rp-keys/server-public", )
             pass

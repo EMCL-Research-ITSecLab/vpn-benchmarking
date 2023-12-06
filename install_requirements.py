@@ -2,7 +2,7 @@ import subprocess
 from error_messages import print_err
 
 
-def install_requirements():
+def install_pip_requirements():
     print("Installing pip requirements... ", end="", flush=True)
     try:
         subprocess.check_output(["pip", "install", "-r", "requirements.txt"])
@@ -12,4 +12,4 @@ def install_requirements():
 
 
 if __name__ == "__main__":
-    install_requirements()
+    install_pip_requirements()

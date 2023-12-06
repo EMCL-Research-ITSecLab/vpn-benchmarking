@@ -75,7 +75,7 @@ def server_rp_exchange(iterations=100, auto=False):
 @click.option("--server", "role", flag_value="server")
 @click.option("--client", "role", flag_value="client")
 @click.option(
-    "-i", "--iterations", required=True, type=int, help="number of iterations"
+    "-i", "--iterations", type=int, default=1, help="number of iterations"
 )
 @click.argument("operation", type=str)
 def cli(role, iterations, operation):
