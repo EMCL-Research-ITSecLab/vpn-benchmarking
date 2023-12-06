@@ -153,12 +153,27 @@ class HTTPExchange:
                     formatted_number = "{num:0>{len}}".format(
                         num=i + 1, len=len(str(iterations + 1))
                     )
-                    os.system(
-                        f"rp genkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret"
-                    )
-                    os.system(
-                        f"rp pubkey rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public"
-                    )
+                    try:
+                        subprocess.check_output(
+                            [
+                                "rp",
+                                "genkey",
+                                f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                            ]
+                        )
+                        subprocess.check_output(
+                            [
+                                "rp",
+                                "pubkey",
+                                f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                                f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
+                            ]
+                        )
+                    except:
+                        print_err(
+                            "Something went wrong! Perhaps rosenpass is not installed."
+                        )
+                        return
             else:
                 print_err("Number of iterations cannot be negative!")
                 return
