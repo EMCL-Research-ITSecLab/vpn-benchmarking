@@ -35,7 +35,7 @@ def set_up_folder_structure(host):
         print_err("Could not install requirements.")
 
 
-@click.command
+@click.command()
 @click.argument("role")
 def cli(role):
     set_up_folder_structure(role)

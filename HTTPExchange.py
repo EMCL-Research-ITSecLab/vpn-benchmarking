@@ -349,6 +349,7 @@ class HTTPExchange:
                 print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
+            # TODO: Analogous to server's gen_keys()
             print(
                 f"Generating {iterations} rosenpass and wireguard keys for client... ",
                 end="",
