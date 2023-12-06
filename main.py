@@ -1,21 +1,22 @@
-from os import error
-import subprocess
-from traitlets import default
 from Monitoring import Monitoring
 from HTTPExchange import HTTPExchange
-from error_messages import print_err
 
 import click
 
 # TODO: Let rp use iterations too
 
 
-def client_genkeys(number=100):
+def client_genkeys(number):
     client = HTTPExchange.OnClient()
     client.gen_keys(number)
 
 
-def client_novpn_exchange(iterations=100, auto=False):
+def client_share_keys(remote_dir):
+    client = HTTPExchange().OnClient()
+    client.send_public_keys_to_server(remote_dir)
+
+
+def client_novpn_exchange(iterations, auto=False):
     monitor = Monitoring("client_novpn")
     client = HTTPExchange.OnClient()
 
@@ -26,7 +27,7 @@ def client_novpn_exchange(iterations=100, auto=False):
     monitor.stop()
 
 
-def client_rp_exchange(iterations=100, auto=False):
+def client_rp_exchange(iterations, auto=False):
     monitor = Monitoring("client_rp_exchange")
     client = HTTPExchange.OnClient()
 
@@ -42,7 +43,12 @@ def server_genkeys(number=100):
     server.gen_keys(number)
 
 
-def server_novpn_exchange(iterations=100, auto=False):
+def server_share_keys(remote_dir):
+    server = HTTPExchange().OnServer()
+    server.send_public_keys_to_client(remote_dir)
+
+
+def server_novpn_exchange(iterations, auto=False):
     monitor = Monitoring("server-novpn")
     server = HTTPExchange.OnServer()
 
@@ -53,7 +59,7 @@ def server_novpn_exchange(iterations=100, auto=False):
     monitor.stop()
 
 
-def server_rp_exchange(iterations=100, auto=False):
+def server_rp_exchange(iterations, auto=False):
     monitor = Monitoring("server-rp")
     server = HTTPExchange.OnServer()
 
@@ -74,9 +80,7 @@ def server_rp_exchange(iterations=100, auto=False):
 @click.command()
 @click.option("--server", "role", flag_value="server")
 @click.option("--client", "role", flag_value="client")
-@click.option(
-    "-i", "--iterations", type=int, default=1, help="number of iterations"
-)
+@click.option("-i", "--iterations", type=int, default=1, help="number of iterations")
 @click.argument("operation", type=str)
 def cli(role, iterations, operation):
     # TODO: Check if hosts file is correct
@@ -84,23 +88,27 @@ def cli(role, iterations, operation):
     if role == None:
         print("Missing option --server/--client for the role of the host.")
     elif role == "server":
-        if operation == "genkeys":
+        if operation == "keygen":
             server_genkeys(iterations)
+        elif operation == "keysend":
+            server_share_keys("~")  # TODO: Add option to work in different directory
         elif operation == "novpn":
             server_novpn_exchange(iterations)
         elif operation == "rp":
             server_rp_exchange(iterations)
         else:
-            print("OPERATION must be genkeys/novpn/rp.")
+            print("OPERATION must be keygen/keysend/novpn/rp.")
     elif role == "client":
-        if operation == "genkeys":
+        if operation == "keygen":
             client_genkeys(iterations)
+        elif operation == "keysend":
+            client_share_keys("~")  # TODO: Add option to work in different directory
         elif operation == "novpn":
             client_novpn_exchange(iterations)
         elif operation == "rp":
             client_rp_exchange(iterations)
         else:
-            print("OPERATION must be genkeys/novpn/rp.")
+            print("OPERATION must be keygen/keysend/novpn/rp.")
     else:
         return
 

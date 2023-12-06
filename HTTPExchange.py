@@ -37,7 +37,7 @@ class HTTPExchange:
 
             if iterations == -1:
                 print_err(
-                    "Number of keys in directories is not consistent. Generate new keys to proceed."
+                    f"Number of keys in directories is not consistent. Generate new keys to proceed."
                 )
                 return
 
@@ -121,7 +121,8 @@ class HTTPExchange:
 
                 home_path = os.getcwd()
                 os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
+                    os.path.join(home_path, "rp-exchange/rp-keys/server-secret"),
+                    exist_ok=True,
                 )
 
                 try:
@@ -130,11 +131,21 @@ class HTTPExchange:
                             "rp",
                             "genkey",
                             "rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
-                        ]
+                        ],
+                        stderr=subprocess.PIPE,
+                    )
+                    subprocess.check_output(
+                        [
+                            "rp",
+                            "pubkey",
+                            f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
+                            f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
+                        ],
+                        stderr=subprocess.PIPE,
                     )
                 except:
                     print_err(
-                        "Something went wrong! Perhaps rosenpass is not installed."
+                        "Something went wrong! Perhaps rosenpass is not installed or the key set already exists."
                     )
                     return
             elif iterations > 1:
@@ -159,7 +170,8 @@ class HTTPExchange:
                                 "rp",
                                 "genkey",
                                 f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
-                            ]
+                            ],
+                            stderr=subprocess.PIPE,
                         )
                         subprocess.check_output(
                             [
@@ -167,7 +179,8 @@ class HTTPExchange:
                                 "pubkey",
                                 f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
                                 f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
-                            ]
+                            ],
+                            stderr=subprocess.PIPE,
                         )
                     except:
                         print_err(
@@ -180,14 +193,43 @@ class HTTPExchange:
 
             print("done.")
 
-        # TODO: Add function to send the keys via ssh
-        def send_public_keys_to_host(self, remote_path):
-            # with open("data/hosts.json", "r") as file:
-            #     json.load()
+        def send_public_keys_to_client(self, remote_path):
+            try:
+                with open("data/hosts.json", "r") as file:
+                    hosts = json.load(file)
+            except:
+                print_err('Missing "hosts.json" file.')
 
-            # exchange = HTTPExchange()
-            # exchange.send_file_to_host("rp-exchange/rp-keys/server-public", )
-            pass
+            # needed variables
+            c_ip_addr, c_user = None, None
+
+            var_set = False
+            for e in hosts["hosts"]:
+                if e["role"] == "client":
+                    c_ip_addr = e["ip_addr"]
+                    c_user = e["user"]
+                    var_set = True
+
+            if var_set == False:
+                print_err(
+                    "The hosts file does not contain information about the client."
+                )
+                return
+
+            exchange = HTTPExchange()
+            try:
+                base_path = "rp-exchange/rp-keys/server-public/"
+                for folder in os.listdir(base_path):
+                    exchange.send_file_to_host(
+                        os.path.join(base_path, folder),
+                        c_user,
+                        c_ip_addr,
+                        os.path.join(remote_path, base_path, folder),
+                    )
+            except:
+                print_err(
+                    'Keys do not exist. Generate new keys with the operation "keygen" of "main.py".'
+                )
 
         def __count_rp_keys(self):
             exchange = HTTPExchange()
@@ -338,6 +380,44 @@ class HTTPExchange:
 
             print("done.")
 
+        def send_public_keys_to_server(self, remote_path):
+            try:
+                with open("data/hosts.json", "r") as file:
+                    hosts = json.load(file)
+            except:
+                print_err('Missing "hosts.json" file.')
+
+            # needed variables
+            c_ip_addr, c_user = None, None
+
+            var_set = False
+            for e in hosts["hosts"]:
+                if e["role"] == "server":
+                    s_ip_addr = e["ip_addr"]
+                    s_user = e["user"]
+                    var_set = True
+
+            if var_set == False:
+                print_err(
+                    "The hosts file does not contain information about the server."
+                )
+                return
+
+            exchange = HTTPExchange()
+            try:
+                base_path = "rp-exchange/rp-keys/client-public/"
+                for folder in os.listdir(base_path):
+                    exchange.send_file_to_host(
+                        os.path.join(base_path, folder),
+                        c_user,
+                        c_ip_addr,
+                        os.path.join(remote_path, base_path, folder),
+                    )
+            except:
+                print_err(
+                    'Keys do not exist. Generate new keys with the operation "keygen" of "main.py".'
+                )
+
         def __count_rp_keys(self):
             exchange = HTTPExchange()
             return exchange.count_rp_keys()
@@ -389,10 +469,10 @@ class HTTPExchange:
 
         return s_pub_count
 
-    def send_file_to_host(self, file, user, receiver, target_path):
+    def send_file_to_host(self, file, target_user, target_ip_addr, target_path):
         try:
             subprocess.check_output(
-                ["scp", file, f"{user}@{receiver}:{target_path}"],
+                ["scp", "-pr", file, f"{target_user}@{target_ip_addr}:{target_path}"],
                 stderr=subprocess.PIPE,
             )
         except:
