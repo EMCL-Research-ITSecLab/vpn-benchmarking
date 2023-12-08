@@ -4,8 +4,6 @@ from error_messages import print_err
 
 import click
 
-# TODO: Let rp use iterations too
-
 
 def client_genkeys(number):
     client = HTTPExchange.OnClient()
@@ -18,7 +16,7 @@ def client_share_keys(remote_dir):
 
 
 def client_novpn_exchange(iterations, auto=False):
-    monitor = Monitoring("client_novpn")
+    monitor = Monitoring("client-novpn")
     client = HTTPExchange.OnClient()
 
     monitor.start(auto=auto)
@@ -29,7 +27,7 @@ def client_novpn_exchange(iterations, auto=False):
 
 
 def client_rp_exchange(iterations=None, auto=False):
-    monitor = Monitoring("client_rp_exchange")
+    monitor = Monitoring("client-rp")
     client = HTTPExchange.OnClient()
 
     monitor.start(auto=auto)
@@ -88,8 +86,6 @@ def server_rp_exchange(iterations=None, auto=False):
 )
 @click.argument("operation", type=str)
 def cli(role, iterations, operation, dir, auto):
-    # TODO: Check if hosts file is correct
-
     if role == None:
         print("Missing option --server/--client for the role of the host.")
     elif role == "server":
