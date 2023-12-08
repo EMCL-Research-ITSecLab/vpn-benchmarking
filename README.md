@@ -67,7 +67,15 @@ Now the keys and hosts should be ready to start and monitor exchanges.
 #### HTTP exchange using no vpn (baseline)
 Start the baseline HTTP exchange, by running the following commands:
 ```
-user@server:~$ python main.py server rp 
+user@server:~$ python main.py server ... TODO
 ```
 
 #### HTTP exchange via Rosenpass connection
+Start the HTTP exchange with Rosenpass VPN, by running the following commands:
+```
+user@server:~$ python main.py server rp [-i/--iterations ITERATIONS]
+```
+```
+user@client:~$ python main.py client rp [-i/--iterations ITERATIONS]
+```
+Without setting the iterations, there will be as many exchanges as key sets in the corresponding folder. If you only created a single key beforehand, you can enter a number as `ITERATIONS` and the exchange will be repeated as often as you entered, using the same key.
