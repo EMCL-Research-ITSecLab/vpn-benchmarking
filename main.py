@@ -82,11 +82,12 @@ def server_rp_exchange(iterations=None, auto=False):
 @click.option("--server", "role", flag_value="server")
 @click.option("--client", "role", flag_value="client")
 @click.option("-i", "--iterations", type=int, default=1, help="number of iterations")
+@click.option("--auto", type=bool, default=False, help="monitor in auto mode")
 @click.option(
     "-d", "--dir", type=str, help="directory to save the keys (only for keysend option)"
 )
 @click.argument("operation", type=str)
-def cli(role, iterations, operation, dir):
+def cli(role, iterations, operation, dir, auto):
     # TODO: Check if hosts file is correct
 
     if role == None:
@@ -105,9 +106,9 @@ def cli(role, iterations, operation, dir):
                     "Missing directory for the keys on the remote host (use option -d)."
                 )
         elif operation == "novpn":
-            server_novpn_exchange(iterations)
+            server_novpn_exchange(iterations, auto)
         elif operation == "rp":
-            server_rp_exchange(iterations)
+            server_rp_exchange(iterations, auto)
         else:
             print("OPERATION must be keygen/keysend/novpn/rp.")
     elif role == "client":
@@ -124,9 +125,9 @@ def cli(role, iterations, operation, dir):
                     "Missing directory for the keys on the remote host (use option -d)."
                 )
         elif operation == "novpn":
-            client_novpn_exchange(iterations)
+            client_novpn_exchange(iterations, auto)
         elif operation == "rp":
-            client_rp_exchange(iterations)
+            client_rp_exchange(iterations, auto)
         else:
             print("OPERATION must be keygen/keysend/novpn/rp.")
     else:
