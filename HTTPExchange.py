@@ -62,9 +62,9 @@ class HTTPExchange:
 
             # only used for use_iterations == True, needed to avoid unbound variables
             server_key_path = os.path.join(
-                    os.getcwd(),
-                    f"rp-keys/server-secret/server.rosenpass-secret",
-                )
+                os.getcwd(),
+                f"rp-keys/server-secret/server.rosenpass-secret",
+            )
             client_key_path = os.path.join(
                 os.getcwd(),
                 f"rp-keys/client-public/client.rosenpass-public",
@@ -86,7 +86,7 @@ class HTTPExchange:
                     )
                 else:
                     print("starting iteration", i)
-                    
+
                 proc = subprocess.Popen(
                     [
                         "sudo",
@@ -122,7 +122,12 @@ class HTTPExchange:
                             stderr=subprocess.PIPE,
                         )
                         break
-                    except:
+                    except subprocess.CalledProcessError as e:
+                        # RTNETLINK answers: File exists error
+                        if "exit status 2" in str(e):
+                            subprocess.run(
+                                ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"]
+                            )
                         j -= 1
 
                 # if adding an ip address failed
@@ -185,9 +190,7 @@ class HTTPExchange:
                 )
 
                 home_path = os.getcwd()
-                os.makedirs(
-                    os.path.join(home_path, "rp-keys"), exist_ok=True
-                )
+                os.makedirs(os.path.join(home_path, "rp-keys"), exist_ok=True)
 
                 for i in range(iterations):
                     formatted_number = "{num:0>{len}}".format(
@@ -330,9 +333,9 @@ class HTTPExchange:
 
             # only used for use_iterations == True, needed to avoid unbound variables
             client_key_path = os.path.join(
-                    os.getcwd(),
-                    f"rp-keys/client-secret/client.rosenpass-secret",
-                )
+                os.getcwd(),
+                f"rp-keys/client-secret/client.rosenpass-secret",
+            )
             server_key_path = os.path.join(
                 os.getcwd(),
                 f"rp-keys/server-public/server.rosenpass-public",
@@ -354,7 +357,7 @@ class HTTPExchange:
                     )
                 else:
                     print("starting iteration", i)
-                    
+
                 proc = subprocess.Popen(
                     [
                         "sudo",
@@ -390,7 +393,12 @@ class HTTPExchange:
                             stderr=subprocess.PIPE,
                         )
                         break
-                    except:
+                    except subprocess.CalledProcessError as e:
+                        # RTNETLINK answers: File exists error
+                        if "exit status 2" in str(e):
+                            subprocess.run(
+                                ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"]
+                            )
                         j -= 1
 
                 # if adding an ip address failed
@@ -453,9 +461,7 @@ class HTTPExchange:
                 )
 
                 home_path = os.getcwd()
-                os.makedirs(
-                    os.path.join(home_path, "rp-keys"), exist_ok=True
-                )
+                os.makedirs(os.path.join(home_path, "rp-keys"), exist_ok=True)
 
                 for i in range(iterations):
                     formatted_number = "{num:0>{len}}".format(
@@ -599,5 +605,5 @@ class HTTPExchange:
             print_err(
                 "SSH connection to send files could not be established. Check if the needed SSH keys are set up."
             )
-            
+
     # TODO: Add function to delete old keys
