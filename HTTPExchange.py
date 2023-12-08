@@ -63,11 +63,11 @@ class HTTPExchange:
             # only used for use_iterations == True, needed to avoid unbound variables
             server_key_path = os.path.join(
                     os.getcwd(),
-                    f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
+                    f"rp-keys/server-secret/server.rosenpass-secret",
                 )
             client_key_path = os.path.join(
                 os.getcwd(),
-                f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
+                f"rp-keys/client-public/client.rosenpass-public",
             )
 
             for i in range(iterations):
@@ -78,11 +78,11 @@ class HTTPExchange:
                     )
                     server_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                        f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
                     )
                     client_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                        f"rp-keys/client-public/{formatted_number}_client.rosenpass-public",
                     )
                 else:
                     print("starting iteration", i)
@@ -150,7 +150,7 @@ class HTTPExchange:
 
                 home_path = os.getcwd()
                 os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys/server-secret"),
+                    os.path.join(home_path, "rp-keys/server-secret"),
                     exist_ok=True,
                 )
 
@@ -159,7 +159,7 @@ class HTTPExchange:
                         [
                             "rp",
                             "genkey",
-                            "rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
+                            "rp-keys/server-secret/server.rosenpass-secret",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -167,8 +167,8 @@ class HTTPExchange:
                         [
                             "rp",
                             "pubkey",
-                            f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
-                            f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
+                            f"rp-keys/server-secret/server.rosenpass-secret",
+                            f"rp-keys/server-public/server.rosenpass-public",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -186,7 +186,7 @@ class HTTPExchange:
 
                 home_path = os.getcwd()
                 os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
+                    os.path.join(home_path, "rp-keys"), exist_ok=True
                 )
 
                 for i in range(iterations):
@@ -198,7 +198,7 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "genkey",
-                                f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                                f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -206,8 +206,8 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "pubkey",
-                                f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
-                                f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
+                                f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                                f"rp-keys/server-public/{formatted_number}_server.rosenpass-public",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -248,7 +248,7 @@ class HTTPExchange:
 
             exchange = HTTPExchange()
             try:
-                base_path = "rp-exchange/rp-keys/server-public/"
+                base_path = "rp-keys/server-public/"
                 for folder in os.listdir(base_path):
                     exchange.send_file_to_host(
                         os.path.join(base_path, folder),
@@ -331,11 +331,11 @@ class HTTPExchange:
             # only used for use_iterations == True, needed to avoid unbound variables
             client_key_path = os.path.join(
                     os.getcwd(),
-                    f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
+                    f"rp-keys/client-secret/client.rosenpass-secret",
                 )
             server_key_path = os.path.join(
                 os.getcwd(),
-                f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
+                f"rp-keys/server-public/server.rosenpass-public",
             )
 
             for i in range(iterations):
@@ -346,11 +346,11 @@ class HTTPExchange:
                     )
                     client_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                        f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
                     )
                     server_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
+                        f"rp-keys/server-public/{formatted_number}_server.rosenpass-public",
                     )
                 else:
                     print("starting iteration", i)
@@ -418,7 +418,7 @@ class HTTPExchange:
 
                 home_path = os.getcwd()
                 os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys/client-secret"),
+                    os.path.join(home_path, "rp-keys/client-secret"),
                     exist_ok=True,
                 )
 
@@ -427,7 +427,7 @@ class HTTPExchange:
                         [
                             "rp",
                             "genkey",
-                            "rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
+                            "rp-keys/client-secret/client.rosenpass-secret",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -435,8 +435,8 @@ class HTTPExchange:
                         [
                             "rp",
                             "pubkey",
-                            f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
-                            f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
+                            f"rp-keys/client-secret/client.rosenpass-secret",
+                            f"rp-keys/client-public/client.rosenpass-public",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -454,7 +454,7 @@ class HTTPExchange:
 
                 home_path = os.getcwd()
                 os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
+                    os.path.join(home_path, "rp-keys"), exist_ok=True
                 )
 
                 for i in range(iterations):
@@ -466,7 +466,7 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "genkey",
-                                f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                                f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -474,8 +474,8 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "pubkey",
-                                f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
-                                f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                                f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                                f"rp-keys/client-public/{formatted_number}_client.rosenpass-public",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -516,7 +516,7 @@ class HTTPExchange:
 
             exchange = HTTPExchange()
             try:
-                base_path = "rp-exchange/rp-keys/client-public/"
+                base_path = "rp-keys/client-public/"
                 for folder in os.listdir(base_path):
                     exchange.send_file_to_host(
                         os.path.join(base_path, folder),
@@ -544,7 +544,7 @@ class HTTPExchange:
             c.close()
 
     def count_rp_keys(self):
-        path = os.path.join(os.getcwd(), "rp-exchange/rp-keys/")
+        path = os.path.join(os.getcwd(), "rp-keys/")
         s_pub_path = os.path.join(path, "server-public")
         cl_pub_path = os.path.join(path, "client-public")
 
@@ -554,7 +554,7 @@ class HTTPExchange:
                 s_pub_count += 1
         except:
             print_err(
-                "The folder rp-exchange/rp-keys/server-public could not be found/opened. Generate and share new keys to proceed."
+                "The folder rp-keys/server-public could not be found/opened. Generate and share new keys to proceed."
             )
             return -1
         try:
@@ -562,7 +562,7 @@ class HTTPExchange:
                 cl_pub_count += 1
         except:
             print_err(
-                "The folder rp-exchange/rp-keys/client-public could not be found/opened. Generate and share new keys to proceed."
+                "The folder rp-keys/client-public could not be found/opened. Generate and share new keys to proceed."
             )
             return -1
 
@@ -580,7 +580,7 @@ class HTTPExchange:
                     count += 1
             except:
                 print_err(
-                    "The folder rp-exchange/rp-keys/server-secret could not be found/opened. Generate new keys to proceed."
+                    "The folder rp-keys/server-secret could not be found/opened. Generate new keys to proceed."
                 )
                 return -1
 
@@ -595,7 +595,7 @@ class HTTPExchange:
                     count += 1
             except:
                 print_err(
-                    "The folder rp-exchange/rp-keys/client-secret could not be found/opened. Generate new keys to proceed."
+                    "The folder rp-keys/client-secret could not be found/opened. Generate new keys to proceed."
                 )
                 return -1
 

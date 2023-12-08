@@ -20,12 +20,12 @@ def set_up_folder_structure(host):
     try:
         base_path = os.getcwd()
         if host == "server":
-            Path(base_path, "rp-exchange/rp-keys", "client-public").mkdir(
+            Path(base_path, "rp-keys", "client-public").mkdir(
                 parents=True, exist_ok=True
             )
             print("done.")
         elif host == "client":
-            Path(base_path, "rp-exchange/rp-keys", "server-public").mkdir(
+            Path(base_path, "rp-keys", "server-public").mkdir(
                 parents=True, exist_ok=True
             )
             print("done.")
