@@ -37,7 +37,7 @@ def client_rp_exchange(iterations=None, auto=False):
     monitor.stop()
 
 
-def server_genkeys(number=100):
+def server_genkeys(number):
     server = HTTPExchange.OnServer()
     server.gen_keys(number)
 
