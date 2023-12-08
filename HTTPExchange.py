@@ -31,32 +31,62 @@ class HTTPExchange:
                 server.handle_request()
                 server.server_close()
 
-        def run_with_rp(self, monitor):
+        def run_with_rp(self, iterations, monitor):
             # check if the number of keys is consistent
-            iterations = self.__count_rp_keys()
+            keys = self.__count_rp_keys()
+            use_iterations = True
 
-            if iterations == -1:
+            if keys <= -1:
                 print_err(
                     f"Number of keys in directories is not consistent. Generate new keys to proceed."
                 )
                 return
+            elif keys == 0:
+                print_err("No keys found. Generate new keys to proceed.")
+                return
+            elif keys == 1:
+                if iterations == None:
+                    iterations = 1
+                elif iterations < 1:
+                    print_err(
+                        "Number of iterations was invalid. Please enter at least one iteration or generate new keys."
+                    )
+                    return
+            else:
+                print("Number of iterations was set to number of different keys.")
+                iterations = keys
+                use_iterations = False
 
             # enter sudo so it does not ask during the next commands
             subprocess.run(["sudo", "echo"], stdout=subprocess.PIPE)
 
-            for i in range(iterations):
-                print("starting iteration", i, "with key", i + 1)
-                formatted_number = "{num:0>{len}}".format(
-                    num=i + 1, len=len(str(iterations + 1))
-                )
+            if use_iterations:
                 server_key_path = os.path.join(
-                    os.getcwd(),
-                    f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
-                )
+                        os.getcwd(),
+                        f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
+                    )
                 client_key_path = os.path.join(
                     os.getcwd(),
-                    f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                    f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
                 )
+
+            for i in range(iterations):
+                if not use_iterations:
+                    print("starting iteration", i, "with key", i + 1)
+                    formatted_number = "{num:0>{len}}".format(
+                        num=i + 1, len=len(str(iterations + 1))
+                    )
+                    server_key_path = os.path.join(
+                        os.getcwd(),
+                        f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                    )
+                    client_key_path = os.path.join(
+                        os.getcwd(),
+                        f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                    )
+                else:
+                    print("starting iteration", i)
+                    
                 proc = subprocess.Popen(
                     [
                         "sudo",
@@ -111,7 +141,6 @@ class HTTPExchange:
                 print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            # TODO: Implement handling in other classes
             if iterations == 1:
                 print(
                     f"Generating rosenpass and wireguard key set for server... ",
@@ -268,33 +297,63 @@ class HTTPExchange:
 
         # when having errors try "sudo ip addr flush dev rosenpass0"
 
-        def run_with_rp(self, monitor):
+        def run_with_rp(self, iterations, monitor):
             # check if the number of keys is consistent
-            iterations = self.__count_rp_keys()
+            keys = self.__count_rp_keys()
+            use_iterations == True
 
-            if iterations == -1:
+            if keys == -1:
                 print_err(
                     "Number of keys in directories is not consistent. Generate new keys to proceed."
                 )
                 return
+            elif keys == 0:
+                print_err("No keys found. Generate new keys to proceed.")
+                return
+            elif keys == 1:
+                if iterations == None:
+                    iterations = 1
+                elif iterations < 1:
+                    print_err(
+                        "Number of iterations was invalid. Please enter at least one iteration or generate new keys."
+                    )
+                    return
+            else:
+                print("Number of iterations was set to number of different keys.")
+                iterations = keys
+                use_iterations = False
 
             subprocess.run(
                 ["sudo", "echo"], stdout=subprocess.PIPE
             )  # enter sudo so it does not ask during the next commands
 
-            for i in range(iterations):
-                print("starting iteration", i, "with key", i + 1)
-                formatted_number = "{num:0>{len}}".format(
-                    num=i + 1, len=len(str(iterations + 1))
-                )
+            if use_iterations:
                 client_key_path = os.path.join(
-                    os.getcwd(),
-                    f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
-                )
+                        os.getcwd(),
+                        f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
+                    )
                 server_key_path = os.path.join(
                     os.getcwd(),
-                    f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
+                    f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
                 )
+
+            for i in range(iterations):
+                if not use_iterations:
+                    print("starting iteration", i, "with key", i + 1)
+                    formatted_number = "{num:0>{len}}".format(
+                        num=i + 1, len=len(str(iterations + 1))
+                    )
+                    client_key_path = os.path.join(
+                        os.getcwd(),
+                        f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                    )
+                    server_key_path = os.path.join(
+                        os.getcwd(),
+                        f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
+                    )
+                else:
+                    print("starting iteration", i)
+                    
                 proc = subprocess.Popen(
                     [
                         "sudo",
@@ -349,35 +408,84 @@ class HTTPExchange:
                 print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            # TODO: Analogous to server's gen_keys()
-            print(
-                f"Generating {iterations} rosenpass and wireguard keys for client... ",
-                end="",
-                flush=True,
-            )
+            if iterations == 1:
+                print(
+                    f"Generating rosenpass and wireguard key set for client... ",
+                    end="",
+                    flush=True,
+                )
 
-            home_path = os.getcwd()
-            os.makedirs(os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True)
+                home_path = os.getcwd()
+                os.makedirs(
+                    os.path.join(home_path, "rp-exchange/rp-keys/client-secret"),
+                    exist_ok=True,
+                )
 
-            for i in range(iterations):
-                formatted_number = "{num:0>{len}}".format(
-                    num=i + 1, len=len(str(iterations + 1))
+                try:
+                    subprocess.check_output(
+                        [
+                            "rp",
+                            "genkey",
+                            "rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
+                        ],
+                        stderr=subprocess.PIPE,
+                    )
+                    subprocess.check_output(
+                        [
+                            "rp",
+                            "pubkey",
+                            f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
+                            f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
+                        ],
+                        stderr=subprocess.PIPE,
+                    )
+                except:
+                    print_err(
+                        "Something went wrong! Perhaps rosenpass is not installed or the key set already exists."
+                    )
+                    return
+            elif iterations > 1:
+                print(
+                    f"Generating {iterations} rosenpass and wireguard key sets for client... ",
+                    end="",
+                    flush=True,
                 )
-                subprocess.run(
-                    [
-                        "rp",
-                        "genkey",
-                        f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
-                    ]
+
+                home_path = os.getcwd()
+                os.makedirs(
+                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
                 )
-                subprocess.run(
-                    [
-                        "rp",
-                        "pubkey",
-                        f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
-                        f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
-                    ]
-                )
+
+                for i in range(iterations):
+                    formatted_number = "{num:0>{len}}".format(
+                        num=i + 1, len=len(str(iterations + 1))
+                    )
+                    try:
+                        subprocess.check_output(
+                            [
+                                "rp",
+                                "genkey",
+                                f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                            ],
+                            stderr=subprocess.PIPE,
+                        )
+                        subprocess.check_output(
+                            [
+                                "rp",
+                                "pubkey",
+                                f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                                f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                            ],
+                            stderr=subprocess.PIPE,
+                        )
+                    except:
+                        print_err(
+                            "Something went wrong! Perhaps rosenpass is not installed."
+                        )
+                        return
+            else:
+                print_err("Number of iterations cannot be negative!")
+                return
 
             print("done.")
 
@@ -439,10 +547,22 @@ class HTTPExchange:
         cl_pub_path = os.path.join(path, "client-public")
 
         s_pub_count, cl_pub_count = 0, 0
-        for _ in os.listdir(s_pub_path):
-            s_pub_count += 1
-        for _ in os.listdir(cl_pub_path):
-            cl_pub_count += 1
+        try:
+            for _ in os.listdir(s_pub_path):
+                s_pub_count += 1
+        except:
+            print_err(
+                "The folder rp-exchange/rp-keys/server-public could not be found/opened. Generate and share new keys to proceed."
+            )
+            return -1
+        try:
+            for _ in os.listdir(cl_pub_path):
+                cl_pub_count += 1
+        except:
+            print_err(
+                "The folder rp-exchange/rp-keys/client-public could not be found/opened. Generate and share new keys to proceed."
+            )
+            return -1
 
         # something went wrong if the number of keys in directories are unequal
         if s_pub_count != cl_pub_count:
@@ -453,8 +573,14 @@ class HTTPExchange:
             key_path = os.path.join(path, "server-secret")
 
             count = 0
-            for _ in os.listdir(key_path):
-                count += 1
+            try:
+                for _ in os.listdir(key_path):
+                    count += 1
+            except:
+                print_err(
+                    "The folder rp-exchange/rp-keys/server-secret could not be found/opened. Generate new keys to proceed."
+                )
+                return -1
 
             if s_pub_count != count:
                 return -1
@@ -462,8 +588,14 @@ class HTTPExchange:
             key_path = os.path.join(path, "client-secret")
 
             count = 0
-            for _ in os.listdir(key_path):
-                count += 1
+            try:
+                for _ in os.listdir(key_path):
+                    count += 1
+            except:
+                print_err(
+                    "The folder rp-exchange/rp-keys/client-secret could not be found/opened. Generate new keys to proceed."
+                )
+                return -1
 
             if s_pub_count != count:
                 return -1
@@ -480,3 +612,5 @@ class HTTPExchange:
             print_err(
                 "SSH connection to send files could not be established. Check if the needed SSH keys are set up."
             )
+            
+    # TODO: Add function to delete old keys

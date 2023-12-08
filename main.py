@@ -28,13 +28,13 @@ def client_novpn_exchange(iterations, auto=False):
     monitor.stop()
 
 
-def client_rp_exchange(iterations, auto=False):
+def client_rp_exchange(iterations=None, auto=False):
     monitor = Monitoring("client_rp_exchange")
     client = HTTPExchange.OnClient()
 
     monitor.start(auto=auto)
     ### start test
-    client.run_with_rp(monitor=monitor)
+    client.run_with_rp(iterations=iterations, monitor=monitor)
     ### end test
     monitor.stop()
 
@@ -60,13 +60,13 @@ def server_novpn_exchange(iterations, auto=False):
     monitor.stop()
 
 
-def server_rp_exchange(iterations, auto=False):
+def server_rp_exchange(iterations=None, auto=False):
     monitor = Monitoring("server-rp")
     server = HTTPExchange.OnServer()
 
     monitor.start(auto=auto)
     ### start test
-    server.run_with_rp(monitor=monitor)
+    server.run_with_rp(iterations=iterations, monitor=monitor)
     ### end test
     monitor.stop()
 
