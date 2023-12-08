@@ -60,15 +60,15 @@ class HTTPExchange:
             # enter sudo so it does not ask during the next commands
             subprocess.run(["sudo", "echo"], stdout=subprocess.PIPE)
 
-            if use_iterations:
-                server_key_path = os.path.join(
-                        os.getcwd(),
-                        f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
-                    )
-                client_key_path = os.path.join(
+            # only used for use_iterations == True, needed to avoid unbound variables
+            server_key_path = os.path.join(
                     os.getcwd(),
-                    f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
+                    f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
                 )
+            client_key_path = os.path.join(
+                os.getcwd(),
+                f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
+            )
 
             for i in range(iterations):
                 if not use_iterations:
@@ -228,6 +228,7 @@ class HTTPExchange:
                     hosts = json.load(file)
             except:
                 print_err('Missing "hosts.json" file.')
+                return
 
             # needed variables
             c_ip_addr, c_user = None, None
@@ -300,7 +301,7 @@ class HTTPExchange:
         def run_with_rp(self, iterations, monitor):
             # check if the number of keys is consistent
             keys = self.__count_rp_keys()
-            use_iterations == True
+            use_iterations = True
 
             if keys == -1:
                 print_err(
@@ -327,15 +328,15 @@ class HTTPExchange:
                 ["sudo", "echo"], stdout=subprocess.PIPE
             )  # enter sudo so it does not ask during the next commands
 
-            if use_iterations:
-                client_key_path = os.path.join(
-                        os.getcwd(),
-                        f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
-                    )
-                server_key_path = os.path.join(
+            # only used for use_iterations == True, needed to avoid unbound variables
+            client_key_path = os.path.join(
                     os.getcwd(),
-                    f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
+                    f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
                 )
+            server_key_path = os.path.join(
+                os.getcwd(),
+                f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
+            )
 
             for i in range(iterations):
                 if not use_iterations:
@@ -495,6 +496,7 @@ class HTTPExchange:
                     hosts = json.load(file)
             except:
                 print_err('Missing "hosts.json" file.')
+                return
 
             # needed variables
             c_ip_addr, c_user = None, None
