@@ -499,7 +499,7 @@ class HTTPExchange:
                 return
 
             # needed variables
-            c_ip_addr, c_user = None, None
+            s_ip_addr, s_user = None, None
 
             var_set = False
             for e in hosts["hosts"]:
@@ -520,8 +520,8 @@ class HTTPExchange:
                 for folder in os.listdir(base_path):
                     exchange.send_file_to_host(
                         os.path.join(base_path, folder),
-                        c_user,
-                        c_ip_addr,
+                        s_user,
+                        s_ip_addr,
                         os.path.join(remote_path, base_path, folder),
                     )
             except:
@@ -571,36 +571,21 @@ class HTTPExchange:
             return -1
 
         # check if this is server or client by checking existence of secret keys
-        try:
-            key_path = os.path.join(path, "server-secret")
+        s_key_path = os.path.join(path, "server-secret")
+        c_key_path = os.path.join(path, "client-secret")
 
-            count = 0
-            try:
-                for _ in os.listdir(key_path):
-                    count += 1
-            except:
-                print_err(
-                    "The folder rp-keys/server-secret could not be found/opened. Generate new keys to proceed."
-                )
-                return -1
+        count = 0
+        if os.path.exists(s_key_path):
+            for _ in os.listdir(s_key_path):
+                count += 1
+        elif os.path.exists(c_key_path):
+            for _ in os.listdir(c_key_path):
+                count += 1
+        else:
+            print_err("Key path was not found.")
 
-            if s_pub_count != count:
-                return -1
-        except:
-            key_path = os.path.join(path, "client-secret")
-
-            count = 0
-            try:
-                for _ in os.listdir(key_path):
-                    count += 1
-            except:
-                print_err(
-                    "The folder rp-keys/client-secret could not be found/opened. Generate new keys to proceed."
-                )
-                return -1
-
-            if s_pub_count != count:
-                return -1
+        if s_pub_count != count:
+            return -1
 
         return s_pub_count
 
