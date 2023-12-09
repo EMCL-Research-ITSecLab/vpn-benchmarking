@@ -143,7 +143,10 @@ class HTTPExchange:
                 # else
                 self.run(1, monitor)
                 proc.kill()
-                print("ending iteration", i, "with key", i + 1)
+                if use_iterations:
+                    print("ending iteration", i)
+                else:
+                    print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
             if iterations == 1:
@@ -414,7 +417,10 @@ class HTTPExchange:
                 # else
                 self.run(1, monitor)
                 proc.kill()
-                print("ending iteration", i, "with key", i + 1)
+                if use_iterations:
+                    print("ending iteration", i)
+                else:
+                    print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
             if iterations == 1:
@@ -603,7 +609,7 @@ class HTTPExchange:
             )
         except:
             print_err(
-                "SSH connection to send files could not be established. Check if the needed SSH keys are set up."
+                "SSH connection to send files could not be established. Check if the needed SSH keys are set up. If all keys are correct, run install_requirements.py."
             )
 
     # TODO: Add function to delete old keys

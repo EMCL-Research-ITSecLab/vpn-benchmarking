@@ -67,10 +67,16 @@ Now the keys and hosts should be ready to start and monitor exchanges.
 #### HTTP exchange using no vpn (baseline)
 Start the baseline HTTP exchange, by running the following commands:
 ```
-user@server:~$ python main.py server ... TODO
+user@server:~$ python main.py server novpn -i/--iterations ITERATIONS
 ```
+```
+user@client:~$ python main.py client novpn -i/--iterations ITERATIONS
+```
+Note, that it is necessary to give the iterations as input.
 
 #### HTTP exchange via Rosenpass connection
+Important: In exchanges with a high number of iterations you may be asked for your password multiple times. Enter your `sudo` password and the exchange will continue.
+
 Start the HTTP exchange with Rosenpass VPN, by running the following commands:
 ```
 user@server:~$ python main.py server rp [-i/--iterations ITERATIONS]
