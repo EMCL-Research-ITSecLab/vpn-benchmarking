@@ -16,7 +16,7 @@ def client_share_keys(remote_dir):
 
 
 def client_novpn_exchange(iterations, auto=False):
-    monitor = Monitoring("client_novpn")
+    monitor = Monitoring("client-novpn")
     client = HTTPExchange.OnClient()
 
     monitor.start(auto=auto)
@@ -27,7 +27,7 @@ def client_novpn_exchange(iterations, auto=False):
 
 
 def client_rp_exchange(iterations=None, auto=False):
-    monitor = Monitoring("client_rp_exchange")
+    monitor = Monitoring("client-rp")
     client = HTTPExchange.OnClient()
 
     monitor.start(auto=auto)
@@ -37,7 +37,7 @@ def client_rp_exchange(iterations=None, auto=False):
     monitor.stop()
 
 
-def server_genkeys(number=100):
+def server_genkeys(number):
     server = HTTPExchange.OnServer()
     server.gen_keys(number)
 
@@ -77,19 +77,16 @@ def server_rp_exchange(iterations=None, auto=False):
 
 
 @click.command()
-@click.option("--server", "role", flag_value="server")
-@click.option("--client", "role", flag_value="client")
 @click.option("-i", "--iterations", type=int, default=1, help="number of iterations")
-@click.option("--auto", type=bool, default=False, help="monitor in auto mode")
+@click.option("--auto", help="monitor in auto mode", is_flag=True)
 @click.option(
     "-d", "--dir", type=str, help="directory to save the keys (only for keysend option)"
 )
+@click.argument("role", type=str)
 @click.argument("operation", type=str)
 def cli(role, iterations, operation, dir, auto):
-    # TODO: Check if hosts file is correct
-
     if role == None:
-        print("Missing option --server/--client for the role of the host.")
+        print_err("Something went wrong.")
     elif role == "server":
         if operation == "keygen":
             server_genkeys(iterations)
@@ -129,6 +126,7 @@ def cli(role, iterations, operation, dir, auto):
         else:
             print("OPERATION must be keygen/keysend/novpn/rp.")
     else:
+        print_err("ROLE must be server|client.")
         return
 
 

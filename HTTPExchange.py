@@ -60,15 +60,15 @@ class HTTPExchange:
             # enter sudo so it does not ask during the next commands
             subprocess.run(["sudo", "echo"], stdout=subprocess.PIPE)
 
-            if use_iterations:
-                server_key_path = os.path.join(
-                        os.getcwd(),
-                        f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
-                    )
-                client_key_path = os.path.join(
-                    os.getcwd(),
-                    f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
-                )
+            # only used for use_iterations == True, needed to avoid unbound variables
+            server_key_path = os.path.join(
+                os.getcwd(),
+                f"rp-keys/server-secret/server.rosenpass-secret",
+            )
+            client_key_path = os.path.join(
+                os.getcwd(),
+                f"rp-keys/client-public/client.rosenpass-public",
+            )
 
             for i in range(iterations):
                 if not use_iterations:
@@ -78,15 +78,15 @@ class HTTPExchange:
                     )
                     server_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                        f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
                     )
                     client_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                        f"rp-keys/client-public/{formatted_number}_client.rosenpass-public",
                     )
                 else:
                     print("starting iteration", i)
-                    
+
                 proc = subprocess.Popen(
                     [
                         "sudo",
@@ -122,7 +122,12 @@ class HTTPExchange:
                             stderr=subprocess.PIPE,
                         )
                         break
-                    except:
+                    except subprocess.CalledProcessError as e:
+                        # RTNETLINK answers: File exists error
+                        if "exit status 2" in str(e):
+                            subprocess.run(
+                                ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"]
+                            )
                         j -= 1
 
                 # if adding an ip address failed
@@ -138,7 +143,10 @@ class HTTPExchange:
                 # else
                 self.run(1, monitor)
                 proc.kill()
-                print("ending iteration", i, "with key", i + 1)
+                if use_iterations:
+                    print("ending iteration", i)
+                else:
+                    print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
             if iterations == 1:
@@ -150,7 +158,7 @@ class HTTPExchange:
 
                 home_path = os.getcwd()
                 os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys/server-secret"),
+                    os.path.join(home_path, "rp-keys/server-secret"),
                     exist_ok=True,
                 )
 
@@ -159,7 +167,7 @@ class HTTPExchange:
                         [
                             "rp",
                             "genkey",
-                            "rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
+                            "rp-keys/server-secret/server.rosenpass-secret",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -167,8 +175,8 @@ class HTTPExchange:
                         [
                             "rp",
                             "pubkey",
-                            f"rp-exchange/rp-keys/server-secret/server.rosenpass-secret",
-                            f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
+                            f"rp-keys/server-secret/server.rosenpass-secret",
+                            f"rp-keys/server-public/server.rosenpass-public",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -185,9 +193,7 @@ class HTTPExchange:
                 )
 
                 home_path = os.getcwd()
-                os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
-                )
+                os.makedirs(os.path.join(home_path, "rp-keys"), exist_ok=True)
 
                 for i in range(iterations):
                     formatted_number = "{num:0>{len}}".format(
@@ -198,7 +204,7 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "genkey",
-                                f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                                f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -206,8 +212,8 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "pubkey",
-                                f"rp-exchange/rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
-                                f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
+                                f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
+                                f"rp-keys/server-public/{formatted_number}_server.rosenpass-public",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -228,6 +234,7 @@ class HTTPExchange:
                     hosts = json.load(file)
             except:
                 print_err('Missing "hosts.json" file.')
+                return
 
             # needed variables
             c_ip_addr, c_user = None, None
@@ -247,7 +254,7 @@ class HTTPExchange:
 
             exchange = HTTPExchange()
             try:
-                base_path = "rp-exchange/rp-keys/server-public/"
+                base_path = "rp-keys/server-public/"
                 for folder in os.listdir(base_path):
                     exchange.send_file_to_host(
                         os.path.join(base_path, folder),
@@ -300,7 +307,7 @@ class HTTPExchange:
         def run_with_rp(self, iterations, monitor):
             # check if the number of keys is consistent
             keys = self.__count_rp_keys()
-            use_iterations == True
+            use_iterations = True
 
             if keys == -1:
                 print_err(
@@ -327,15 +334,15 @@ class HTTPExchange:
                 ["sudo", "echo"], stdout=subprocess.PIPE
             )  # enter sudo so it does not ask during the next commands
 
-            if use_iterations:
-                client_key_path = os.path.join(
-                        os.getcwd(),
-                        f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
-                    )
-                server_key_path = os.path.join(
-                    os.getcwd(),
-                    f"rp-exchange/rp-keys/server-public/server.rosenpass-public",
-                )
+            # only used for use_iterations == True, needed to avoid unbound variables
+            client_key_path = os.path.join(
+                os.getcwd(),
+                f"rp-keys/client-secret/client.rosenpass-secret",
+            )
+            server_key_path = os.path.join(
+                os.getcwd(),
+                f"rp-keys/server-public/server.rosenpass-public",
+            )
 
             for i in range(iterations):
                 if not use_iterations:
@@ -345,15 +352,15 @@ class HTTPExchange:
                     )
                     client_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                        f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
                     )
                     server_key_path = os.path.join(
                         os.getcwd(),
-                        f"rp-exchange/rp-keys/server-public/{formatted_number}_server.rosenpass-public",
+                        f"rp-keys/server-public/{formatted_number}_server.rosenpass-public",
                     )
                 else:
                     print("starting iteration", i)
-                    
+
                 proc = subprocess.Popen(
                     [
                         "sudo",
@@ -389,7 +396,12 @@ class HTTPExchange:
                             stderr=subprocess.PIPE,
                         )
                         break
-                    except:
+                    except subprocess.CalledProcessError as e:
+                        # RTNETLINK answers: File exists error
+                        if "exit status 2" in str(e):
+                            subprocess.run(
+                                ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"]
+                            )
                         j -= 1
 
                 # if adding an ip address failed
@@ -405,7 +417,10 @@ class HTTPExchange:
                 # else
                 self.run(1, monitor)
                 proc.kill()
-                print("ending iteration", i, "with key", i + 1)
+                if use_iterations:
+                    print("ending iteration", i)
+                else:
+                    print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
             if iterations == 1:
@@ -417,7 +432,7 @@ class HTTPExchange:
 
                 home_path = os.getcwd()
                 os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys/client-secret"),
+                    os.path.join(home_path, "rp-keys/client-secret"),
                     exist_ok=True,
                 )
 
@@ -426,7 +441,7 @@ class HTTPExchange:
                         [
                             "rp",
                             "genkey",
-                            "rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
+                            "rp-keys/client-secret/client.rosenpass-secret",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -434,8 +449,8 @@ class HTTPExchange:
                         [
                             "rp",
                             "pubkey",
-                            f"rp-exchange/rp-keys/client-secret/client.rosenpass-secret",
-                            f"rp-exchange/rp-keys/client-public/client.rosenpass-public",
+                            f"rp-keys/client-secret/client.rosenpass-secret",
+                            f"rp-keys/client-public/client.rosenpass-public",
                         ],
                         stderr=subprocess.PIPE,
                     )
@@ -452,9 +467,7 @@ class HTTPExchange:
                 )
 
                 home_path = os.getcwd()
-                os.makedirs(
-                    os.path.join(home_path, "rp-exchange/rp-keys"), exist_ok=True
-                )
+                os.makedirs(os.path.join(home_path, "rp-keys"), exist_ok=True)
 
                 for i in range(iterations):
                     formatted_number = "{num:0>{len}}".format(
@@ -465,7 +478,7 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "genkey",
-                                f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                                f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -473,8 +486,8 @@ class HTTPExchange:
                             [
                                 "rp",
                                 "pubkey",
-                                f"rp-exchange/rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
-                                f"rp-exchange/rp-keys/client-public/{formatted_number}_client.rosenpass-public",
+                                f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
+                                f"rp-keys/client-public/{formatted_number}_client.rosenpass-public",
                             ],
                             stderr=subprocess.PIPE,
                         )
@@ -495,9 +508,10 @@ class HTTPExchange:
                     hosts = json.load(file)
             except:
                 print_err('Missing "hosts.json" file.')
+                return
 
             # needed variables
-            c_ip_addr, c_user = None, None
+            s_ip_addr, s_user = None, None
 
             var_set = False
             for e in hosts["hosts"]:
@@ -514,12 +528,12 @@ class HTTPExchange:
 
             exchange = HTTPExchange()
             try:
-                base_path = "rp-exchange/rp-keys/client-public/"
+                base_path = "rp-keys/client-public/"
                 for folder in os.listdir(base_path):
                     exchange.send_file_to_host(
                         os.path.join(base_path, folder),
-                        c_user,
-                        c_ip_addr,
+                        s_user,
+                        s_ip_addr,
                         os.path.join(remote_path, base_path, folder),
                     )
             except:
@@ -542,7 +556,7 @@ class HTTPExchange:
             c.close()
 
     def count_rp_keys(self):
-        path = os.path.join(os.getcwd(), "rp-exchange/rp-keys/")
+        path = os.path.join(os.getcwd(), "rp-keys/")
         s_pub_path = os.path.join(path, "server-public")
         cl_pub_path = os.path.join(path, "client-public")
 
@@ -552,7 +566,7 @@ class HTTPExchange:
                 s_pub_count += 1
         except:
             print_err(
-                "The folder rp-exchange/rp-keys/server-public could not be found/opened. Generate and share new keys to proceed."
+                "The folder rp-keys/server-public could not be found/opened. Generate and share new keys to proceed."
             )
             return -1
         try:
@@ -560,7 +574,7 @@ class HTTPExchange:
                 cl_pub_count += 1
         except:
             print_err(
-                "The folder rp-exchange/rp-keys/client-public could not be found/opened. Generate and share new keys to proceed."
+                "The folder rp-keys/client-public could not be found/opened. Generate and share new keys to proceed."
             )
             return -1
 
@@ -569,36 +583,21 @@ class HTTPExchange:
             return -1
 
         # check if this is server or client by checking existence of secret keys
-        try:
-            key_path = os.path.join(path, "server-secret")
+        s_key_path = os.path.join(path, "server-secret")
+        c_key_path = os.path.join(path, "client-secret")
 
-            count = 0
-            try:
-                for _ in os.listdir(key_path):
-                    count += 1
-            except:
-                print_err(
-                    "The folder rp-exchange/rp-keys/server-secret could not be found/opened. Generate new keys to proceed."
-                )
-                return -1
+        count = 0
+        if os.path.exists(s_key_path):
+            for _ in os.listdir(s_key_path):
+                count += 1
+        elif os.path.exists(c_key_path):
+            for _ in os.listdir(c_key_path):
+                count += 1
+        else:
+            print_err("Key path was not found.")
 
-            if s_pub_count != count:
-                return -1
-        except:
-            key_path = os.path.join(path, "client-secret")
-
-            count = 0
-            try:
-                for _ in os.listdir(key_path):
-                    count += 1
-            except:
-                print_err(
-                    "The folder rp-exchange/rp-keys/client-secret could not be found/opened. Generate new keys to proceed."
-                )
-                return -1
-
-            if s_pub_count != count:
-                return -1
+        if s_pub_count != count:
+            return -1
 
         return s_pub_count
 
@@ -610,7 +609,7 @@ class HTTPExchange:
             )
         except:
             print_err(
-                "SSH connection to send files could not be established. Check if the needed SSH keys are set up."
+                "SSH connection to send files could not be established. Check if the needed SSH keys are set up. If all keys are correct, run install_requirements.py."
             )
-            
+
     # TODO: Add function to delete old keys
