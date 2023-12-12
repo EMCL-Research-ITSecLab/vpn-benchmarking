@@ -9,14 +9,14 @@ hosts = {"hosts": []}
 
 
 @click.command()
-@click.option("--server", default="", help="server: [USER]@[IP ADDRESS]:[PORT]")
-@click.option("--client", default="", help="client: [USER]@[IP ADDRESS]")
+@click.option("--server", default="", help="server: [user]@[ip_address]:[port]")
+@click.option("--client", default="", help="client: [user]@[ip_address]")
 def cli(server, client):
     # check if at both of the options is set
     # TODO: Add option to only enter one value
     if server == "" or client == "":
         click.echo(
-            "Usage: set_hosts.py --server [USER]@[IP ADDRESS]:[PORT] --client [USER]@[IP ADDRESS]"
+            "Usage: set_hosts.py --server [user]@[ip_address]:[port] --client [user]@[ip_address]"
         )
         return
 
@@ -46,7 +46,7 @@ def cli(server, client):
             hosts["hosts"].append(server)
         except:
             print_err(
-                "The format of the information about the server was incorrect. Correct format: [USER]@[IP ADDRESS]:[PORT]"
+                "The format of the information about the server was incorrect. Correct format: [user]@[ip_address]:[port]"
             )
 
     # get information about the client
@@ -59,7 +59,7 @@ def cli(server, client):
             hosts["hosts"].append(client)
         except:
             print_err(
-                "The format of the information about the client was incorrect. Correct format: [USER]@[IP ADDRESS]"
+                "The format of the information about the client was incorrect. Correct format: [user]@[ip_address]"
             )
 
     # save the data

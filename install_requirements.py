@@ -15,7 +15,6 @@ def install_pip_requirements():
 
 
 def set_up_folder_structure(host):
-    # TODO: Remove folder rp-exchange from all files
     print("Setting up folder structure for rosenpass keys... ", end="", flush=True)
     try:
         base_path = os.getcwd()

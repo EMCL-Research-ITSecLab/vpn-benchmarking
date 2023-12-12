@@ -4,8 +4,6 @@ from error_messages import print_err
 
 import click
 
-# TODO: Let rp use iterations too
-
 
 def client_genkeys(number):
     client = HTTPExchange.OnClient()
