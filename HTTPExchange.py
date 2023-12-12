@@ -219,7 +219,7 @@ class HTTPExchange:
                         )
                     except:
                         print_err(
-                            "Something went wrong! Perhaps rosenpass is not installed."
+                            "Something went wrong! Perhaps rosenpass is not installed or the key set already exists."
                         )
                         return
             else:
@@ -253,6 +253,7 @@ class HTTPExchange:
                 return
 
             exchange = HTTPExchange()
+            print("Sending public keys to the client... ", end="", flush=True)
             try:
                 base_path = "rp-keys/server-public/"
                 for folder in os.listdir(base_path):
@@ -262,6 +263,7 @@ class HTTPExchange:
                         c_ip_addr,
                         os.path.join(remote_path, base_path, folder),
                     )
+                print("done.")
             except:
                 print_err(
                     'Keys do not exist. Generate new keys with the operation "keygen" of "main.py".'
@@ -527,6 +529,7 @@ class HTTPExchange:
                 return
 
             exchange = HTTPExchange()
+            print("Sending public keys to the server... ", end="", flush=True)
             try:
                 base_path = "rp-keys/client-public/"
                 for folder in os.listdir(base_path):
@@ -536,6 +539,7 @@ class HTTPExchange:
                         s_ip_addr,
                         os.path.join(remote_path, base_path, folder),
                     )
+                print("done.")
             except:
                 print_err(
                     'Keys do not exist. Generate new keys with the operation "keygen" of "main.py".'

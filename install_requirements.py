@@ -13,6 +13,13 @@ def install_pip_requirements():
     except:
         print_err("Could not install requirements.")
 
+def install_python_requirements():
+    print("Installing python requirements... ", flush=True)
+    try:
+        subprocess.check_output(["sudo", "apt-get", "install", "python3-pycurl"])
+        print("done.")
+    except:
+        print_err("Could not install requirements.")
 
 def set_up_folder_structure(host):
     print("Setting up folder structure for rosenpass keys... ", end="", flush=True)
@@ -42,4 +49,5 @@ def cli(role):
 
 if __name__ == "__main__":
     install_pip_requirements()
+    install_python_requirements()
     cli()

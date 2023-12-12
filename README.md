@@ -24,7 +24,7 @@ Note, that both options `--server` and `--client` have to be set on both hosts.
 After setting the hosts, you will be asked if you want to set the same hosts for the ansible hosts file. This can be used in the next step, to install Rosenpass on the hosts. Confirm if you need to install or update Rosenpass.
 
 ### Install latest Rosenpass version
-For setting up the environment, install Ansible on a third device (master), set up SSH keys on both hosts and use:
+For setting up the environment, install Ansible on a third device (master), set up SSH keys on both hosts, copy the ansible hosts file from one of the hosts to master and use:
 ```
 user@master:~$ ansible-playbook install_rosenpass.yml --ask-become-pass
 ```
@@ -48,10 +48,10 @@ For a successful exchange, both hosts have to generate the same number of key se
 #### Sharing Rosenpass public keys with the other host
 For sharing the keys, it is necessary to set up SSH keys on both the server and the client. To share the keys, execute:
 ```
-user@server:~$ python main.py server keysend -d [REMOTE_CLIENT_DIRECTORY]
+user@server:~$ python main.py server keysend -d REMOTE_CLIENT_DIRECTORY
 ```
 ```
-user@client:~$ python main.py client keysend -d [REMOTE_SERVER_DIRECTORY]
+user@client:~$ python main.py client keysend -d REMOTE_SERVER_DIRECTORY
 ```
 `REMOTE_SERVER_DIRECTORY` and `REMOTE_CLIENT_DIRECTORY` specify the working directory on the remote host, in which the folder `rp-keys` for the keys is existent.
 
