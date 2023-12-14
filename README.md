@@ -67,21 +67,25 @@ Now the keys and hosts should be ready to start and monitor exchanges.
 #### HTTP exchange using no vpn (baseline)
 Start the baseline HTTP exchange, by running the following commands:
 ```
-user@server:~$ python main.py server novpn -i/--iterations ITERATIONS
+user@server:~$ python main.py server novpn -i/--iterations ITERATIONS [--auto]
 ```
 ```
-user@client:~$ python main.py client novpn -i/--iterations ITERATIONS
+user@client:~$ python main.py client novpn -i/--iterations ITERATIONS [--auto]
 ```
 Note, that it is necessary to give the iterations as input.
+
+The `--auto` option lets the software save the hardware/network performance every 0.1 seconds automatically, additionally to the values when a new exchange starts. This makes sure that you get values during the entire exchange, without breaks in the execution stopping the values from being saved.
 
 #### HTTP exchange via Rosenpass connection
 Important: In exchanges with a high number of iterations you may be asked for your password multiple times. Enter your `sudo` password and the exchange will continue.
 
 Start the HTTP exchange with Rosenpass VPN, by running the following commands:
 ```
-user@server:~$ python main.py server rp [-i/--iterations ITERATIONS]
+user@server:~$ python main.py server rp [-i/--iterations ITERATIONS] [--auto]
 ```
 ```
-user@client:~$ python main.py client rp [-i/--iterations ITERATIONS]
+user@client:~$ python main.py client rp [-i/--iterations ITERATIONS] [--auto]
 ```
 Without setting the iterations, there will be as many exchanges as key sets in the corresponding folder. If you only created a single key beforehand, you can enter a number as `ITERATIONS` and the exchange will be repeated as often as you entered, using the same key.
+
+The `--auto` option works as described in the baseline HTTP exchange above.
