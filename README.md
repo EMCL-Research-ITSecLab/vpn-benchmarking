@@ -4,7 +4,12 @@ This project aims to measure and compare the performance overhead of using a pos
 
 ## Usage
 ### Installing libraries
-As a first step, you need to install necessary libraries by executing:
+As a first step, it is required to set up a virtual environment for the installation. For this, use:
+```
+python -m venv [DIRECTORY]
+```
+
+Now, you need to install necessary libraries by executing the following in the same folder in which you set up `venv`:
 ```
 user@server:~$ python install_requirements.py server
 ```

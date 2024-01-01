@@ -1,6 +1,6 @@
-psutil
-click
-inquirer
+python3-psutil
+python3-click
+python3-inquirer
 
 
 # to install pycurl: sudo apt-get install python3-pycurl
