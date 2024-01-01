@@ -1,5 +1,6 @@
 import json
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 from pathlib import Path
 from datetime import datetime
@@ -261,7 +262,7 @@ class DataOutput:
 
                 plt.grid(True, "both", "y")
                 plt.xlabel("time [s]")
-                plt.minorticks_on()
+                # plt.minorticks_on()
 
                 if l == "bytes_recv" or l == "bytes_sent":
                     # get the unit of the maximum value and use it for all values
@@ -280,7 +281,26 @@ class DataOutput:
                     plt.xlim([0, max(timestamps)])
                     plt.ylim([0, max(values) + 0.05 * max(values)])
 
-                    plt.plot(timestamps, values)
+                    # plt.plot(timestamps, values)
+                    data = []
+                    nr = len(timestamps)
+
+                    sub_data = []
+                    init_cnt = nr // 10
+                    print(nr)
+                    print(init_cnt)
+                    cnt = init_cnt
+                    for e in self.lists[l]:
+                        sub_data.append(e)
+                        if cnt > 1:
+                            cnt -= 1
+                        else:
+                            cnt = init_cnt
+                            data.append(sub_data)
+                            sub_data = []
+
+                    # plt.plot(timestamps, self.lists[l])
+                    plt.boxplot(data)
                 elif l == "cpu_percent" or l == "ram_percent":
                     if l == "cpu_percent":
                         plt.ylabel("CPU usage [%]")
@@ -301,10 +321,28 @@ class DataOutput:
                             self.lists[l]
                         )  # set max_limit to 5 percent more than the actual maximum
 
-                    plt.xlim([0, max(timestamps)])
-                    plt.ylim([min_limit, max_limit])
+                    # plt.xlim([0, max(timestamps)])
+                    plt.ylim([0, 100])
 
-                    plt.plot(timestamps, self.lists[l])
+                    data = []
+                    nr = len(timestamps)
+
+                    sub_data = []
+                    init_cnt = nr // 8
+                    print(nr)
+                    print(init_cnt)
+                    cnt = init_cnt
+                    for e in self.lists[l]:
+                        sub_data.append(e)
+                        if cnt > 1:
+                            cnt -= 1
+                        else:
+                            cnt = init_cnt
+                            data.append(sub_data)
+                            sub_data = []
+
+                    # plt.plot(timestamps, self.lists[l])
+                    plt.boxplot(data, showfliers=True, flierprops = dict(marker = "x", markeredgecolor='lightgrey'), medianprops = dict(color = "blue", linewidth = 1.5))
                 elif l == "pps_recv" or l == "pps_sent":
                     if l == "pps_recv":
                         plt.ylabel("packets per second (received)")
