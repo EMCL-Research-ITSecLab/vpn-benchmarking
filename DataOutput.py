@@ -281,7 +281,7 @@ class DataOutput:
 
                     plt.xlim([0, max(timestamps)])
                     plt.ylim([0, max(values) + 0.05 * max(values)])
-                    
+
                     if median:
                         data = self.__partition_data(self.lists[l], len(timestamps))
                         plt.boxplot(
@@ -332,16 +332,25 @@ class DataOutput:
                     else:
                         plt.ylabel("packets per second (sent)")
 
-                    plt.xlim([0, max(timestamps)])
                     plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
 
-                    plt.plot(timestamps, self.lists[l])
+                    if median:
+                        data = self.__partition_data(self.lists[l], len(timestamps))
+                        plt.boxplot(
+                            data,
+                            showfliers=True,
+                            flierprops=dict(marker="x", markeredgecolor="lightgrey"),
+                            medianprops=dict(color="blue", linewidth=1.5),
+                        )
+                    else:
+                        plt.xlim([0, max(timestamps)])
+                        plt.plot(timestamps, self.lists[l])
                 else:
                     plt.plot(timestamps, self.lists[l])
 
                 if median:
                     l += "_median"
-                    
+
                 if full:
                     l += "_full"
 
