@@ -252,6 +252,7 @@ class DataOutput:
         self.__fill_lists()
         timestamps = self.__get_timestamps()
 
+        always_full = False
         no_data = True
         for l in self.lists:
             if self.lists[l] != [] and l != "time":
@@ -265,6 +266,7 @@ class DataOutput:
                     plt.minorticks_on()
 
                 if l == "bytes_recv" or l == "bytes_sent":
+                    always_full = True
                     # get the unit of the maximum value and use it for all values
                     values = self.lists[l]
                     unit = self.__get_unit(max(values))
@@ -278,7 +280,6 @@ class DataOutput:
                     else:
                         plt.ylabel(f"total bytes (sent) [{unit}]")
 
-                    plt.xlim([0, max(timestamps)])
                     plt.ylim([0, max(values) + 0.05 * max(values)])
 
                     if median:
@@ -326,6 +327,7 @@ class DataOutput:
                         plt.xlim([0, max(timestamps)])
                         plt.plot(timestamps, self.lists[l])
                 elif l == "pps_recv" or l == "pps_sent":
+                    always_full = True
                     if l == "pps_recv":
                         plt.ylabel("packets per second (received)")
                     else:
@@ -345,12 +347,13 @@ class DataOutput:
                         plt.xlim([0, max(timestamps)])
                         plt.plot(timestamps, self.lists[l])
                 else:
+                    always_full = True
                     plt.plot(timestamps, self.lists[l])
 
                 if median:
                     l += "_median"
 
-                if full:
+                if full and not always_full:
                     l += "_full"
 
                 plt.savefig(os.path.join(file_path, l))
@@ -370,15 +373,17 @@ class DataOutput:
     def __partition_data(self, initial_data, timestamps, number_blocks=8):
         data = []
         sub_data = []
-        sub_time = max(timestamps) / 8          # length of each interval
-        cur_time = sub_time                     # use data up to this time, then go to next interval
+        sub_time = max(timestamps) / 8  # length of each interval
+        cur_time = sub_time  # use data up to this time, then go to next interval
         initial_time = datetime.fromisoformat(self.__get_time_stamp(0))
 
         i = 0
         while i < len(initial_data):
             try:
                 time = datetime.fromisoformat(self.__get_time_stamp(i))
-                if (time - initial_time).total_seconds() > cur_time:    # if all values in interval have been added
+                if (
+                    time - initial_time
+                ).total_seconds() > cur_time:  # if all values in interval have been added
                     data.append(sub_data)
                     sub_data = []
                     cur_time += sub_time
@@ -386,14 +391,14 @@ class DataOutput:
             except:
                 print_err("Something went wrong!")
                 return
-            
+
             sub_data.append(initial_data[i])
             i += 1
-            
+
         time = datetime.fromisoformat(self.__get_time_stamp(len(initial_data) - 1))
         if (time - initial_time).total_seconds() <= cur_time:
             data.append(sub_data)
-            
+
         return data
 
     def __fill_lists(self):

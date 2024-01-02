@@ -1,0 +1,15 @@
+{
+  "hosts": [
+    {
+      "role": "server",
+      "ip_addr": "192.168.2.228",
+      "port": 9999,
+      "user": "kali"
+    },
+    {
+      "role": "client",
+      "ip_addr": "192.168.2.227",
+      "user": "kali"
+    }
+  ]
+}
