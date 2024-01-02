@@ -252,7 +252,6 @@ class DataOutput:
         self.__fill_lists()
         timestamps = self.__get_timestamps()
 
-        # TODO: Add way to plot multiple graphs into one graphic
         no_data = True
         for l in self.lists:
             if self.lists[l] != [] and l != "time":
@@ -283,7 +282,7 @@ class DataOutput:
                     plt.ylim([0, max(values) + 0.05 * max(values)])
 
                     if median:
-                        data = self.__partition_data(self.lists[l], len(timestamps))
+                        data = self.__partition_data(self.lists[l], timestamps)
                         plt.boxplot(
                             data,
                             showfliers=True,
@@ -316,7 +315,7 @@ class DataOutput:
                     plt.ylim([min_limit, max_limit])
 
                     if median:
-                        data = self.__partition_data(self.lists[l], len(timestamps))
+                        data = self.__partition_data(self.lists[l], timestamps)
                         plt.boxplot(
                             data,
                             showfliers=True,
@@ -335,7 +334,7 @@ class DataOutput:
                     plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
 
                     if median:
-                        data = self.__partition_data(self.lists[l], len(timestamps))
+                        data = self.__partition_data(self.lists[l], timestamps)
                         plt.boxplot(
                             data,
                             showfliers=True,
@@ -368,21 +367,33 @@ class DataOutput:
         for l in self.lists:
             self.lists[l] = []
 
-    def __partition_data(self, initial_data, number_timestamps, number_blocks=8):
+    def __partition_data(self, initial_data, timestamps, number_blocks=8):
         data = []
         sub_data = []
-        init_cnt = number_timestamps // 8
-        cnt = init_cnt
+        sub_time = max(timestamps) / 8          # length of each interval
+        cur_time = sub_time                     # use data up to this time, then go to next interval
+        initial_time = datetime.fromisoformat(self.__get_time_stamp(0))
 
-        for e in initial_data:
-            sub_data.append(e)
-            if cnt > 1:
-                cnt -= 1
-            else:
-                cnt = init_cnt
-                data.append(sub_data)
-                sub_data = []
-
+        i = 0
+        while i < len(initial_data):
+            try:
+                time = datetime.fromisoformat(self.__get_time_stamp(i))
+                if (time - initial_time).total_seconds() > cur_time:    # if all values in interval have been added
+                    data.append(sub_data)
+                    sub_data = []
+                    cur_time += sub_time
+                    continue
+            except:
+                print_err("Something went wrong!")
+                return
+            
+            sub_data.append(initial_data[i])
+            i += 1
+            
+        time = datetime.fromisoformat(self.__get_time_stamp(len(initial_data) - 1))
+        if (time - initial_time).total_seconds() <= cur_time:
+            data.append(sub_data)
+            
         return data
 
     def __fill_lists(self):
