@@ -39,17 +39,17 @@ class DataOutput:
         self.pps_recv = pps_recv
         self.pps_sent = pps_sent
 
-    def make_graphs_for_directory(self, dir_path):
+    def make_graphs_for_directory(self, dir_path, full, median):
         try:
             for file in os.listdir(dir_path):
                 if file[-5:] == ".json":
                     file_path = dir_path + "/" + file
-                    self.make_graphs_for_file(file_path)
+                    self.make_graphs_for_file(file_path, full, median)
                     plt.close()
         except NotADirectoryError:
             print_err("The given path is not a directory!")
 
-    def make_graphs_for_file(self, file_path):
+    def make_graphs_for_file(self, file_path, full, median):
         self.file = open(file_path)
         self.data = json.load(self.file)
         file_name = os.path.basename(file_path)
@@ -58,7 +58,7 @@ class DataOutput:
             print_warn(f"Skipping {file_name}. Not a json file!")
             return
 
-        self.__make_graph(file_name)
+        self.__make_graph(file_name, full, median)
 
     def compare_graphs(self, path, number_of_files):
         # check if the number of files is too high
@@ -247,7 +247,7 @@ class DataOutput:
                 plt.clf()
                 print(f"File saved as {short_path}/{l}.png.")
 
-    def __make_graph(self, file_name):
+    def __make_graph(self, file_name, full, median):
         self.__reset_lists()
         self.__fill_lists()
         timestamps = self.__get_timestamps()
@@ -262,7 +262,8 @@ class DataOutput:
 
                 plt.grid(True, "both", "y")
                 plt.xlabel("time [s]")
-                # plt.minorticks_on()
+                if not median:
+                    plt.minorticks_on()
 
                 if l == "bytes_recv" or l == "bytes_sent":
                     # get the unit of the maximum value and use it for all values
@@ -280,69 +281,51 @@ class DataOutput:
 
                     plt.xlim([0, max(timestamps)])
                     plt.ylim([0, max(values) + 0.05 * max(values)])
-
-                    # plt.plot(timestamps, values)
-                    data = []
-                    nr = len(timestamps)
-
-                    sub_data = []
-                    init_cnt = nr // 10
-                    print(nr)
-                    print(init_cnt)
-                    cnt = init_cnt
-                    for e in self.lists[l]:
-                        sub_data.append(e)
-                        if cnt > 1:
-                            cnt -= 1
-                        else:
-                            cnt = init_cnt
-                            data.append(sub_data)
-                            sub_data = []
-
-                    # plt.plot(timestamps, self.lists[l])
-                    plt.boxplot(data)
+                    
+                    if median:
+                        data = self.__partition_data(self.lists[l], len(timestamps))
+                        plt.boxplot(
+                            data,
+                            showfliers=True,
+                            flierprops=dict(marker="x", markeredgecolor="lightgrey"),
+                            medianprops=dict(color="blue", linewidth=1.5),
+                        )
+                    else:
+                        plt.xlim([0, max(timestamps)])
+                        plt.plot(timestamps, self.lists[l])
                 elif l == "cpu_percent" or l == "ram_percent":
                     if l == "cpu_percent":
                         plt.ylabel("CPU usage [%]")
                     else:
                         plt.ylabel("RAM usage [%]")
 
-                    if min(self.lists[l]) <= 15:
-                        min_limit = 0
+                    min_limit = 0
+                    max_limit = 100
+
+                    if not full:
+                        if min(self.lists[l]) > 15:
+                            min_limit = 0.95 * min(
+                                self.lists[l]
+                            )  # set min_limit to 5 percent less than the actual minimum
+
+                        if max(self.lists[l]) < 85:
+                            max_limit = 1.05 * max(
+                                self.lists[l]
+                            )  # set max_limit to 5 percent more than the actual maximum
+
+                    plt.ylim([min_limit, max_limit])
+
+                    if median:
+                        data = self.__partition_data(self.lists[l], len(timestamps))
+                        plt.boxplot(
+                            data,
+                            showfliers=True,
+                            flierprops=dict(marker="x", markeredgecolor="lightgrey"),
+                            medianprops=dict(color="blue", linewidth=1.5),
+                        )
                     else:
-                        min_limit = 0.95 * min(
-                            self.lists[l]
-                        )  # set min_limit to 5 percent less than the actual minimum
-
-                    if max(self.lists[l]) >= 85:
-                        max_limit = 100
-                    else:
-                        max_limit = 1.05 * max(
-                            self.lists[l]
-                        )  # set max_limit to 5 percent more than the actual maximum
-
-                    # plt.xlim([0, max(timestamps)])
-                    plt.ylim([0, 100])
-
-                    data = []
-                    nr = len(timestamps)
-
-                    sub_data = []
-                    init_cnt = nr // 8
-                    print(nr)
-                    print(init_cnt)
-                    cnt = init_cnt
-                    for e in self.lists[l]:
-                        sub_data.append(e)
-                        if cnt > 1:
-                            cnt -= 1
-                        else:
-                            cnt = init_cnt
-                            data.append(sub_data)
-                            sub_data = []
-
-                    # plt.plot(timestamps, self.lists[l])
-                    plt.boxplot(data, showfliers=True, flierprops = dict(marker = "x", markeredgecolor='lightgrey'), medianprops = dict(color = "blue", linewidth = 1.5))
+                        plt.xlim([0, max(timestamps)])
+                        plt.plot(timestamps, self.lists[l])
                 elif l == "pps_recv" or l == "pps_sent":
                     if l == "pps_recv":
                         plt.ylabel("packets per second (received)")
@@ -356,11 +339,16 @@ class DataOutput:
                 else:
                     plt.plot(timestamps, self.lists[l])
 
-                plt.savefig(os.path.join(file_path, l))
-                plt.clf()
+                if median:
+                    l += "_median"
+                    
+                if full:
+                    l += "_full"
 
-                no_data = False
+                plt.savefig(os.path.join(file_path, l))
                 print(f"File saved as {short_path}/{l}.png.")
+                plt.clf()
+                no_data = False
         if no_data == True:
             print("No data. Not printing any graphs.")
 
@@ -370,6 +358,23 @@ class DataOutput:
     def __reset_lists(self):
         for l in self.lists:
             self.lists[l] = []
+
+    def __partition_data(self, initial_data, number_timestamps, number_blocks=8):
+        data = []
+        sub_data = []
+        init_cnt = number_timestamps // 8
+        cnt = init_cnt
+
+        for e in initial_data:
+            sub_data.append(e)
+            if cnt > 1:
+                cnt -= 1
+            else:
+                cnt = init_cnt
+                data.append(sub_data)
+                sub_data = []
+
+        return data
 
     def __fill_lists(self):
         for i in range(len(self.data["data"])):
@@ -468,6 +473,24 @@ def cli(compare, path):
                 "pps_sent",
             ],
         ),
+        inquirer.List(
+            "full",
+            message="Create full or detailed graphs?",
+            choices=[
+                "only full graphs (0 to 100 percent)",
+                "only detailed graphs",
+                "both",
+            ],
+        ),
+        inquirer.List(
+            "median",
+            message="Create min/max/median graphs?",
+            choices=[
+                "only min/max/median graphs",
+                "only normal graphs",
+                "both",
+            ],
+        ),
     ]
 
     answers = inquirer.prompt(questions)
@@ -476,10 +499,35 @@ def cli(compare, path):
         print_err("Something went wrong!")
         return
 
+    for a in answers:
+        if a == None:
+            print_err("Something went wrong!")
+            return
+
     if "all" in answers["values"]:
         all = True
     else:
         all = False
+
+    if answers["full"] == "only full graphs (0 to 100 percent)":
+        full_graphs = True
+        detailed_graphs = False
+    elif answers["full"] == "only detailed graphs":
+        full_graphs = False
+        detailed_graphs = True
+    else:
+        full_graphs = True
+        detailed_graphs = True
+
+    if answers["median"] == "only min/max/median graphs":
+        median_graphs = True
+        normal_graphs = False
+    elif answers["median"] == "only normal graphs":
+        median_graphs = False
+        normal_graphs = True
+    else:
+        median_graphs = True
+        normal_graphs = True
 
     if compare == 0 or compare == 1:
         # if path is directory
@@ -493,7 +541,14 @@ def cli(compare, path):
                 pps_sent="pps_sent" in answers["values"] or all,
             )
             print("Creating graphs for all json files in the directory...")
-            output.make_graphs_for_directory(path)
+            if full_graphs and median_graphs:
+                output.make_graphs_for_directory(path, full=True, median=True)
+            if full_graphs and normal_graphs:
+                output.make_graphs_for_directory(path, full=True, median=False)
+            if detailed_graphs and median_graphs:
+                output.make_graphs_for_directory(path, full=False, median=True)
+            if detailed_graphs and normal_graphs:
+                output.make_graphs_for_directory(path, full=False, median=False)
         # if path is json file
         elif os.path.isfile(path) and path[-5:] == ".json":
             output = DataOutput(
@@ -505,7 +560,14 @@ def cli(compare, path):
                 pps_sent="pps_sent" in answers["values"] or all,
             )
             print("Creating graphs for the file...")
-            output.make_graphs_for_file(path)
+            if full_graphs and median_graphs:
+                output.make_graphs_for_file(path, full=True, median=True)
+            if full_graphs and normal_graphs:
+                output.make_graphs_for_file(path, full=True, median=False)
+            if detailed_graphs and median_graphs:
+                output.make_graphs_for_file(path, full=False, median=True)
+            if detailed_graphs and normal_graphs:
+                output.make_graphs_for_file(path, full=False, median=False)
         # if path is other file
         elif os.path.exists(path):
             print_err("The given file is not a json file.")
