@@ -219,7 +219,7 @@ class DataOutput:
 
                         plt.xlim([0, 100])
                         plt.ylim([0, 100])
-                        plt.yticks(ticks=range(0, 101, 10))
+                        plt.yticks(ticks=np.arange(0, 101, 10))
 
                         plt.plot(timestamps, self.lists[l], label=names[f])
                     elif l == "pps_recv" or l == "pps_sent":
