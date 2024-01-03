@@ -1,12 +1,11 @@
+from genericpath import isdir
 import json
-from matplotlib.font_manager import font_scalings
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 from pathlib import Path
 from datetime import datetime
-from error_messages import print_err
-from error_messages import print_warn
+from error_messages import print_err, print_warn
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
 import click
@@ -14,6 +13,7 @@ import inquirer
 
 
 class DataOutput:
+    # different lists for the values
     lists = {
         "time": [],
         "cpu_percent": [],
@@ -41,25 +41,59 @@ class DataOutput:
         self.pps_sent = pps_sent
 
     def make_graphs_for_directory(self, dir_path, full, median):
+        # goes through files in a directory and calls make_graphs_for_file
         try:
+            files_exist = False
+
+            # check if path exists and is a directory
+            if not os.path.isdir(dir_path):
+                raise NotADirectoryError
+
             for file in os.listdir(dir_path):
+                # check if file is a json
                 if file[-5:] == ".json":
+                    files_exist = True
                     file_path = dir_path + "/" + file
                     self.make_graphs_for_file(file_path, full, median)
                     plt.close()
+
+            if not files_exist:
+                raise FileNotFoundError
         except NotADirectoryError:
-            print_err("The given path is not a directory!")
-
-    def make_graphs_for_file(self, file_path, full, median):
-        self.file = open(file_path)
-        self.data = json.load(self.file)
-        file_name = os.path.basename(file_path)
-
-        if file_name[-5:] != ".json":
-            print_warn(f"Skipping {file_name}. Not a json file!")
+            print_err("The given path is not a directory.")
+            return
+        except FileNotFoundError:
+            print_err("The given directory does not contain json files.")
+            return
+        except KeyError:
+            print_err("At least one of the json files does not contain correct data.")
+            return
+        except Exception as err:
+            print_err(f"Unexpected {err=}, {type(err)=}")
             return
 
-        self.__make_graph(file_name, full, median)
+    def make_graphs_for_file(self, file_path, full, median):
+        self.file_name = os.path.basename(file_path)
+        try:
+            if self.file_name[-5:] != ".json":
+                raise FileNotFoundError
+
+            self.file = open(file_path)
+            self.data = json.load(self.file)
+        except IsADirectoryError:
+            print_err(f"Skipping {file_path}: The given path is not a json file.")
+            return
+        except FileNotFoundError:
+            if self.file_name[-5:] == ".json":
+                print_err(f"Skipping {file_path}: The given path is not a file.")
+            else:
+                print_err(f"Skipping {file_path}: The given path is not a json file.")
+            return
+        except Exception as err:
+            print_err(f"Unexpected {err=}, {type(err)=}")
+            return
+
+        self.__make_graph(self.file_name, full, median)
 
     def compare_graphs(self, path, number_of_files):
         # check if the number of files is too high
@@ -125,12 +159,15 @@ class DataOutput:
 
                 # compute the maximum value for the bytes (needed for correct bounds on the graphs)
                 for i in range(len(self.data["data"])):
-                    cur_b_recv = self.__get_bytes_recv(i)
-                    cur_b_sent = self.__get_bytes_sent(i)
-                    if cur_b_recv > max_bytes_recv:
-                        max_bytes_recv = cur_b_recv
-                    if cur_b_sent > max_bytes_sent:
-                        max_bytes_sent = cur_b_sent
+                    bytes_recv = self.__get_bytes_recv(i)
+                    bytes_sent = self.__get_bytes_sent(i)
+                    if bytes_recv != None and bytes_sent != None:
+                        cur_b_recv = bytes_recv
+                        cur_b_sent = bytes_sent
+                        if cur_b_recv > max_bytes_recv:
+                            max_bytes_recv = cur_b_recv
+                        if cur_b_sent > max_bytes_sent:
+                            max_bytes_sent = cur_b_sent
 
             short_path = ""
             full_path = ""
@@ -145,7 +182,7 @@ class DataOutput:
                 # get the timestamps from the file
                 if self.lists["time"] == []:
                     for i in range(len(self.data["data"])):
-                        self.lists["time"].append(self.__get_time_stamp(i))
+                        self.lists["time"].append(self.__get_timestamp(i))
 
                 # append all values that we want a graph for
                 for i in range(len(self.data["data"])):
@@ -249,6 +286,9 @@ class DataOutput:
                 print(f"File saved as {short_path}/{l}.png.")
 
     def __make_graph(self, file_name, full, median):
+        if not self.__check_data():
+            return
+
         self.__reset_lists()
         self.__fill_lists()
         timestamps = self.__get_timestamps()
@@ -409,6 +449,59 @@ class DataOutput:
         # reset data lists
         self.__reset_lists()
 
+    def __check_data(self):
+        try:
+            # check if there is only one field 'data'
+            if len(self.data) != 1 or not isinstance(self.data["data"], list):
+                raise KeyError
+
+            for dictionary in self.data["data"]:
+                if not isinstance(dictionary, dict) or len(dictionary) != 4:
+                    raise KeyError
+
+                # check hardware values
+                if (
+                    not isinstance(dictionary["hardware"], list)
+                    or len(dictionary["hardware"]) != 1
+                    or not isinstance(dictionary["hardware"][0], dict)
+                    or len(dictionary["hardware"][0]) != 2
+                    or not isinstance(dictionary["hardware"][0]["cpu_percent"], float)
+                    or not isinstance(dictionary["hardware"][0]["ram_percent"], float)
+                ):
+                    raise KeyError
+                
+                # check network values
+                if (
+                    not isinstance(dictionary["network"], list)
+                    or len(dictionary["network"]) != 1
+                    or not isinstance(dictionary["network"][0], dict)
+                    or len(dictionary["network"][0]) != 4
+                    or not isinstance(dictionary["network"][0]["bytes_recv"], int)
+                    or not isinstance(dictionary["network"][0]["bytes_sent"], int)
+                    or not isinstance(dictionary["network"][0]["pps_recv"], int)
+                    or not isinstance(dictionary["network"][0]["pps_sent"], int)
+                ):
+                    raise KeyError
+                
+                # check timestamp
+                datetime.fromisoformat(dictionary["time"])
+                
+                # check name
+                if not isinstance(dictionary["name"], str):
+                    raise KeyError
+
+        except KeyError:
+            print_err(f"Skipping file {self.file_name}: Incorrect or no data!")
+            return False
+        except ValueError:
+            print_err(f"Skipping file {self.file_name}: Incorrect timestamp format!")
+            return False
+        except Exception as err:
+            print_err(f"Unexpected {err=}, {type(err)=}")
+            return False
+        
+        return True
+
     def __reset_lists(self):
         for l in self.lists:
             self.lists[l] = []
@@ -418,19 +511,25 @@ class DataOutput:
         sub_data = []
         sub_time = self.length / number_blocks  # length of each interval
         cur_time = sub_time  # use data up to this time, then go to next interval
-        initial_time = datetime.fromisoformat(self.__get_time_stamp(0))
+        timestamp = self.__get_timestamp(0)
+        if timestamp != None:
+            initial_time = datetime.fromisoformat(timestamp)
+        else:
+            return
 
         i = 0
         while i < len(initial_data):
             try:
-                time = datetime.fromisoformat(self.__get_time_stamp(i))
-                if (
-                    time - initial_time
-                ).total_seconds() > cur_time:  # if all values in interval have been added
-                    data.append(sub_data)
-                    sub_data = []
-                    cur_time += sub_time
-                    continue
+                timestamp = self.__get_timestamp(i)
+                if timestamp != None:
+                    time = datetime.fromisoformat(timestamp)
+                    if (
+                        time - initial_time
+                    ).total_seconds() > cur_time:  # if all values in interval have been added
+                        data.append(sub_data)
+                        sub_data = []
+                        cur_time += sub_time
+                        continue
             except:
                 print_err("Something went wrong!")
                 return
@@ -438,15 +537,20 @@ class DataOutput:
             sub_data.append(initial_data[i])
             i += 1
 
-        time = datetime.fromisoformat(self.__get_time_stamp(len(initial_data) - 1))
-        if (time - initial_time).total_seconds() <= cur_time:
-            data.append(sub_data)
+        timestamp = self.__get_timestamp(len(initial_data) - 1)
+        if timestamp != None:
+            time = datetime.fromisoformat(timestamp)
+            if (time - initial_time).total_seconds() <= cur_time:
+                data.append(sub_data)
 
         return (data, sub_time)
 
     def __fill_lists(self):
+        if not self.__check_data():
+            return
+        
         for i in range(len(self.data["data"])):
-            self.lists["time"].append(self.__get_time_stamp(i))
+            self.lists["time"].append(self.__get_timestamp(i))
             if self.cpu_percent == True:
                 self.lists["cpu_percent"].append(self.__get_cpu_percent(i))
             if self.ram_percent == True:
@@ -501,26 +605,47 @@ class DataOutput:
             bytes = bytes / 1024
         print_err("Number of bytes is too large!")
 
-    def __get_time_stamp(self, entry):
-        return self.data["data"][entry]["time"]
+    def __get_timestamp(self, entry):
+        try:
+            return self.data["data"][entry]["time"]
+        except:
+            print_err("Could not get timestamp.")
 
     def __get_cpu_percent(self, entry):
-        return self.data["data"][entry]["hardware"][0]["cpu_percent"]
+        try:
+            return self.data["data"][entry]["hardware"][0]["cpu_percent"]
+        except:
+            print_err("Could not get cpu percent value.")
 
     def __get_ram_percent(self, entry):
-        return self.data["data"][entry]["hardware"][0]["ram_percent"]
+        try:
+            return self.data["data"][entry]["hardware"][0]["ram_percent"]
+        except:
+            print_err("Could not get ram percent value.")
 
     def __get_bytes_recv(self, entry):
-        return self.data["data"][entry]["network"][0]["bytes_recv"]
+        try:
+            return self.data["data"][entry]["network"][0]["bytes_recv"]
+        except:
+            print_err("Could not get bytes recv value.")
 
     def __get_bytes_sent(self, entry):
-        return self.data["data"][entry]["network"][0]["bytes_sent"]
+        try:
+            return self.data["data"][entry]["network"][0]["bytes_sent"]
+        except:
+            print_err("Could not get bytes sent value.")
 
     def __get_pps_recv(self, entry):
-        return self.data["data"][entry]["network"][0]["pps_recv"]
+        try:
+            return self.data["data"][entry]["network"][0]["pps_recv"]
+        except:
+            print_err("Could not get pps recv value.")
 
     def __get_pps_sent(self, entry):
-        return self.data["data"][entry]["network"][0]["pps_sent"]
+        try:
+            return self.data["data"][entry]["network"][0]["pps_sent"]
+        except:
+            print_err("Could not get pps sent value.")
 
 
 @click.command()
