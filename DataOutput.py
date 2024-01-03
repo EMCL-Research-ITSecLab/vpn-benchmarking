@@ -469,7 +469,7 @@ class DataOutput:
                     or not isinstance(dictionary["hardware"][0]["ram_percent"], float)
                 ):
                     raise KeyError
-                
+
                 # check network values
                 if (
                     not isinstance(dictionary["network"], list)
@@ -482,10 +482,10 @@ class DataOutput:
                     or not isinstance(dictionary["network"][0]["pps_sent"], int)
                 ):
                     raise KeyError
-                
+
                 # check timestamp
                 datetime.fromisoformat(dictionary["time"])
-                
+
                 # check name
                 if not isinstance(dictionary["name"], str):
                     raise KeyError
@@ -499,7 +499,7 @@ class DataOutput:
         except Exception as err:
             print_err(f"Unexpected {err=}, {type(err)=}")
             return False
-        
+
         return True
 
     def __reset_lists(self):
@@ -515,7 +515,7 @@ class DataOutput:
         if timestamp != None:
             initial_time = datetime.fromisoformat(timestamp)
         else:
-            return
+            raise KeyError
 
         i = 0
         while i < len(initial_data):
@@ -531,8 +531,7 @@ class DataOutput:
                         cur_time += sub_time
                         continue
             except:
-                print_err("Something went wrong!")
-                return
+                raise KeyError
 
             sub_data.append(initial_data[i])
             i += 1
@@ -548,7 +547,7 @@ class DataOutput:
     def __fill_lists(self):
         if not self.__check_data():
             return
-        
+
         for i in range(len(self.data["data"])):
             self.lists["time"].append(self.__get_timestamp(i))
             if self.cpu_percent == True:
@@ -565,7 +564,7 @@ class DataOutput:
                 self.lists["pps_sent"].append(self.__get_pps_sent(i))
 
     def __get_timestamps(self):
-        # get the times as difference from the initial time
+        # get the times as absolute difference from the initial time
         timestamps = [0.0]
         initial_time = datetime.fromisoformat(self.lists["time"][0])
         for i in range(1, len(self.lists["time"])):
@@ -575,7 +574,7 @@ class DataOutput:
         return timestamps
 
     def __get_relative_timestamps(self):
-        # get the times as difference from the initial time
+        # get the times as relative difference from the initial time
         timestamps = [0.0]
 
         min_time = min(self.lists["time"])
