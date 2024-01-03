@@ -261,7 +261,6 @@ class DataOutput:
                 Path(file_path).mkdir(parents=True, exist_ok=True)
 
                 plt.grid(True, "both", "y")
-                plt.xlabel("time [s]")
                 if not median:
                     plt.minorticks_on()
 
@@ -284,13 +283,18 @@ class DataOutput:
 
                     if median:
                         data = self.__partition_data(self.lists[l], timestamps)
+                        if data == None:
+                            print_err("Something went wrong!")
+                            return
+                        plt.xlabel("#time interval (of length {:.3f} s)".format(data[1]))
                         plt.boxplot(
-                            data,
+                            data[0],
                             showfliers=True,
                             flierprops=dict(marker="x", markeredgecolor="lightgrey"),
                             medianprops=dict(color="blue", linewidth=1.5),
                         )
                     else:
+                        plt.xlabel("time [s]")
                         plt.xlim([0, max(timestamps)])
                         plt.plot(timestamps, self.lists[l])
                 elif l == "cpu_percent" or l == "ram_percent":
@@ -317,13 +321,18 @@ class DataOutput:
 
                     if median:
                         data = self.__partition_data(self.lists[l], timestamps)
+                        if data == None:
+                            print_err("Something went wrong!")
+                            return
+                        plt.xlabel("#time interval (of length {:.3f} s)".format(data[1]))
                         plt.boxplot(
-                            data,
+                            data[0],
                             showfliers=True,
                             flierprops=dict(marker="x", markeredgecolor="lightgrey"),
                             medianprops=dict(color="blue", linewidth=1.5),
                         )
                     else:
+                        plt.xlabel("time [s]")
                         plt.xlim([0, max(timestamps)])
                         plt.plot(timestamps, self.lists[l])
                 elif l == "pps_recv" or l == "pps_sent":
@@ -337,13 +346,18 @@ class DataOutput:
 
                     if median:
                         data = self.__partition_data(self.lists[l], timestamps)
+                        if data == None:
+                            print_err("Something went wrong!")
+                            return
+                        plt.xlabel("#time interval (of length {:.3f} s)".format(data[1]))
                         plt.boxplot(
-                            data,
+                            data[0],
                             showfliers=True,
                             flierprops=dict(marker="x", markeredgecolor="lightgrey"),
                             medianprops=dict(color="blue", linewidth=1.5),
                         )
                     else:
+                        plt.xlabel("time [s]")
                         plt.xlim([0, max(timestamps)])
                         plt.plot(timestamps, self.lists[l])
                 else:
@@ -399,7 +413,7 @@ class DataOutput:
         if (time - initial_time).total_seconds() <= cur_time:
             data.append(sub_data)
 
-        return data
+        return (data, sub_time)
 
     def __fill_lists(self):
         for i in range(len(self.data["data"])):
