@@ -1,4 +1,5 @@
 import json
+from matplotlib.font_manager import font_scalings
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -251,14 +252,20 @@ class DataOutput:
         self.__reset_lists()
         self.__fill_lists()
         timestamps = self.__get_timestamps()
+        self.length = max(timestamps)
 
         always_full = False
         no_data = True
         for l in self.lists:
+            title = ""
             if self.lists[l] != [] and l != "time":
                 short_path = f"data_graphs/{file_name[:-5]}"
                 file_path = os.path.join(os.getcwd(), short_path)
                 Path(file_path).mkdir(parents=True, exist_ok=True)
+
+                # get device role and type of exchange
+                info = file_name[:-5].split(":")[0].split("-")
+                self.role = info[0]
 
                 plt.grid(True, "both", "y")
                 if not median:
@@ -276,17 +283,21 @@ class DataOutput:
 
                     if l == "bytes_recv":
                         plt.ylabel(f"total bytes (received) [{unit}]")
+                        title += f"Total received bytes "
                     else:
                         plt.ylabel(f"total bytes (sent) [{unit}]")
+                        title += f"Total sent bytes "
 
                     plt.ylim([0, max(values) + 0.05 * max(values)])
 
                     if median:
-                        data = self.__partition_data(self.lists[l], timestamps)
+                        data = self.__partition_data(self.lists[l])
                         if data == None:
                             print_err("Something went wrong!")
                             return
-                        plt.xlabel("#time interval (of length {:.3f} s)".format(data[1]))
+                        plt.xlabel(
+                            "#time interval (of length {:.3f} s)".format(data[1])
+                        )
                         plt.boxplot(
                             data[0],
                             showfliers=True,
@@ -295,13 +306,15 @@ class DataOutput:
                         )
                     else:
                         plt.xlabel("time [s]")
-                        plt.xlim([0, max(timestamps)])
+                        plt.xlim([0, self.length])
                         plt.plot(timestamps, self.lists[l])
                 elif l == "cpu_percent" or l == "ram_percent":
                     if l == "cpu_percent":
                         plt.ylabel("CPU usage [%]")
+                        title += f"CPU usage "
                     else:
                         plt.ylabel("RAM usage [%]")
+                        title += f"RAM usage "
 
                     min_limit = 0
                     max_limit = 100
@@ -320,11 +333,13 @@ class DataOutput:
                     plt.ylim([min_limit, max_limit])
 
                     if median:
-                        data = self.__partition_data(self.lists[l], timestamps)
+                        data = self.__partition_data(self.lists[l])
                         if data == None:
                             print_err("Something went wrong!")
                             return
-                        plt.xlabel("#time interval (of length {:.3f} s)".format(data[1]))
+                        plt.xlabel(
+                            "#time interval (of length {:.3f} s)".format(data[1])
+                        )
                         plt.boxplot(
                             data[0],
                             showfliers=True,
@@ -333,23 +348,27 @@ class DataOutput:
                         )
                     else:
                         plt.xlabel("time [s]")
-                        plt.xlim([0, max(timestamps)])
+                        plt.xlim([0, self.length])
                         plt.plot(timestamps, self.lists[l])
                 elif l == "pps_recv" or l == "pps_sent":
                     always_full = True
                     if l == "pps_recv":
                         plt.ylabel("packets per second (received)")
+                        title += f"Received PPS "
                     else:
                         plt.ylabel("packets per second (sent)")
+                        title += f"Sent PPS "
 
                     plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
 
                     if median:
-                        data = self.__partition_data(self.lists[l], timestamps)
+                        data = self.__partition_data(self.lists[l])
                         if data == None:
                             print_err("Something went wrong!")
                             return
-                        plt.xlabel("#time interval (of length {:.3f} s)".format(data[1]))
+                        plt.xlabel(
+                            "#time interval (of length {:.3f} s)".format(data[1])
+                        )
                         plt.boxplot(
                             data[0],
                             showfliers=True,
@@ -358,18 +377,28 @@ class DataOutput:
                         )
                     else:
                         plt.xlabel("time [s]")
-                        plt.xlim([0, max(timestamps)])
+                        plt.xlim([0, self.length])
                         plt.plot(timestamps, self.lists[l])
                 else:
                     always_full = True
                     plt.plot(timestamps, self.lists[l])
 
+                # adjust title
+                if info[1] == "novpn":
+                    title += "without VPN "
+                elif info[1] == "rp":
+                    title += "using Rosenpass "
+                title += f"({self.role.capitalize()}, "
+                title += "{:.1f} s)".format(self.length)
+
                 if median:
                     l += "_median"
+                    title += " (min/max/median)"
 
                 if full and not always_full:
                     l += "_full"
 
+                plt.title(title, fontweight="bold", fontsize=9)
                 plt.savefig(os.path.join(file_path, l))
                 print(f"File saved as {short_path}/{l}.png.")
                 plt.clf()
@@ -384,10 +413,10 @@ class DataOutput:
         for l in self.lists:
             self.lists[l] = []
 
-    def __partition_data(self, initial_data, timestamps, number_blocks=8):
+    def __partition_data(self, initial_data, number_blocks=8):
         data = []
         sub_data = []
-        sub_time = max(timestamps) / 8  # length of each interval
+        sub_time = self.length / number_blocks  # length of each interval
         cur_time = sub_time  # use data up to this time, then go to next interval
         initial_time = datetime.fromisoformat(self.__get_time_stamp(0))
 
@@ -516,18 +545,18 @@ def cli(compare, path):
             "full",
             message="Create full or detailed graphs?",
             choices=[
+                "both",
                 "only full graphs (0 to 100 percent)",
                 "only detailed graphs",
-                "both",
             ],
         ),
         inquirer.List(
             "median",
             message="Create min/max/median graphs?",
             choices=[
+                "both",
                 "only min/max/median graphs",
                 "only normal graphs",
-                "both",
             ],
         ),
     ]
