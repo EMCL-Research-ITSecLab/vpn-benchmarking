@@ -13,6 +13,7 @@ def install_pip_requirements():
     except:
         print_err("Could not install requirements.")
 
+
 def install_python_requirements():
     print("Installing python requirements... ", flush=True)
     try:
@@ -20,6 +21,7 @@ def install_python_requirements():
         print("done.")
     except:
         print_err("Could not install requirements.")
+
 
 def set_up_folder_structure(host):
     print("Setting up folder structure for rosenpass keys... ", end="", flush=True)

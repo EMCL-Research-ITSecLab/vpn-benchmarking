@@ -1,6 +1,7 @@
 python3-psutil
 python3-click
 python3-inquirer
+numpy
 
 
 # to install pycurl: sudo apt-get install python3-pycurl
