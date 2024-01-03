@@ -5,12 +5,14 @@ import pycurl
 from error_messages import print_err, print_warn
 import json
 
+hosts_path = "hosts.json"
+
 
 class HTTPExchange:
     class OnServer:
         def __init__(self) -> None:
             try:
-                file = open("data/hosts.json", "r")
+                file = open(hosts_path, "r")
                 hosts = json.load(file)
                 for e in hosts["hosts"]:
                     if e["role"] == "server":
@@ -230,7 +232,7 @@ class HTTPExchange:
 
         def send_public_keys_to_client(self, remote_path):
             try:
-                with open("data/hosts.json", "r") as file:
+                with open(hosts_path, "r") as file:
                     hosts = json.load(file)
             except:
                 print_err('Missing "hosts.json" file.')
@@ -281,7 +283,7 @@ class HTTPExchange:
     class OnClient:
         def __init__(self) -> None:
             try:
-                file = open("data/hosts.json", "r")
+                file = open(hosts_path, "r")
                 hosts = json.load(file)
                 for e in hosts["hosts"]:
                     if e["role"] == "server":
@@ -506,7 +508,7 @@ class HTTPExchange:
 
         def send_public_keys_to_server(self, remote_path):
             try:
-                with open("data/hosts.json", "r") as file:
+                with open(hosts_path, "r") as file:
                     hosts = json.load(file)
             except:
                 print_err('Missing "hosts.json" file.')

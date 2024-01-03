@@ -6,6 +6,7 @@ import inquirer
 from pathlib import Path
 
 hosts = {"hosts": []}
+hosts_path = "hosts.json"
 
 
 @click.command()
@@ -63,13 +64,13 @@ def cli(server, client):
             )
 
     # save the data
-    if os.path.exists("data/hosts.json"):  # file exists
+    if os.path.exists(hosts_path):  # file exists
         server_data_exists = False
         client_data_exists = False
         other_data_exists = False
         correct_data = False
 
-        file = open("data/hosts.json")
+        file = open(hosts_path)
         try:
             existing_data = json.load(file)
             # check what data the existing file contains
@@ -118,9 +119,9 @@ def cli(server, client):
                         for e in existing_data["hosts"]:
                             if e["role"] != "server" and e["role"] != "client":
                                 hosts["hosts"].append(e)
-                        os.remove("data/hosts.json")
+                        os.remove(hosts_path)
                         Path("data").mkdir(parents=True, exist_ok=True)
-                        with open(f"data/hosts.json", "a") as file:
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
@@ -132,9 +133,9 @@ def cli(server, client):
                         answers["keep"]
                         == "delete existing data and update server and client information"
                     ):
-                        os.remove("data/hosts.json")
+                        os.remove(hosts_path)
                         Path("data").mkdir(parents=True, exist_ok=True)
-                        with open(f"data/hosts.json", "a") as file:
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
@@ -163,8 +164,8 @@ def cli(server, client):
                         print("The information was not updated.")
                         return
                     elif answers["keep"] == "update server and client information":
-                        os.remove("data/hosts.json")
-                        with open(f"data/hosts.json", "a") as file:
+                        os.remove(hosts_path)
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
@@ -203,8 +204,8 @@ def cli(server, client):
                         for e in existing_data["hosts"]:
                             if e["role"] != "server":
                                 hosts["hosts"].append(e)
-                        os.remove("data/hosts.json")
-                        with open(f"data/hosts.json", "a") as file:
+                        os.remove(hosts_path)
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
@@ -213,8 +214,8 @@ def cli(server, client):
                         answers["keep"]
                         == "delete existing data and update server information"
                     ):
-                        os.remove("data/hosts.json")
-                        with open(f"data/hosts.json", "a") as file:
+                        os.remove(hosts_path)
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
@@ -240,8 +241,8 @@ def cli(server, client):
                         print("The information was not updated.")
                         return
                     elif answers["keep"] == "update server information":
-                        os.remove("data/hosts.json")
-                        with open(f"data/hosts.json", "a") as file:
+                        os.remove(hosts_path)
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
@@ -276,8 +277,8 @@ def cli(server, client):
                         for e in existing_data["hosts"]:
                             if e["role"] != "client":
                                 hosts["hosts"].append(e)
-                        os.remove("data/hosts.json")
-                        with open(f"data/hosts.json", "a") as file:
+                        os.remove(hosts_path)
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The client's information was updated to {c_user}@{c_ip_addr}."
@@ -286,8 +287,8 @@ def cli(server, client):
                         answers["keep"]
                         == "delete existing data and update client information"
                     ):
-                        os.remove("data/hosts.json")
-                        with open(f"data/hosts.json", "a") as file:
+                        os.remove(hosts_path)
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The client's information was updated to {c_user}@{c_ip_addr}."
@@ -313,8 +314,8 @@ def cli(server, client):
                         print("The information was not updated.")
                         return
                     elif answers["keep"] == "update client information":
-                        os.remove("data/hosts.json")
-                        with open(f"data/hosts.json", "a") as file:
+                        os.remove(hosts_path)
+                        with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
                             f"The client's information was updated to {c_user}@{c_ip_addr}."
@@ -323,14 +324,14 @@ def cli(server, client):
                         return
         # case 3: no entries exist
         else:
-            os.remove("data/hosts.json")
-            with open(f"data/hosts.json", "a") as file:
+            os.remove(hosts_path)
+            with open(hosts_path, "a") as file:
                 json.dump(hosts, indent=2, fp=file)
             print(f"The server's information was set to {s_user}@{s_ip_addr}:{s_port}.")
             print(f"The client's information was set to {c_user}@{c_ip_addr}.")
     else:  # file does not exist
         Path("data").mkdir(parents=True, exist_ok=True)
-        with open(f"data/hosts.json", "a") as file:
+        with open(hosts_path, "a") as file:
             json.dump(hosts, indent=2, fp=file)
         print(f"The server's information was set to {s_user}@{s_ip_addr}:{s_port}.")
         print(f"The client's information was set to {c_user}@{c_ip_addr}.")
