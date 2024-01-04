@@ -291,8 +291,9 @@ class DataOutput:
             return
 
         # check file name
-        self.check_file_name_and_set_attributes(file_name)
-
+        if self.check_file_name_and_set_attributes(file_name) == False:
+            return
+        
         # get path names and create directory
         graph_dir_path = (
             f"data_graphs/{self.short_file_name}"  # directory path for the graph
@@ -585,18 +586,20 @@ class DataOutput:
             print_warn(
                 f"Skipping {file_name}: The format of the file name is incorrect."
             )
-            return
+            return False
         except ValueError:
             print_warn(
                 f"Skipping {file_name}: The format of the file name is incorrect: wrong timestamp format."
             )
-            return
+            return False
         except TypeError:
             print_warn(f"Skipping {file_name}: Not a file name.")
-            return
+            return False
         except Exception as err:
             print_err(f"Unexpected {err=}, {type(err)=}")
-            return
+            return False
+        
+        return True
 
     def __reset_lists(self):
         for l in self.lists:

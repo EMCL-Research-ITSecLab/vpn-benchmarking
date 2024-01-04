@@ -1,5 +1,6 @@
 from DataOutput import DataOutput
 import datetime
+from Monitoring import Monitoring
 
 
 output = DataOutput(
@@ -38,3 +39,14 @@ output = DataOutput(
 # print(datetime.datetime.now().isoformat())
 
 # output.check_file_name_and_set_attributes("client-novpn:2024-01-04T12:29:19.843495.json")
+
+import psutil
+
+monitor = Monitoring("test-novpn")
+
+monitor.start(auto=True)
+### start test
+for i in range(99999999):
+    i += i
+### end test
+monitor.stop()

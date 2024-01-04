@@ -60,7 +60,7 @@ class Monitoring:
             time.sleep(self.interval)
 
     def __get_cpu_percent(self):
-        return psutil.cpu_times_percent()[0]
+        return psutil.cpu_percent()
 
     def __get_ram_percent(self):
         return psutil.virtual_memory()[2]
