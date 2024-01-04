@@ -293,13 +293,12 @@ class DataOutput:
         # check file name
         if self.check_file_name_and_set_attributes(file_name) == False:
             return
-        
+
         # get path names and create directory
         graph_dir_path = (
             f"data_graphs/{self.short_file_name}"  # directory path for the graph
         )
-        graph_file_path = os.path.join(os.getcwd(), graph_dir_path)
-        Path(graph_file_path).mkdir(parents=True, exist_ok=True)
+        long_graph_dir_path = os.path.join(os.getcwd(), graph_dir_path)
 
         # get the data from the file
         self.__reset_lists()
@@ -310,20 +309,23 @@ class DataOutput:
         always_full = False  # True if value type is not relative but absolute
         no_data = True  # True if self.lists is empty
 
-        for l in self.lists:
-            if self.lists[l] != [] and l != "time":
+        for value in self.lists:
+            if self.lists[value] != [] and value != "time":
                 title = ""  # build the title depending on values
+                graph_file_path = (
+                    long_graph_dir_path  # build the file path depending on values
+                )
 
                 # set plot parameters: grid
                 plt.grid(True, "both", "y")
                 if not median:
                     plt.minorticks_on()
 
-                if l == "bytes_recv" or l == "bytes_sent":  # absolute values
+                if value == "bytes_recv" or value == "bytes_sent":  # absolute values
                     always_full = True
 
                     # get the unit of the maximum value and use it for all values
-                    values = self.lists[l]
+                    values = self.lists[value]
                     unit = self.__get_unit(max(values))
 
                     while max(values) > 1024:
@@ -331,18 +333,18 @@ class DataOutput:
                             values[v] = values[v] / 1024
 
                     # set plot parameters: ylabel
-                    if l == "bytes_recv":
+                    if value == "bytes_recv":
                         plt.ylabel(f"total bytes (received) [{unit}]")
-                        title += f"Total received bytes "
+                        title += "Total received bytes "
                     else:
                         plt.ylabel(f"total bytes (sent) [{unit}]")
-                        title += f"Total sent bytes "
+                        title += "Total sent bytes "
 
                     # set plot parameters: ylimits
                     plt.ylim([0, 1.05 * max(values)])
 
                     if median:
-                        data = self.__partition_data(self.lists[l])
+                        data = self.__partition_data(self.lists[value])
 
                         if data == None:
                             print_err("Data is empty. Not printing the graph.")
@@ -366,10 +368,12 @@ class DataOutput:
                         plt.xlim([0, self.length])
 
                         # plot
-                        plt.plot(timestamps, self.lists[l])
-                elif l == "cpu_percent" or l == "ram_percent":  # relative values
+                        plt.plot(timestamps, self.lists[value])
+                elif (
+                    value == "cpu_percent" or value == "ram_percent"
+                ):  # relative values
                     # set plot parameters: ylabel
-                    if l == "cpu_percent":
+                    if value == "cpu_percent":
                         plt.ylabel("CPU usage [%]")
                         title += f"CPU usage "
                     else:
@@ -382,21 +386,21 @@ class DataOutput:
 
                     # if detailed, set new ylimits
                     if not full:
-                        if min(self.lists[l]) > 15:
+                        if min(self.lists[value]) > 15:
                             min_limit = 0.95 * min(
-                                self.lists[l]
+                                self.lists[value]
                             )  # set min_limit to 5 percent less than the actual minimum
 
-                        if max(self.lists[l]) < 85:
+                        if max(self.lists[value]) < 85:
                             max_limit = 1.05 * max(
-                                self.lists[l]
+                                self.lists[value]
                             )  # set max_limit to 5 percent more than the actual maximum
 
                     # set plot parameters: ylimits
                     plt.ylim([min_limit, max_limit])
 
                     if median:
-                        data = self.__partition_data(self.lists[l])
+                        data = self.__partition_data(self.lists[value])
 
                         if data == None:
                             print_err("Data is empty. Not printing the graph.")
@@ -420,12 +424,12 @@ class DataOutput:
                         plt.xlim([0, self.length])
 
                         # plot
-                        plt.plot(timestamps, self.lists[l])
-                elif l == "pps_recv" or l == "pps_sent":  # absolute values
+                        plt.plot(timestamps, self.lists[value])
+                elif value == "pps_recv" or value == "pps_sent":  # absolute values
                     always_full = True
 
                     # set plot parameters: ylabel
-                    if l == "pps_recv":
+                    if value == "pps_recv":
                         plt.ylabel("packets per second (received)")
                         title += f"Received PPS "
                     else:
@@ -433,10 +437,12 @@ class DataOutput:
                         title += f"Sent PPS "
 
                     # set plot parameters: ylimits
-                    plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
+                    plt.ylim(
+                        [0, max(self.lists[value]) + 0.05 * max(self.lists[value])]
+                    )
 
                     if median:
-                        data = self.__partition_data(self.lists[l])
+                        data = self.__partition_data(self.lists[value])
 
                         if data == None:
                             print_err("Data is empty. Not printing the graph.")
@@ -460,9 +466,9 @@ class DataOutput:
                         plt.xlim([0, self.length])
 
                         # plot
-                        plt.plot(timestamps, self.lists[l])
+                        plt.plot(timestamps, self.lists[value])
                 else:
-                    print_err(f"Unknown performance parameter '{l}'.")
+                    print_err(f"Unknown performance parameter '{value}'.")
                     return
 
                 # adjust title
@@ -475,19 +481,32 @@ class DataOutput:
                 title += f"({self.role.capitalize()}, "
                 title += "{:.1f} s)".format(self.length)
 
+                # group data in subdirectories 'hardware' and 'network'
+                if value == "cpu_percent" or value == "ram_percent":
+                    graph_file_path = os.path.join(graph_dir_path, "hardware", value)
+                elif value == "bytes_recv" or value == "bytes_sent" or value == "pps_recv" or value == "pps_sent":
+                    graph_file_path = os.path.join(graph_dir_path, "network", value)
+                else:
+                    graph_file_path = os.path.join(graph_dir_path, value)
+
+                specific_value = value
+
                 if median:
-                    l += "_median"
+                    specific_value += "_median"
                     title += " (min/max/median)"
 
                 if full and not always_full:
-                    l += "_full"
+                    specific_value += "_full"
 
                 # set plot parameters: title
                 plt.title(title, fontweight="bold", fontsize=9)
 
-                # save plot in file
-                plt.savefig(os.path.join(graph_file_path, l))
-                print_log(f"File saved as {graph_dir_path}/{l}.png.")
+                # create subdirectory and save plot in file
+                Path(graph_file_path).mkdir(parents=True, exist_ok=True)
+                plt.savefig(os.path.join(graph_file_path, specific_value))
+                print_log(
+                    f"File saved as {graph_dir_path}/{value}/{specific_value}.png."
+                )
 
                 # clean up
                 plt.clf()
@@ -598,7 +617,7 @@ class DataOutput:
         except Exception as err:
             print_err(f"Unexpected {err=}, {type(err)=}")
             return False
-        
+
         return True
 
     def __reset_lists(self):
