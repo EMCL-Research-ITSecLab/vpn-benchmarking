@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import subprocess
 import pycurl
-from error_messages import print_err, print_warn
+from messages import print_err, print_warn
 import json
 
 hosts_path = "hosts.json"

@@ -1,6 +1,6 @@
 from Monitoring import Monitoring
 from HTTPExchange import HTTPExchange
-from error_messages import print_err
+from messages import print_err
 
 import click
 

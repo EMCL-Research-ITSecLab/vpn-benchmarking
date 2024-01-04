@@ -1,4 +1,5 @@
 from DataOutput import DataOutput
+import datetime
 
 
 output = DataOutput(
@@ -32,4 +33,8 @@ output = DataOutput(
 # output.make_graphs_for_file("does_not_exist.json", False, False)
 
 # # test: incorrect json file
-output.make_graphs_for_file("test_dir2/false.json", False, False)
+# output.make_graphs_for_file("test_dir2/false.json", False, False)
+
+# print(datetime.datetime.now().isoformat())
+
+# output.check_file_name_and_set_attributes("client-novpn:2024-01-04T12:29:19.843495.json")

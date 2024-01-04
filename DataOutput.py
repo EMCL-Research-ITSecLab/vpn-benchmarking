@@ -5,7 +5,7 @@ import numpy as np
 import os
 from pathlib import Path
 from datetime import datetime
-from error_messages import print_err, print_warn
+from messages import print_err, print_warn, print_log
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
 import click
@@ -13,7 +13,7 @@ import inquirer
 
 
 class DataOutput:
-    # different lists for the values
+    # lists for the values
     lists = {
         "time": [],
         "cpu_percent": [],
@@ -40,6 +40,7 @@ class DataOutput:
         self.pps_recv = pps_recv
         self.pps_sent = pps_sent
 
+    # public methods
     def make_graphs_for_directory(self, dir_path, full, median):
         # goes through files in a directory and calls make_graphs_for_file
         try:
@@ -75,9 +76,7 @@ class DataOutput:
     def make_graphs_for_file(self, file_path, full, median):
         self.file_name = os.path.basename(file_path)
         try:
-            if self.file_name[-5:] != ".json":
-                raise FileNotFoundError
-
+            self.check_file_name_and_set_attributes(self.file_name)
             self.file = open(file_path)
             self.data = json.load(self.file)
         except IsADirectoryError:
@@ -285,34 +284,43 @@ class DataOutput:
                 plt.clf()
                 print(f"File saved as {short_path}/{l}.png.")
 
+    # private methods
     def __make_graph(self, file_name, full, median):
+        # check if 'data' is correct
         if not self.__check_data():
             return
 
+        # check file name
+        self.check_file_name_and_set_attributes(file_name)
+
+        # get path names and create directory
+        graph_dir_path = (
+            f"data_graphs/{self.short_file_name}"  # directory path for the graph
+        )
+        graph_file_path = os.path.join(os.getcwd(), graph_dir_path)
+        Path(graph_file_path).mkdir(parents=True, exist_ok=True)
+
+        # get the data from the file
         self.__reset_lists()
         self.__fill_lists()
         timestamps = self.__get_timestamps()
         self.length = max(timestamps)
 
-        always_full = False
-        no_data = True
+        always_full = False  # True if value type is not relative but absolute
+        no_data = True  # True if self.lists is empty
+
         for l in self.lists:
-            title = ""
             if self.lists[l] != [] and l != "time":
-                short_path = f"data_graphs/{file_name[:-5]}"
-                file_path = os.path.join(os.getcwd(), short_path)
-                Path(file_path).mkdir(parents=True, exist_ok=True)
+                title = ""  # build the title depending on values
 
-                # get device role and type of exchange
-                info = file_name[:-5].split(":")[0].split("-")
-                self.role = info[0]
-
+                # set plot parameters: grid
                 plt.grid(True, "both", "y")
                 if not median:
                     plt.minorticks_on()
 
-                if l == "bytes_recv" or l == "bytes_sent":
+                if l == "bytes_recv" or l == "bytes_sent":  # absolute values
                     always_full = True
+
                     # get the unit of the maximum value and use it for all values
                     values = self.lists[l]
                     unit = self.__get_unit(max(values))
@@ -321,6 +329,7 @@ class DataOutput:
                         for v in range(len(values)):
                             values[v] = values[v] / 1024
 
+                    # set plot parameters: ylabel
                     if l == "bytes_recv":
                         plt.ylabel(f"total bytes (received) [{unit}]")
                         title += f"Total received bytes "
@@ -328,16 +337,22 @@ class DataOutput:
                         plt.ylabel(f"total bytes (sent) [{unit}]")
                         title += f"Total sent bytes "
 
-                    plt.ylim([0, max(values) + 0.05 * max(values)])
+                    # set plot parameters: ylimits
+                    plt.ylim([0, 1.05 * max(values)])
 
                     if median:
                         data = self.__partition_data(self.lists[l])
+
                         if data == None:
-                            print_err("Something went wrong!")
+                            print_err("Data is empty. Not printing the graph.")
                             return
+
+                        # set plot parameters: xlabel
                         plt.xlabel(
                             "#time interval (of length {:.3f} s)".format(data[1])
                         )
+
+                        # plot
                         plt.boxplot(
                             data[0],
                             showfliers=True,
@@ -345,10 +360,14 @@ class DataOutput:
                             medianprops=dict(color="blue", linewidth=1.5),
                         )
                     else:
+                        # set plot parameters: xlabel, xlimits
                         plt.xlabel("time [s]")
                         plt.xlim([0, self.length])
+
+                        # plot
                         plt.plot(timestamps, self.lists[l])
-                elif l == "cpu_percent" or l == "ram_percent":
+                elif l == "cpu_percent" or l == "ram_percent":  # relative values
+                    # set plot parameters: ylabel
                     if l == "cpu_percent":
                         plt.ylabel("CPU usage [%]")
                         title += f"CPU usage "
@@ -356,9 +375,11 @@ class DataOutput:
                         plt.ylabel("RAM usage [%]")
                         title += f"RAM usage "
 
+                    # set initial min and max ylimit
                     min_limit = 0
                     max_limit = 100
 
+                    # if detailed, set new ylimits
                     if not full:
                         if min(self.lists[l]) > 15:
                             min_limit = 0.95 * min(
@@ -370,16 +391,22 @@ class DataOutput:
                                 self.lists[l]
                             )  # set max_limit to 5 percent more than the actual maximum
 
+                    # set plot parameters: ylimits
                     plt.ylim([min_limit, max_limit])
 
                     if median:
                         data = self.__partition_data(self.lists[l])
+
                         if data == None:
-                            print_err("Something went wrong!")
+                            print_err("Data is empty. Not printing the graph.")
                             return
+
+                        # set plot parameters: xlabel
                         plt.xlabel(
                             "#time interval (of length {:.3f} s)".format(data[1])
                         )
+
+                        # plot
                         plt.boxplot(
                             data[0],
                             showfliers=True,
@@ -387,11 +414,16 @@ class DataOutput:
                             medianprops=dict(color="blue", linewidth=1.5),
                         )
                     else:
+                        # set plot parameters: xlabel, xlimits
                         plt.xlabel("time [s]")
                         plt.xlim([0, self.length])
+
+                        # plot
                         plt.plot(timestamps, self.lists[l])
-                elif l == "pps_recv" or l == "pps_sent":
+                elif l == "pps_recv" or l == "pps_sent":  # absolute values
                     always_full = True
+
+                    # set plot parameters: ylabel
                     if l == "pps_recv":
                         plt.ylabel("packets per second (received)")
                         title += f"Received PPS "
@@ -399,16 +431,22 @@ class DataOutput:
                         plt.ylabel("packets per second (sent)")
                         title += f"Sent PPS "
 
+                    # set plot parameters: ylimits
                     plt.ylim([0, max(self.lists[l]) + 0.05 * max(self.lists[l])])
 
                     if median:
                         data = self.__partition_data(self.lists[l])
+
                         if data == None:
-                            print_err("Something went wrong!")
+                            print_err("Data is empty. Not printing the graph.")
                             return
+
+                        # set plot parameters: xlabel
                         plt.xlabel(
                             "#time interval (of length {:.3f} s)".format(data[1])
                         )
+
+                        # plot
                         plt.boxplot(
                             data[0],
                             showfliers=True,
@@ -416,18 +454,23 @@ class DataOutput:
                             medianprops=dict(color="blue", linewidth=1.5),
                         )
                     else:
+                        # set plot parameters: xlabel, xlimits
                         plt.xlabel("time [s]")
                         plt.xlim([0, self.length])
+
+                        # plot
                         plt.plot(timestamps, self.lists[l])
                 else:
-                    always_full = True
-                    plt.plot(timestamps, self.lists[l])
+                    print_err(f"Unknown performance parameter '{l}'.")
+                    return
 
                 # adjust title
-                if info[1] == "novpn":
+                if self.vpn_option == "novpn":
                     title += "without VPN "
-                elif info[1] == "rp":
+                elif self.vpn_option == "rp":
                     title += "using Rosenpass "
+                else:
+                    title += f"(VPN: {self.vpn_option}) "
                 title += f"({self.role.capitalize()}, "
                 title += "{:.1f} s)".format(self.length)
 
@@ -438,13 +481,18 @@ class DataOutput:
                 if full and not always_full:
                     l += "_full"
 
+                # set plot parameters: title
                 plt.title(title, fontweight="bold", fontsize=9)
-                plt.savefig(os.path.join(file_path, l))
-                print(f"File saved as {short_path}/{l}.png.")
+
+                # save plot in file
+                plt.savefig(os.path.join(graph_file_path, l))
+                print_log(f"File saved as {graph_dir_path}/{l}.png.")
+
+                # clean up
                 plt.clf()
                 no_data = False
         if no_data == True:
-            print("No data. Not printing any graphs.")
+            print_warn("No data. Not printing any graphs.")
 
         # reset data lists
         self.__reset_lists()
@@ -453,6 +501,9 @@ class DataOutput:
         try:
             # check if there is only one field 'data'
             if len(self.data) != 1 or not isinstance(self.data["data"], list):
+                raise KeyError
+
+            if len(self.data["data"]) < 1:
                 raise KeyError
 
             for dictionary in self.data["data"]:
@@ -491,16 +542,61 @@ class DataOutput:
                     raise KeyError
 
         except KeyError:
-            print_err(f"Skipping file {self.file_name}: Incorrect or no data!")
+            print_warn(f"Skipping file {self.file_name}: Incorrect or no data!")
             return False
         except ValueError:
-            print_err(f"Skipping file {self.file_name}: Incorrect timestamp format!")
+            print_warn(f"Skipping file {self.file_name}: Incorrect timestamp format!")
             return False
         except Exception as err:
             print_err(f"Unexpected {err=}, {type(err)=}")
             return False
 
         return True
+
+    # check that the file_name has the format 'client-novpn:2024-01-04T12:29:19.843495.json'
+    def check_file_name_and_set_attributes(self, file_name):
+        try:
+            if file_name[-5:] != ".json":
+                raise KeyError
+            self.short_file_name = file_name[:-5]
+            tmp_split_name = self.short_file_name.split(":")
+
+            if len(tmp_split_name) != 4:
+                raise KeyError
+
+            role_and_vpn_option = tmp_split_name[0]
+
+            # check timestamp
+            datetime.fromisoformat(
+                f"{tmp_split_name[1]}:{tmp_split_name[2]}:{tmp_split_name[3]}"
+            )
+
+            tmp_split_name = role_and_vpn_option.split("-")
+            if (
+                len(tmp_split_name) != 2
+                or not isinstance(tmp_split_name[0], str)
+                or not isinstance(tmp_split_name[1], str)
+            ):
+                raise KeyError
+
+            self.role, self.vpn_option = tmp_split_name
+
+        except KeyError:
+            print_warn(
+                f"Skipping {file_name}: The format of the file name is incorrect."
+            )
+            return
+        except ValueError:
+            print_warn(
+                f"Skipping {file_name}: The format of the file name is incorrect: wrong timestamp format."
+            )
+            return
+        except TypeError:
+            print_warn(f"Skipping {file_name}: Not a file name.")
+            return
+        except Exception as err:
+            print_err(f"Unexpected {err=}, {type(err)=}")
+            return
 
     def __reset_lists(self):
         for l in self.lists:
@@ -509,38 +605,58 @@ class DataOutput:
     def __partition_data(self, initial_data, number_blocks=8):
         data = []
         sub_data = []
+
         sub_time = self.length / number_blocks  # length of each interval
         cur_time = sub_time  # use data up to this time, then go to next interval
         timestamp = self.__get_timestamp(0)
-        if timestamp != None:
+
+        # check timestamp
+        try:
+            if not isinstance(timestamp, str):
+                raise KeyError
+
             initial_time = datetime.fromisoformat(timestamp)
-        else:
-            raise KeyError
+        except:
+            print_err("Incorrect timestamp.")
+            return
 
         i = 0
         while i < len(initial_data):
+            timestamp = self.__get_timestamp(i)
+
             try:
-                timestamp = self.__get_timestamp(i)
-                if timestamp != None:
-                    time = datetime.fromisoformat(timestamp)
-                    if (
-                        time - initial_time
-                    ).total_seconds() > cur_time:  # if all values in interval have been added
-                        data.append(sub_data)
-                        sub_data = []
-                        cur_time += sub_time
-                        continue
+                if not isinstance(timestamp, str):
+                    raise KeyError
+
+                time = datetime.fromisoformat(timestamp)
+
+                if (
+                    time - initial_time
+                ).total_seconds() > cur_time:  # if all values in interval have been added
+                    data.append(sub_data)
+                    sub_data = []
+                    cur_time += sub_time
+                    continue
             except:
-                raise KeyError
+                print_err("Incorrect timestamp.")
+                return
 
             sub_data.append(initial_data[i])
             i += 1
 
         timestamp = self.__get_timestamp(len(initial_data) - 1)
-        if timestamp != None:
+
+        try:
+            if not isinstance(timestamp, str):
+                raise KeyError
+
             time = datetime.fromisoformat(timestamp)
+
             if (time - initial_time).total_seconds() <= cur_time:
                 data.append(sub_data)
+        except:
+            print_err("Incorrect timestamp.")
+            return
 
         return (data, sub_time)
 

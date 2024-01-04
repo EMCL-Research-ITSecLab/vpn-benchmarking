@@ -1,7 +1,7 @@
 import click
 import json
 import os
-from error_messages import print_err, print_warn
+from messages import print_err, print_warn
 import inquirer
 from pathlib import Path
 
