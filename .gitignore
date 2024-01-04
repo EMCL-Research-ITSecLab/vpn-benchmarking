@@ -161,7 +161,6 @@ cython_debug/
 hosts
 testing/
 .vscode/settings.json
-ansible_files/hosts copy
 hosts.json
 rp-exchange
 data_graphs/
