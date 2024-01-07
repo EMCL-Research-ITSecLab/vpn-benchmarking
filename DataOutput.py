@@ -301,10 +301,7 @@ class DataOutput:
         long_graph_dir_path = os.path.join(os.getcwd(), graph_dir_path)
 
         # get the data from the file
-        self.__reset_lists()
-        self.__fill_lists()
-        timestamps = self.__get_timestamps()
-        self.length = max(timestamps)
+        timestamps = self.__fill_data_and_return_timestamps()
 
         always_full = False  # True if value type is not relative but absolute
         no_data = True  # True if self.lists is empty
@@ -484,7 +481,12 @@ class DataOutput:
                 # group data in subdirectories 'hardware' and 'network'
                 if value == "cpu_percent" or value == "ram_percent":
                     graph_file_path = os.path.join(graph_dir_path, "hardware", value)
-                elif value == "bytes_recv" or value == "bytes_sent" or value == "pps_recv" or value == "pps_sent":
+                elif (
+                    value == "bytes_recv"
+                    or value == "bytes_sent"
+                    or value == "pps_recv"
+                    or value == "pps_sent"
+                ):
                     graph_file_path = os.path.join(graph_dir_path, "network", value)
                 else:
                     graph_file_path = os.path.join(graph_dir_path, value)
@@ -619,6 +621,14 @@ class DataOutput:
             return False
 
         return True
+
+    def __fill_data_and_return_timestamps(self):
+        self.__reset_lists()
+        self.__fill_lists()
+        timestamps = self.__get_timestamps()
+        self.length = max(timestamps)
+
+        return timestamps
 
     def __reset_lists(self):
         for l in self.lists:
