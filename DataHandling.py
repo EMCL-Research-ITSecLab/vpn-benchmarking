@@ -7,9 +7,9 @@ from json import JSONEncoder
 class DataHandling:
     data = {"data": []}
 
-    def __init__(self, name) -> None:
+    def __init__(self, role, vpn) -> None:
         self.timestamp = datetime.datetime.now().isoformat()
-        self.name = name
+        self.name = f"{role}-{vpn}"
         Path("data").mkdir(parents=True, exist_ok=True)
 
     def write_data(self):

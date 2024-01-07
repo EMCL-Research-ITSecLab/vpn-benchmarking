@@ -16,7 +16,7 @@ def client_share_keys(remote_dir):
 
 
 def client_novpn_exchange(iterations, auto=False):
-    monitor = Monitoring("client-novpn")
+    monitor = Monitoring("client", "novpn")
     client = HTTPExchange.OnClient()
 
     monitor.start(auto=auto)
@@ -27,7 +27,7 @@ def client_novpn_exchange(iterations, auto=False):
 
 
 def client_rp_exchange(iterations=None, auto=False):
-    monitor = Monitoring("client-rp")
+    monitor = Monitoring("client", "rp")
     client = HTTPExchange.OnClient()
 
     monitor.start(auto=auto)
@@ -48,7 +48,7 @@ def server_share_keys(remote_dir):
 
 
 def server_novpn_exchange(iterations, auto=False):
-    monitor = Monitoring("server-novpn")
+    monitor = Monitoring("server", "novpn")
     server = HTTPExchange.OnServer()
 
     monitor.start(auto=auto)
@@ -59,7 +59,7 @@ def server_novpn_exchange(iterations, auto=False):
 
 
 def server_rp_exchange(iterations=None, auto=False):
-    monitor = Monitoring("server-rp")
+    monitor = Monitoring("server", "rp")
     server = HTTPExchange.OnServer()
 
     monitor.start(auto=auto)

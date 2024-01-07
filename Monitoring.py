@@ -9,8 +9,8 @@ from DataHandling import DataHandling
 class Monitoring:
     done = threading.Event()
 
-    def __init__(self, name) -> None:
-        self.data_handler = DataHandling(name)
+    def __init__(self, role, vpn) -> None:
+        self.data_handler = DataHandling(role, vpn)
 
         self.initial_bytes_sent = psutil.net_io_counters().bytes_sent
         self.initial_bytes_recv = psutil.net_io_counters().bytes_recv
