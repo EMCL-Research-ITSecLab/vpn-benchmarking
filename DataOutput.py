@@ -290,7 +290,7 @@ class DataOutput:
         if not self.__check_data():
             return
 
-        # check file name
+        # check file name and set attributes short_file_name, role and vpn_option
         if self.__check_file_name_and_set_attributes(file_name) == False:
             return
 
