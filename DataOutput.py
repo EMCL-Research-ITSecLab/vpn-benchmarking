@@ -76,7 +76,7 @@ class DataOutput:
     def make_graphs_for_file(self, file_path, full, median):
         self.file_name = os.path.basename(file_path)
         try:
-            self.check_file_name_and_set_attributes(self.file_name)
+            self.__check_file_name_and_set_attributes(self.file_name)
             self.file = open(file_path)
             self.data = json.load(self.file)
         except IsADirectoryError:
@@ -291,7 +291,7 @@ class DataOutput:
             return
 
         # check file name
-        if self.check_file_name_and_set_attributes(file_name) == False:
+        if self.__check_file_name_and_set_attributes(file_name) == False:
             return
 
         # get path names and create directory
@@ -574,7 +574,7 @@ class DataOutput:
         return True
 
     # check that the file_name has the format 'client-novpn:2024-01-04T12:29:19.843495.json'
-    def check_file_name_and_set_attributes(self, file_name):
+    def __check_file_name_and_set_attributes(self, file_name):
         try:
             if file_name[-5:] != ".json":
                 raise KeyError
