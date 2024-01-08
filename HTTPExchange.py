@@ -164,6 +164,11 @@ class HTTPExchange:
                     exist_ok=True,
                 )
 
+                os.makedirs(
+                    os.path.join(home_path, "rp-keys/server-public"),
+                    exist_ok=True,
+                )
+
                 try:
                     subprocess.check_output(
                         [
@@ -202,6 +207,17 @@ class HTTPExchange:
                         num=i + 1, len=len(str(iterations + 1))
                     )
                     try:
+                        home_path = os.getcwd()
+                        os.makedirs(
+                            os.path.join(home_path, "rp-keys/server-secret"),
+                            exist_ok=True,
+                        )
+
+                        os.makedirs(
+                            os.path.join(home_path, "rp-keys/server-public"),
+                            exist_ok=True,
+                        )
+
                         subprocess.check_output(
                             [
                                 "rp",
@@ -441,6 +457,17 @@ class HTTPExchange:
                 )
 
                 try:
+                    home_path = os.getcwd()
+                    os.makedirs(
+                        os.path.join(home_path, "rp-keys/server-secret"),
+                        exist_ok=True,
+                    )
+
+                    os.makedirs(
+                        os.path.join(home_path, "rp-keys/server-public"),
+                        exist_ok=True,
+                    )
+
                     subprocess.check_output(
                         [
                             "rp",
