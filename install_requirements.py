@@ -64,7 +64,7 @@ def cli(role):
 
 
 if __name__ == "__main__":
-    set_up_venv()
+    start_venv()
     install_pip_requirements()
     install_python_requirements()
     cli()
