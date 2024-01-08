@@ -5,15 +5,14 @@ import os
 from pathlib import Path
 
 
-def set_up_venv():
-    print("Setting up venv environment...")
+def start_venv():
+    print("Setting up venv environment...", end="", flush=True)
     try:
-        subprocess.check_output(["python", "-m", "venv", "."])
         subprocess.check_output(["source", "bin/activate"])
         print("done.")
     except:
         print("failed.")
-        print_err("Could not set up venv.")
+        print_err("Could not start venv. Maybe it is not set up.")
 
 
 def install_pip_requirements():
