@@ -5,16 +5,6 @@ import os
 from pathlib import Path
 
 
-def start_venv():
-    print("Setting up venv environment...", end="", flush=True)
-    try:
-        subprocess.check_output(["source", "bin/activate"])
-        print("done.")
-    except:
-        print("failed.")
-        print_err("Could not start venv. Maybe it is not set up.")
-
-
 def install_pip_requirements():
     print("Installing pip requirements... ", end="", flush=True)
     try:
@@ -64,7 +54,6 @@ def cli(role):
 
 
 if __name__ == "__main__":
-    start_venv()
     install_pip_requirements()
     install_python_requirements()
     cli()
