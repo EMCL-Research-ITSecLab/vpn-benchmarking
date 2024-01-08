@@ -9,10 +9,11 @@ def set_up_venv():
     print("Setting up venv environment...")
     try:
         subprocess.check_output(["python", "-m", "venv", "."])
+        subprocess.check_output(["source", "bin/activate"])
         print("done.")
     except:
         print("failed.")
-        print_err("Could not install requirements.")
+        print_err("Could not set up venv.")
 
 
 def install_pip_requirements():
@@ -54,7 +55,7 @@ def set_up_folder_structure(host):
             print_err("ROLE must be server or client.")
     except:
         print("failed.")
-        print_err("Could not install requirements.")
+        print_err("Could not set up folder structure.")
 
 
 @click.command()
