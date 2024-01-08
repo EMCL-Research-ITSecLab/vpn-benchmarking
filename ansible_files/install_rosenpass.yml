@@ -20,7 +20,7 @@
 
   - name: make rosenpass globally available
     copy:
-      src: "{{ ansible_env.HOME }}/Downloads/bin/rosenpass"
+      src: "{{ ansible_env.HOME }}/bin/rosenpass"
       remote_src: true
       dest: "/bin/"
       mode: a+x
@@ -29,7 +29,7 @@
 
   - name: make rp globally available
     copy:
-      src: "{{ ansible_env.HOME }}/Downloads/bin/rp"
+      src: "{{ ansible_env.HOME }}/bin/rp"
       remote_src: true
       dest: "/bin/"
       mode: a+x
