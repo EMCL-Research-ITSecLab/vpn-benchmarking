@@ -11,7 +11,7 @@ def install_pip_requirements():
         subprocess.check_output(["usr/pip", "install", "-r", "requirements.txt"])
         print("done.")
     except:
-        print_err("Could not install requirements.")
+        print_err("failed. Could not install requirements.")
 
 
 def install_python_requirements():
@@ -20,7 +20,7 @@ def install_python_requirements():
         subprocess.check_output(["sudo", "apt-get", "install", "python3-pycurl"])
         print("done.")
     except:
-        print_err("Could not install requirements.")
+        print_err("failed. Could not install requirements.")
 
 
 def set_up_folder_structure(host):
@@ -38,9 +38,9 @@ def set_up_folder_structure(host):
             )
             print("done.")
         else:
-            print_err("ROLE must be server or client.")
+            print_err("failed. ROLE must be server or client.")
     except:
-        print_err("Could not install requirements.")
+        print_err("failed. Could not install requirements.")
 
 
 @click.command()
