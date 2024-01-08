@@ -22,6 +22,7 @@ def install_python_requirements():
     print("Installing python requirements... ", end="", flush=True)
     try:
         subprocess.check_output(["sudo", "apt-get", "install", "python3-pycurl"])
+        subprocess.check_output(["sudo", "apt", "install", "libcurl4-gnutls-dev", "librtmp-dev"])
         print("done.")
     except:
         print("failed.")
