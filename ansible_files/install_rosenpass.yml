@@ -15,7 +15,7 @@
     unarchive:
       remote_src: yes
       src: "{{ item.browser_download_url }}"
-      dest: "{{ ansible_env.HOME }}/Downloads/"
+      dest: "{{ ansible_env.HOME }}/"
       keep_newer: yes
 
   - name: make rosenpass globally available
