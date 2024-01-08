@@ -11,12 +11,15 @@ def install_pip_requirements():
         subprocess.check_output(["bin/pip", "install", "-r", "requirements.txt"])
         print("done.")
     except:
-        print("failed.")
-        print_err("Could not install requirements.")
+        try:
+            subprocess.check_output(["bin/pip", "install", "python3-click"])
+        except:
+            print("failed.")
+            print_err("Could not install requirements.")
 
 
 def install_python_requirements():
-    print("Installing python requirements... ", flush=True)
+    print("Installing python requirements... ", end="", flush=True)
     try:
         subprocess.check_output(["sudo", "apt-get", "install", "python3-pycurl"])
         print("done.")
