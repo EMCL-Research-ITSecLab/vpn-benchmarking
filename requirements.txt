@@ -1,6 +1,6 @@
-python3-psutil
-python3-click
-python3-inquirer
+psutil
+click
+inquirer
 numpy
 
 
