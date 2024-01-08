@@ -459,12 +459,12 @@ class HTTPExchange:
                 try:
                     home_path = os.getcwd()
                     os.makedirs(
-                        os.path.join(home_path, "rp-keys/server-secret"),
+                        os.path.join(home_path, "rp-keys/client-secret"),
                         exist_ok=True,
                     )
 
                     os.makedirs(
-                        os.path.join(home_path, "rp-keys/server-public"),
+                        os.path.join(home_path, "rp-keys/client-public"),
                         exist_ok=True,
                     )
 
@@ -505,6 +505,17 @@ class HTTPExchange:
                         num=i + 1, len=len(str(iterations + 1))
                     )
                     try:
+                        home_path = os.getcwd()
+                        os.makedirs(
+                            os.path.join(home_path, "rp-keys/client-secret"),
+                            exist_ok=True,
+                        )
+
+                        os.makedirs(
+                            os.path.join(home_path, "rp-keys/client-public"),
+                            exist_ok=True,
+                        )
+                        
                         subprocess.check_output(
                             [
                                 "rp",
