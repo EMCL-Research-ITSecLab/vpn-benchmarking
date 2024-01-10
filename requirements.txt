@@ -1,7 +1,0 @@
-psutil
-click
-inquirer
-numpy
-
-
-# to install pycurl: sudo apt-get install python3-pycurl

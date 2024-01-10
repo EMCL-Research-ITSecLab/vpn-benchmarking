@@ -4,34 +4,46 @@ This project aims to measure and compare the performance overhead of using a pos
 
 ## Usage
 ### Installing libraries
-As a first step, it is required to set up a virtual environment for the installation. For this, use:
+As a first step, it is required to set up a virtual environment for the installation. For this, install `venv` on your machines and use
 ```
-python -m venv [DIRECTORY]
+$ python -m venv DIRECTORY
+```
+with `DIRECTORY` being the working directory of the project.
+
+Activate the environment in this directory by executing:
+```
+$ source bin/activate
 ```
 
-Now, you need to install necessary libraries by executing the following in the same folder in which you set up `venv`:
+Now, you need to install necessary libraries by executing the following command in the same folder in which you set up `venv`:
 ```
-user@server:~$ python install_requirements.py server
+$ sudo python install_requirements.py
+```
+
+Set the device's role in the exchange by executing:
+```
+user@server:~$ python set_role.py server
 ```
 ```
-user@client:~$ python install_requirements.py client
+user@client:~$ python set_role.py client
 ```
-where the argument `server` or `client` determines what role the current host gets. It is important to keep that role from now on.
 
 ### Setting the hosts
-Next, you need to set the hosts that take part in the exchange. For this, execute the command:
+Next, you need to define both hosts that take part in the exchange on all devices. For this, execute the command
 ```
 $ python set_hosts.py --server USER@IP_ADDRESS:PORT --client USER@IP_ADDRESS
 ```
-`USER` and `IP_ADDRESS` describe the user and the IP address on the respective host, the port for opening the server needs to be specified as `PORT` in the server option.
+on the `server`, the `client` AND if Rosenpass needs to be installed, on a third host `master`. Alternatively, you can only run it on `server` and `client` and copy the derived ansible hosts file to the `master` manually.
+
+`USER` and `IP_ADDRESS` describe the user and the IP address on the respective host, the port for opening the server needs to be specified as `PORT` in the server option (you should be able to use port 9999).
 Note, that both options `--server` and `--client` have to be set on both hosts.
 
-After setting the hosts, you will be asked if you want to set the same hosts for the ansible hosts file. This can be used in the next step, to install Rosenpass on the hosts. Confirm if you need to install or update Rosenpass.
+After setting the hosts, you will be asked if you want to set the same hosts for the ansible hosts file. This can be used in the next step, to install Rosenpass on the hosts. Confirm on `master` if you need to install or update Rosenpass. The file is not needed on `server` and `client`, but can be generated and copied to `master` if needed.
 
 ### Install latest Rosenpass version
 For setting up the environment, install Ansible on a third device (master), set up SSH keys on both hosts, copy the ansible hosts file from one of the hosts to master and use:
 ```
-user@master:~$ ansible-playbook install_rosenpass.yml --ask-become-pass
+user@master:~/ansible_files$ ansible-playbook install_rosenpass.yml --ask-become-pass
 ```
 You will be asked to enter the password for the remote machine. At the moment, it is only possible to update machines with the same password by running the command once.
 

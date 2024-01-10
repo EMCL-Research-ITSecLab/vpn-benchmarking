@@ -1,63 +1,118 @@
 import subprocess
-from messages import print_err
-import click
-import os
-from pathlib import Path
+from messages import print_err, print_log
 
 
-def install_pip_requirements():
-    print("Installing pip requirements... ", end="", flush=True)
+def install_requirements():
+    print_log("Installing requirements...")
+    if not install_psutil():
+        return
+    if not install_click():
+        return
+    if not install_inquirer():
+        return
+    if not install_numpy():
+        return
+    if not install_pycurl():
+        return
+    print("done.")
+
+
+def install_psutil():
+    print("Install psutil... ", end="", flush=True)
     try:
-        subprocess.check_output(["bin/pip", "install", "-r", "requirements.txt"])
-        print("done.")
+        subprocess.check_output(["bin/pip", "install", "psutil"])
+    except:
+        try:
+            subprocess.check_output(["bin/pip", "install", "python3-psutil"])
+        except:
+            print("failed.")
+            print_err(
+                "Could not install requirements. Module 'psutil' could not be installed."
+            )
+            return False
+
+    print("done.")
+    return True
+
+
+def install_click():
+    print("Install click... ", end="", flush=True)
+    try:
+        subprocess.check_output(["bin/pip", "install", "click"])
     except:
         try:
             subprocess.check_output(["bin/pip", "install", "python3-click"])
         except:
             print("failed.")
-            print_err("Could not install requirements.")
+            print_err(
+                "Could not install requirements. Module 'click' could not be installed."
+            )
+            return False
+
+    print("done.")
+    return True
 
 
-def install_python_requirements():
-    print("Installing python requirements... ", end="", flush=True)
+def install_inquirer():
+    print("Install inquirer... ", end="", flush=True)
     try:
-        subprocess.check_output(["sudo", "apt-get", "install", "python3-pycurl"])
-        subprocess.check_output(["sudo", "apt", "install", "libcurl4-gnutls-dev", "librtmp-dev"])
-        print("done.")
+        subprocess.check_output(["bin/pip", "install", "inquirer"])
     except:
-        print("failed.")
-        print_err("Could not install requirements.")
-
-
-def set_up_folder_structure(host):
-    print("Setting up folder structure for rosenpass keys... ", end="", flush=True)
-    try:
-        base_path = os.getcwd()
-        if host == "server":
-            Path(base_path, "rp-keys", "client-public").mkdir(
-                parents=True, exist_ok=True
-            )
-            print("done.")
-        elif host == "client":
-            Path(base_path, "rp-keys", "server-public").mkdir(
-                parents=True, exist_ok=True
-            )
-            print("done.")
-        else:
+        try:
+            subprocess.check_output(["bin/pip", "install", "python3-inquirer"])
+        except:
             print("failed.")
-            print_err("ROLE must be server or client.")
+            print_err(
+                "Could not install requirements. Module 'inquirer' could not be installed."
+            )
+            return False
+
+    print("done.")
+    return True
+
+
+def install_numpy():
+    print("Install numpy... ", end="", flush=True)
+    try:
+        subprocess.check_output(["bin/pip", "install", "numpy"])
     except:
-        print("failed.")
-        print_err("Could not set up folder structure.")
+        try:
+            subprocess.check_output(["bin/pip", "install", "python3-numpy"])
+        except:
+            print("failed.")
+            print_err(
+                "Could not install requirements. Module 'numpy' could not be installed."
+            )
+            return False
+
+    print("done.")
+    return True
 
 
-@click.command()
-@click.argument("role")
-def cli(role):
-    set_up_folder_structure(role)
+def install_pycurl():
+    print("Install pycurl... ", end="", flush=True)
+
+    try:
+        subprocess.check_output(
+            ["bin/pip", "install", "pycurl"],
+            stdout=subprocess.PIPE,
+        )
+    except:
+        try:
+            subprocess.check_output(
+                ["bin/pip", "install", "python3-pycurl"],
+                stdout=subprocess.PIPE,
+            )
+        except:
+            print("failed.")
+            print_err(
+                "Could not install requirements. Module 'pycurl' could not be installed.\nRun 'sudo apt install libcurl4-gnutls-dev librtmp-dev && sudo apt install python3-pycurl && bin/pip install pycurl' manually."
+            )
+            return False
+
+    print("done.")
+    return True
 
 
 if __name__ == "__main__":
-    install_pip_requirements()
-    install_python_requirements()
-    cli()
+    install_requirements()

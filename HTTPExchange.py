@@ -5,7 +5,7 @@ import pycurl
 from messages import print_err, print_warn
 import json
 
-hosts_path = "hosts.json"
+hosts_path = "hosts.json"  # path and for the hosts file, should not be changed
 
 
 class HTTPExchange:
@@ -643,11 +643,10 @@ class HTTPExchange:
         try:
             subprocess.check_output(
                 ["scp", "-pr", file, f"{target_user}@{target_ip_addr}:{target_path}"],
-                stderr=subprocess.PIPE,
             )
         except:
             print_err(
-                "SSH connection to send files could not be established. Check if the needed SSH keys are set up. If all keys are correct, run install_requirements.py."
+                "SSH connection to send files could not be established. Check if the given directory is the correct working directory and that the needed SSH keys are set up. If all keys are correct, run install_requirements.py."
             )
 
     # TODO: Add function to delete old keys
