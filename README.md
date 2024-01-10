@@ -2,7 +2,7 @@
 
 This project aims to measure and compare the performance overhead of using a post-quantum-secure Rosenpass VPN connection and to visualize the resulting data.
 
-## Usage
+## Usage for Performance Measurements
 ### Installing libraries
 As a first step, it is required to set up a virtual environment for the installation. For this, install `venv` on your machines and use
 ```
@@ -106,3 +106,33 @@ user@client:~$ python main.py client rp [-i/--iterations ITERATIONS] [--auto]
 Without setting the iterations, there will be as many exchanges as key sets in the corresponding folder. If you only created a single key beforehand, you can enter a number as `ITERATIONS` and the exchange will be repeated as often as you entered, using the same key.
 
 The `--auto` option works as described in the baseline HTTP exchange above.
+
+## Usage for Visualizing Data
+### Generate correctly formatted data
+
+To generate the data for later visualization, just follow the steps in the above chapter 'Usage for Performance Measurements'.
+
+### Output graphs
+
+To visualize the stored data, use
+```
+$ python DataOutput.py DIRECTORY|FILE [--compare COMPARE_NR]
+```
+where `DIRECTORY|FILE` is either the folder containing the `.json` files or the `.json` file itself. Note, that the format of each file has to be:
+```
+ROLE-VPN_OPTION:TIMESTAMP.json
+```
+
+`ROLE`: Role of the device (by default either `server` or `client`)
+
+`VPN_OPTION`: VPN name (by default either `novpn` or `rp`)
+
+`TIMESTAMP`: Timestamp, must be in ISO Format: `YYYY-MM-DD HH:MM:SS.mmmmmm`
+
+`COMPARE_NR`: Number of graphs to compare (`1 < COMPARE_NR < 7`). When comparing graphs, it is only possible to compare the normal graphs, not the min/max/median graphs.
+
+After executing the command, you will have to determine what graphs should be created. Here you can choose `all`, `cpu_percent`, `ram_percent`, `bytes_recv`, `bytes_sent`, `pps_recv` and `pps_sent`, or multiple of them by ticking the boxes.
+
+You will also be asked if you want to generate the full relative graphs (0 to 100 percent) or only the part where values are present. You can also choose both.
+
+You can also choose to create min/max/median graphs.
