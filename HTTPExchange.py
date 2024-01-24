@@ -144,45 +144,7 @@ class HTTPExchange:
             pass
 
         def send_public_keys_to_client(self, remote_path):
-            try:
-                with open(hosts_path, "r") as file:
-                    hosts = json.load(file)
-            except:
-                print_err('Missing "hosts.json" file.')
-                return
-
-            # needed variables
-            c_ip_addr, c_user = None, None
-
-            var_set = False
-            for e in hosts["hosts"]:
-                if e["role"] == "client":
-                    c_ip_addr = e["ip_addr"]
-                    c_user = e["user"]
-                    var_set = True
-
-            if var_set == False:
-                print_err(
-                    "The hosts file does not contain information about the client."
-                )
-                return
-
-            exchange = HTTPExchange()
-            print("Sending public keys to the client... ", end="", flush=True)
-            try:
-                base_path = "rp-keys/server-public/"
-                for folder in os.listdir(base_path):
-                    exchange.send_file_to_host(
-                        os.path.join(base_path, folder),
-                        c_user,
-                        c_ip_addr,
-                        os.path.join(remote_path, base_path, folder),
-                    )
-                print("done.")
-            except:
-                print_err(
-                    'Keys do not exist. Generate new keys with the operation "keygen" of "main.py".'
-                )
+            pass
 
         def __count_rp_keys(self):
             pass
@@ -332,45 +294,7 @@ class HTTPExchange:
             pass
 
         def send_public_keys_to_server(self, remote_path):
-            try:
-                with open(hosts_path, "r") as file:
-                    hosts = json.load(file)
-            except:
-                print_err('Missing "hosts.json" file.')
-                return
-
-            # needed variables
-            s_ip_addr, s_user = None, None
-
-            var_set = False
-            for e in hosts["hosts"]:
-                if e["role"] == "server":
-                    s_ip_addr = e["ip_addr"]
-                    s_user = e["user"]
-                    var_set = True
-
-            if var_set == False:
-                print_err(
-                    "The hosts file does not contain information about the server."
-                )
-                return
-
-            exchange = HTTPExchange()
-            print("Sending public keys to the server... ", end="", flush=True)
-            try:
-                base_path = "rp-keys/client-public/"
-                for folder in os.listdir(base_path):
-                    exchange.send_file_to_host(
-                        os.path.join(base_path, folder),
-                        s_user,
-                        s_ip_addr,
-                        os.path.join(remote_path, base_path, folder),
-                    )
-                print("done.")
-            except:
-                print_err(
-                    'Keys do not exist. Generate new keys with the operation "keygen" of "main.py".'
-                )
+            pass
 
         def __count_rp_keys(self):
             pass
@@ -389,13 +313,6 @@ class HTTPExchange:
         pass
 
     def send_file_to_host(self, file, target_user, target_ip_addr, target_path):
-        try:
-            subprocess.check_output(
-                ["scp", "-pr", file, f"{target_user}@{target_ip_addr}:{target_path}"],
-            )
-        except:
-            print_err(
-                "SSH connection to send files could not be established. Check if the given directory is the correct working directory and that the needed SSH keys are set up. If all keys are correct, run install_requirements.py."
-            )
+        pass
 
     # TODO: Add function to delete old keys

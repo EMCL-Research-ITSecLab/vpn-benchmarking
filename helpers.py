@@ -1,6 +1,10 @@
 import messages
 import os
 import subprocess
+import json
+import helpers
+
+hosts_path = "hosts.json"  # path and for the hosts file, should not be changed
 
 
 class Rosenpass:
@@ -15,7 +19,7 @@ class Rosenpass:
         self.role = role
 
     def generate_keys(self, iterations):
-        if self.role == None:
+        if self.role not in ("server", "client"):
             messages.print_err("Unable to generate keys: no role.")
             return
 
@@ -143,6 +147,55 @@ class Rosenpass:
 
         return s_pub_count
 
+    def share_public_keys(self, remote_path):
+        if self.role not in ("server", "client"):
+            messages.print_err("Unable to share keys: no role.")
+            return
+
+        try:
+            with open(hosts_path, "r") as file:
+                hosts = json.load(file)
+        except:
+            messages.print_err(
+                "File 'hosts.json' could not be opened. Create the file using 'set_hosts.py'."
+            )
+            return
+
+        ip_addr, user = None, None
+
+        var_set = False
+        for e in hosts["hosts"]:
+            if e["role"] == self.role:
+                ip_addr = e["ip_addr"]
+                user = e["user"]
+                var_set = True
+
+        if var_set == False:
+            messages.print_err(
+                f"'hosts.json' does not contain information about the {self.role}."
+            )
+            return
+
+        if self.role == "server":
+            messages.print_log("Sending public keys to the client...")
+        else:
+            messages.print_log("Sending public keys to the server... ")
+
+        try:
+            base_path = f"rp-keys/{self.role}-public/"
+            for folder in os.listdir(base_path):
+                helpers.send_file_to_host(
+                    os.path.join(base_path, folder),
+                    user,
+                    ip_addr,
+                    os.path.join(remote_path, base_path, folder),
+                )
+        except:
+            messages.print_err("Keys do not exist. Generate new keys with 'main.py'.")
+            return
+
+        messages.print_log(f"Sent public keys to the other host.")
+
     def __create_key_directories(self):
         if self.role not in ("server", "client"):
             messages.print_err("Unable to create key directories: false or no role.")
@@ -167,5 +220,14 @@ class Rosenpass:
         return 0
 
 
-def send_file_to_host():
-    pass
+def send_file_to_host(file, target_user, target_ip_addr, target_path):
+    try:
+        subprocess.check_output(
+            ["scp", "-pr", file, f"{target_user}@{target_ip_addr}:{target_path}"],
+            stderr=subprocess.PIPE,
+        )
+    except Exception as err:
+        messages.print_err(
+            "SSH connection could not be established. Check if the SSH keys are correct, see the following error:"
+        )
+        print(f"{err=}")
