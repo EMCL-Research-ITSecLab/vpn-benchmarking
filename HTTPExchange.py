@@ -11,18 +11,8 @@ hosts_path = "hosts.json"  # path and for the hosts file, should not be changed
 class HTTPExchange:
     class OnServer:
         def __init__(self) -> None:
-            try:
-                file = open(hosts_path, "r")
-                hosts = json.load(file)
-                for e in hosts["hosts"]:
-                    if e["role"] == "server":
-                        self.host_name = e["ip_addr"]
-                        self.port = int(e["port"])
-            except:
-                print_err(
-                    'File "hosts.json" does not exist. Create the file using set_hosts.py.'
-                )
-                return
+            self.host_name = "NOT_IMPLEMENTED"
+            self.port = 0
 
         def run(self, reps, monitor):
             for _ in range(reps):
@@ -151,100 +141,7 @@ class HTTPExchange:
                     print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            if iterations == 1:
-                print(
-                    f"Generating rosenpass and wireguard key set for server... ",
-                    end="",
-                    flush=True,
-                )
-
-                home_path = os.getcwd()
-                os.makedirs(
-                    os.path.join(home_path, "rp-keys/server-secret"),
-                    exist_ok=True,
-                )
-
-                os.makedirs(
-                    os.path.join(home_path, "rp-keys/server-public"),
-                    exist_ok=True,
-                )
-
-                try:
-                    subprocess.check_output(
-                        [
-                            "rp",
-                            "genkey",
-                            "rp-keys/server-secret/server.rosenpass-secret",
-                        ],
-                        stderr=subprocess.PIPE,
-                    )
-                    subprocess.check_output(
-                        [
-                            "rp",
-                            "pubkey",
-                            f"rp-keys/server-secret/server.rosenpass-secret",
-                            f"rp-keys/server-public/server.rosenpass-public",
-                        ],
-                        stderr=subprocess.PIPE,
-                    )
-                except:
-                    print_err(
-                        "Something went wrong! Perhaps rosenpass is not installed or the key set already exists."
-                    )
-                    return
-            elif iterations > 1:
-                print(
-                    f"Generating {iterations} rosenpass and wireguard key sets for server... ",
-                    end="",
-                    flush=True,
-                )
-
-                home_path = os.getcwd()
-                os.makedirs(os.path.join(home_path, "rp-keys"), exist_ok=True)
-
-                for i in range(iterations):
-                    formatted_number = "{num:0>{len}}".format(
-                        num=i + 1, len=len(str(iterations + 1))
-                    )
-                    try:
-                        home_path = os.getcwd()
-                        os.makedirs(
-                            os.path.join(home_path, "rp-keys/server-secret"),
-                            exist_ok=True,
-                        )
-
-                        os.makedirs(
-                            os.path.join(home_path, "rp-keys/server-public"),
-                            exist_ok=True,
-                        )
-
-                        subprocess.check_output(
-                            [
-                                "rp",
-                                "genkey",
-                                f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
-                            ],
-                            stderr=subprocess.PIPE,
-                        )
-                        subprocess.check_output(
-                            [
-                                "rp",
-                                "pubkey",
-                                f"rp-keys/server-secret/{formatted_number}_server.rosenpass-secret",
-                                f"rp-keys/server-public/{formatted_number}_server.rosenpass-public",
-                            ],
-                            stderr=subprocess.PIPE,
-                        )
-                    except:
-                        print_err(
-                            "Something went wrong! Perhaps rosenpass is not installed or the key set already exists."
-                        )
-                        return
-            else:
-                print_err("Number of iterations cannot be negative!")
-                return
-
-            print("done.")
+            pass
 
         def send_public_keys_to_client(self, remote_path):
             try:
@@ -298,18 +195,8 @@ class HTTPExchange:
 
     class OnClient:
         def __init__(self) -> None:
-            try:
-                file = open(hosts_path, "r")
-                hosts = json.load(file)
-                for e in hosts["hosts"]:
-                    if e["role"] == "server":
-                        self.host_name = e["ip_addr"]
-                        self.port = int(e["port"])
-            except:
-                print_err(
-                    'File "hosts.json" does not exist. Create the file using set_hosts.py.'
-                )
-                return
+            self.host_name = "NOT_IMPLEMENTED"
+            self.port = 0
 
         def run(self, reps, monitor):
             i = reps
@@ -443,100 +330,7 @@ class HTTPExchange:
                     print("ending iteration", i, "with key", i + 1)
 
         def gen_keys(self, iterations):
-            if iterations == 1:
-                print(
-                    f"Generating rosenpass and wireguard key set for client... ",
-                    end="",
-                    flush=True,
-                )
-
-                home_path = os.getcwd()
-                os.makedirs(
-                    os.path.join(home_path, "rp-keys/client-secret"),
-                    exist_ok=True,
-                )
-
-                os.makedirs(
-                    os.path.join(home_path, "rp-keys/client-public"),
-                    exist_ok=True,
-                )
-
-                try:
-                    subprocess.check_output(
-                        [
-                            "rp",
-                            "genkey",
-                            "rp-keys/client-secret/client.rosenpass-secret",
-                        ],
-                        stderr=subprocess.PIPE,
-                    )
-                    subprocess.check_output(
-                        [
-                            "rp",
-                            "pubkey",
-                            f"rp-keys/client-secret/client.rosenpass-secret",
-                            f"rp-keys/client-public/client.rosenpass-public",
-                        ],
-                        stderr=subprocess.PIPE,
-                    )
-                except:
-                    print_err(
-                        "Something went wrong! Perhaps rosenpass is not installed or the key set already exists."
-                    )
-                    return
-            elif iterations > 1:
-                print(
-                    f"Generating {iterations} rosenpass and wireguard key sets for client... ",
-                    end="",
-                    flush=True,
-                )
-
-                home_path = os.getcwd()
-                os.makedirs(os.path.join(home_path, "rp-keys"), exist_ok=True)
-
-                for i in range(iterations):
-                    formatted_number = "{num:0>{len}}".format(
-                        num=i + 1, len=len(str(iterations + 1))
-                    )
-                    try:
-                        home_path = os.getcwd()
-                        os.makedirs(
-                            os.path.join(home_path, "rp-keys/client-secret"),
-                            exist_ok=True,
-                        )
-
-                        os.makedirs(
-                            os.path.join(home_path, "rp-keys/client-public"),
-                            exist_ok=True,
-                        )
-
-                        subprocess.check_output(
-                            [
-                                "rp",
-                                "genkey",
-                                f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
-                            ],
-                            stderr=subprocess.PIPE,
-                        )
-                        subprocess.check_output(
-                            [
-                                "rp",
-                                "pubkey",
-                                f"rp-keys/client-secret/{formatted_number}_client.rosenpass-secret",
-                                f"rp-keys/client-public/{formatted_number}_client.rosenpass-public",
-                            ],
-                            stderr=subprocess.PIPE,
-                        )
-                    except:
-                        print_err(
-                            "Something went wrong! Perhaps rosenpass is not installed."
-                        )
-                        return
-            else:
-                print_err("Number of iterations cannot be negative!")
-                return
-
-            print("done.")
+            pass
 
         def send_public_keys_to_server(self, remote_path):
             try:

@@ -91,4 +91,5 @@ class Client:
 
 
 # ONLY FOR TESTING PURPOSES
-helpers.generate_rosenpass_keys("test", 1)
+rosenpass = helpers.Rosenpass(role="server")
+rosenpass.generate_keys(10)
