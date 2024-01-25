@@ -49,8 +49,16 @@ class Server:
         messages.print_log("Server initialized.")
         return
 
-    def run(self, type, vpn):
-        pass
+    def run(self, role, vpn):
+        # check if role is valid
+        if role not in ("server", "client"):
+            messages.print_err("Unable to run: no role.")
+            return
+            
+        # check if vpn option is valid
+        if vpn not in (None, "rosenpass", "wireguard"):
+            messages.print_err("Unable to run: unknown VPN.")
+            return
 
     def send_public_keys_to_client(self, remote_path):
         try:
