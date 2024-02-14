@@ -2,7 +2,7 @@ import messages
 import os
 import subprocess
 import json
-import helpers
+import old_version.helpers as helpers
 
 hosts_path = "hosts.json"  # path and for the hosts file, should not be changed
 

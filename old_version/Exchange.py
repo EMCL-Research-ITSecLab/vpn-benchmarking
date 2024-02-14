@@ -1,7 +1,7 @@
 from email import message_from_binary_file
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-import helpers
+import old_version.helpers as helpers
 import messages
 import json
 import os

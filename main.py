@@ -1,5 +1,5 @@
 from Monitoring import Monitoring
-from HTTPExchange import HTTPExchange
+from old_version.HTTPExchange import HTTPExchange
 from messages import print_err
 
 import click
