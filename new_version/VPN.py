@@ -24,6 +24,6 @@ class VPN:
         messages.print_err("VPN.close(self): NOT IMPLEMENTED")
         return False
 
-    def share_pubkeys(self) -> bool:
-        messages.print_err("VPN.share_pubkeys(self): NOT IMPLEMENTED")
+    def share_pubkeys(self, remote_path) -> bool:
+        messages.print_err("VPN.share_pubkeys(self, remote_path): NOT IMPLEMENTED")
         return False

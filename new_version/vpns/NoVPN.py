@@ -4,8 +4,8 @@ import messages
 
 
 class NoVPN(VPN):
-    def __init__(self, role) -> None:
-        super().__init__(role)
+    def __init__(self, role, remote_ip_addr, remote_user) -> None:
+        super().__init__(role, remote_ip_addr, remote_user)
 
     def open(self) -> bool:
         # does not open any vpn
@@ -15,6 +15,6 @@ class NoVPN(VPN):
         # does not close any vpn
         return True
 
-    def share_pubkeys(self) -> bool:
+    def share_pubkeys(self, remote_path) -> bool:
         # no keys needed
         return True
