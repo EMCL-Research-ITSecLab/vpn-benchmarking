@@ -15,6 +15,14 @@ class NoVPN(VPN):
         # does not close any vpn
         return True
 
+    def generate_keys(self, number):
+        # no keys needed
+        return True
+
+    def count_keys(self) -> int:
+        # no keys to count
+        return 0  # TODO: Check if return 0 or return -1
+
     def share_pubkeys(self, remote_path) -> bool:
         # no keys needed
         return True

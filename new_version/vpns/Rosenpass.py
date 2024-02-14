@@ -9,6 +9,9 @@ class Rosenpass(VPN):
     def __init__(self, role, remote_ip_addr, remote_user) -> None:
         super().__init__(role, remote_ip_addr, remote_user)
 
+    # TODO: Implement generate_keys
+    # TODO: Implement count_keys
+
     # TODO: TEST
     def share_pubkeys(self, remote_path) -> bool:
         if self.role == "server":

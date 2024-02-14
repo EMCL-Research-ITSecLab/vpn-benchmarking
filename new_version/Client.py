@@ -66,3 +66,7 @@ class Client:
                 return False
 
         return True
+
+    def prepare(self) -> bool:
+        # TODO: Implement
+        return False
