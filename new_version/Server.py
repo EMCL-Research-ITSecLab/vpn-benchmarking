@@ -1,4 +1,5 @@
 import messages
+
 import json
 
 hosts_path = "hosts.json"  # hosts file path, should not be changed

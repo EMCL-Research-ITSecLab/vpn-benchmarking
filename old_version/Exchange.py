@@ -25,7 +25,7 @@ class HTTP:
             server = HTTPServer((self.host_name, self.port), HTTP.Server)
             print("Awaiting request... ", end="", flush=True)
             server.handle_request()
-            
+
             messages.print_log("Closing server.")
             server.server_close()
 
@@ -74,7 +74,7 @@ class Server:
         if vpn not in (None, "rosenpass"):
             messages.print_err("Unable to run: unknown VPN. Known: None, rosenpass")
             return
-        
+
         if type not in ("http"):
             messages.print_err("Unable to run: unknown type of exchange. Known: http")
             return
@@ -93,7 +93,7 @@ class Server:
             if type == "http":
                 http_handler = HTTP(self.host_name, self.port)
                 http_handler.handle_requests_and_close(number)
-                
+
             # implement new exchange types here
 
         # implement new vpn types here
