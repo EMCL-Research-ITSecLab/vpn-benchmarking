@@ -26,6 +26,11 @@ class Client:
                 if e["role"] == "server":
                     self.server_name = e["ip_addr"]
                     self.server_port = int(e["port"])
+                    self.server_user = e["user"]
+                    no_data = False
+                elif e["role"] == "client":
+                    self.client_ip_addr = e["ip_addr"]
+                    self.client_user = e["user"]
                     no_data = False
 
             if no_data:
@@ -43,7 +48,9 @@ class Client:
         exchange = ExchangeType(
             role="client", server_name=self.server_name, server_port=self.server_port
         )
-        vpn = VPNType(role="client")
+        vpn = VPNType(
+            role="client", remote_ip_addr=self.server_name, remote_user=self.server_user
+        )
 
         for i in range(number):
             # open the VPN
