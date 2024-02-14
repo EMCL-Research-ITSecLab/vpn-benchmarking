@@ -1,5 +1,7 @@
 import messages
+import helpers
 
+import os
 import json
 
 hosts_path = "hosts.json"  # hosts file path, should not be changed
@@ -26,6 +28,10 @@ class Server:
                 if e["role"] == "server":
                     self.server_name = e["ip_addr"]
                     self.server_port = int(e["port"])
+                    no_data = False
+                elif e["role"] == "client":
+                    self.client_ip_addr = e["ip_addr"]
+                    self.client_user = e["user"]
                     no_data = False
 
             if no_data:
@@ -58,4 +64,24 @@ class Server:
             if not vpn.close():
                 return False
 
+        return True
+
+    # TODO: TEST
+    def send_pubkeys_to_client(self, remote_path) -> bool:
+        messages.print_log("Sending public keys to the client...")
+
+        try:
+            base_path = "rp-keys/server-public/"    # TODO: Make this more general
+            for folder in os.listdir(base_path):
+                helpers.send_file_to_host(
+                    os.path.join(base_path, folder),
+                    self.client_user,
+                    self.client_ip_addr,
+                    os.path.join(remote_path, base_path, folder),
+                )
+        except:
+            messages.print_err("Keys do not exist. Generate new keys with 'main.py'.")
+            return False
+
+        messages.print_log("Sent public keys to the client.")
         return True
