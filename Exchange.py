@@ -1,3 +1,6 @@
+from email import message_from_binary_file
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
 import helpers
 import messages
 import json
@@ -8,11 +11,28 @@ hosts_path = "hosts.json"  # hosts file path, should not be changed
 
 
 class HTTP:
-    def start_server_and_handle_one_request(self):
-        pass
+    def __init__(self, host_name, port) -> None:
+        self.host_name = host_name
+        self.port = port
 
-    def stop_server(self):
-        pass
+    def handle_requests_and_close(self, number):
+        if number < 0:
+            messages.print_err("Negative number of requests!")
+            return
+
+        for i in range(number):
+            print(f"{i + 1}: ", end="", flush=True)
+            server = HTTPServer((self.host_name, self.port), HTTP.Server)
+            print("Awaiting request... ", end="", flush=True)
+            server.handle_request()
+            
+            messages.print_log("Closing server.")
+            server.server_close()
+
+    class Server(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
 
 
 class Server:
@@ -49,16 +69,37 @@ class Server:
         messages.print_log("Server initialized.")
         return
 
-    def run(self, role, vpn):
-        # check if role is valid
-        if role not in ("server", "client"):
-            messages.print_err("Unable to run: no role.")
-            return
-            
+    def run(self, type, vpn, number):
         # check if vpn option is valid
-        if vpn not in (None, "rosenpass", "wireguard"):
-            messages.print_err("Unable to run: unknown VPN.")
+        if vpn not in (None, "rosenpass"):
+            messages.print_err("Unable to run: unknown VPN. Known: None, rosenpass")
             return
+        
+        if type not in ("http"):
+            messages.print_err("Unable to run: unknown type of exchange. Known: http")
+            return
+
+        if number < 1:
+            messages.print_err("Unable to run: negative number of repetitions.")
+            return
+
+        # run without vpn
+        if vpn == None:
+            if number == 1:
+                messages.print_log("Starting exchange without VPN...")
+            else:
+                messages.print_log(f"Starting {number} exchanges without VPN...")
+
+            if type == "http":
+                http_handler = HTTP(self.host_name, self.port)
+                http_handler.handle_requests_and_close(number)
+                
+            # implement new exchange types here
+
+        # implement new vpn types here
+
+        if number == 1:
+            messages.print_log("Exchange finished.")
 
     def send_public_keys_to_client(self, remote_path):
         try:
@@ -80,11 +121,13 @@ class Server:
                 var_set = True
 
         if var_set == False:
-            messages.print_err("'hosts.json' does not contain information about the client.")
+            messages.print_err(
+                "'hosts.json' does not contain information about the client."
+            )
             return
 
         messages.print_log("Sending public keys to the client... ")
-        
+
         try:
             base_path = "rp-keys/server-public/"
             for folder in os.listdir(base_path):
@@ -95,12 +138,10 @@ class Server:
                     os.path.join(remote_path, base_path, folder),
                 )
         except:
-            messages.print_err(
-                "Keys do not exist. Generate new keys with 'main.py'."
-            )
+            messages.print_err("Keys do not exist. Generate new keys with 'main.py'.")
             return
-        
-        messages.print_log('Sent public keys to the client.')
+
+        messages.print_log("Sent public keys to the client.")
 
 
 class Client:
@@ -142,7 +183,7 @@ class Client:
 
 
 # ONLY FOR TESTING PURPOSES
-rosenpass = helpers.Rosenpass(role="server")
-rosenpass.generate_keys(10)
+# rosenpass = helpers.Rosenpass(role="server")
+# rosenpass.generate_keys(10)
 
-helpers.send_file_to_host("test", "test", "test", "test")
+# helpers.send_file_to_host("test", "test", "test", "test")
