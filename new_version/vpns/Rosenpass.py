@@ -10,80 +10,36 @@ class Rosenpass(VPN):
     def __init__(self, role, remote_ip_addr, remote_user) -> None:
         super().__init__(role, remote_ip_addr, remote_user)
 
-    def generate_keys(self, number=1) -> bool:
-        if number == 1:
-            messages.print_log(
-                f"Generating Rosenpass and Wireguard key set for {self.role}..."
+    def generate_keys(self) -> bool:
+        messages.print_log(
+            f"Generating Rosenpass and Wireguard key set for {self.role}..."
+        )
+
+        if not self.__create_key_directories():
+            return False
+
+        try:
+            subprocess.check_output(
+                [
+                    "rp",
+                    "genkey",
+                    f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
+                ],
+                stderr=subprocess.PIPE,
             )
-
-            self.__create_key_directories()
-
-            try:
-                subprocess.check_output(
-                    [
-                        "rp",
-                        "genkey",
-                        f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
-                    ],
-                    stderr=subprocess.PIPE,
-                )
-                subprocess.check_output(
-                    [
-                        "rp",
-                        "pubkey",
-                        f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
-                        f"rp-keys/{self.role}-public/{self.role}.rosenpass-public",
-                    ],
-                    stderr=subprocess.PIPE,
-                )
-            except:
-                messages.print_err(
-                    "Unable to generate keys: Perhaps Rosenpass is not installed or the key set already exists."
-                )
-                return False
-        elif number > 1:
-            messages.print_log(
-                f"Generating {number} Rosenpass and Wireguard key sets for {self.role}..."
+            subprocess.check_output(
+                [
+                    "rp",
+                    "pubkey",
+                    f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
+                    f"rp-keys/{self.role}-public/{self.role}.rosenpass-public",
+                ],
+                stderr=subprocess.PIPE,
             )
-
-            try:
-                os.makedirs(os.path.join(self.home_path, "rp-keys"), exist_ok=True)
-            except:
-                messages.print_err("Unable to create key directory.")
-                return False
-
-            for i in range(number):
-                formatted_number = "{num:0>{len}}".format(
-                    num=i + 1, len=len(str(number + 1))
-                )
-
-                self.__create_key_directories()
-
-                try:
-                    subprocess.check_output(
-                        [
-                            "rp",
-                            "genkey",
-                            f"rp-keys/{self.role}-secret/{formatted_number}_{self.role}.rosenpass-secret",
-                        ],
-                        stderr=subprocess.PIPE,
-                    )
-                    subprocess.check_output(
-                        [
-                            "rp",
-                            "pubkey",
-                            f"rp-keys/{self.role}-secret/{formatted_number}_{self.role}.rosenpass-secret",
-                            f"rp-keys/{self.role}-public/{formatted_number}_{self.role}.rosenpass-public",
-                        ],
-                        stderr=subprocess.PIPE,
-                    )
-                except:
-                    messages.print_err(
-                        "Unable to generate keys: Perhaps Rosenpass is not installed or the key sets already exist."
-                    )
-                    return False
-        else:
-            messages.print_err("Number of iterations cannot be negative!")
+        except:
+            messages.print_err(
+                "Unable to generate keys: Perhaps Rosenpass is not installed or the key set already exists."
+            )
             return False
 
         messages.print_log(f"Generated keys for the {self.role}.")
@@ -120,6 +76,7 @@ class Rosenpass(VPN):
 
         return True
 
+    # TODO: Change so that only one folder with the correct number of keys exists
     def __count_keys(self) -> int:
         key_path = os.path.join(self.home_path, "rp-keys")
         server_pk_path = os.path.join(key_path, "server-public")

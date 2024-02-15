@@ -7,7 +7,7 @@ hosts_path = "hosts.json"  # hosts file path, should not be changed
 
 
 class Client:
-    def __init__(self) -> None:
+    def __init__(self, ExchangeType, VPNType) -> None:
         # open the hosts file
         messages.print_log("Initializing client...")
         try:
@@ -43,21 +43,22 @@ class Client:
             return
 
         messages.print_log("Client initialized.")
-        return
 
-    def run(self, ExchangeType, VPNType, number) -> bool:
-        exchange = ExchangeType(
+        self.exchange = ExchangeType(
             role="client", server_name=self.server_name, server_port=self.server_port
         )
-        vpn = VPNType(
+        self.vpn = VPNType(
             role="client", remote_ip_addr=self.server_name, remote_user=self.server_user
         )
 
+        return
+
+    def run(self, number) -> bool:
         for i in range(number):
             messages.print_log(f"Starting exchange {i + 1}...")
 
             # open the VPN
-            if not vpn.open():
+            if not self.vpn.open():
                 return False
 
             # do one exchange, try multiple times if necessary
@@ -66,7 +67,7 @@ class Client:
 
             while True:
                 if remaining_attempts > 0:  # still attempts left, normal case
-                    if not exchange.run():
+                    if not self.exchange.run():
                         remaining_attempts -= 1
                     else:
                         break
@@ -81,12 +82,23 @@ class Client:
                     return False
 
             # close the VPN
-            if not vpn.close():
+            if not self.vpn.close():
                 return False
 
         messages.print_log(f"Finished exchanges successfully.")
         return True
 
-    def prepare(self) -> bool:
-        # TODO: Implement
-        return False
+    def setup(self, remote_path) -> bool:
+        messages.print_log("Generating key set on the client...")
+
+        if not self.vpn.generate_keys():
+            return False
+
+        messages.print_log("Generated keys.")
+        messages.print_log("Transmitting public keys to the server...")
+
+        if not self.vpn.share_pubkeys(remote_path):
+            return False
+
+        messages.print_log("Setup complete.")
+        return True
