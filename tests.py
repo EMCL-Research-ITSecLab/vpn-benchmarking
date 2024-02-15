@@ -7,5 +7,3 @@ from new_version.vpns.NoVPN import NoVPN
 from new_version.vpns.Rosenpass import Rosenpass
 
 rosenpass = Rosenpass("server", "localhost", "lamron")
-
-rosenpass.generate_keys(10)

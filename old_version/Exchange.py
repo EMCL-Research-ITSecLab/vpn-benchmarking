@@ -1,7 +1,7 @@
 from email import message_from_binary_file
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-import old_version.helpers as helpers
+# import old_version.helpers as helpers
 import messages
 import json
 import os
@@ -100,48 +100,6 @@ class Server:
 
         if number == 1:
             messages.print_log("Exchange finished.")
-
-    def send_public_keys_to_client(self, remote_path):
-        try:
-            with open(hosts_path, "r") as file:
-                hosts = json.load(file)
-        except:
-            messages.print_err(
-                "File 'hosts.json' could not be opened. Create the file using 'set_hosts.py'."
-            )
-            return
-
-        c_ip_addr, c_user = None, None
-
-        var_set = False
-        for e in hosts["hosts"]:
-            if e["role"] == "client":
-                c_ip_addr = e["ip_addr"]
-                c_user = e["user"]
-                var_set = True
-
-        if var_set == False:
-            messages.print_err(
-                "'hosts.json' does not contain information about the client."
-            )
-            return
-
-        messages.print_log("Sending public keys to the client... ")
-
-        try:
-            base_path = "rp-keys/server-public/"
-            for folder in os.listdir(base_path):
-                helpers.send_file_to_host(
-                    os.path.join(base_path, folder),
-                    c_user,
-                    c_ip_addr,
-                    os.path.join(remote_path, base_path, folder),
-                )
-        except:
-            messages.print_err("Keys do not exist. Generate new keys with 'main.py'.")
-            return
-
-        messages.print_log("Sent public keys to the client.")
 
 
 class Client:

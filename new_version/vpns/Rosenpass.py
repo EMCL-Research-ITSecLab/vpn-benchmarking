@@ -90,8 +90,6 @@ class Rosenpass(VPN):
 
         return True
 
-    # TODO: Implement count_keys
-
     def share_pubkeys(self, remote_path) -> bool:
         if self.role == "server":
             messages.print_log("Sending public keys to the client...")
@@ -122,9 +120,52 @@ class Rosenpass(VPN):
 
         return True
 
+    def __count_keys(self) -> int:
+        key_path = os.path.join(self.home_path, "rp-keys")
+        server_pk_path = os.path.join(key_path, "server-public")
+        client_pk_path = os.path.join(key_path, "client-public")
+
+        server_pk_count, client_pk_count = 0, 0
+
+        try:
+            for _ in os.listdir(server_pk_path):
+                server_pk_count += 1
+        except:
+            messages.print_err(
+                "The folder rp-keys/server-public could not be found/opened. Generate and share new keys to proceed."
+            )
+            return -1
+        try:
+            for _ in os.listdir(client_pk_path):
+                client_pk_count += 1
+        except:
+            messages.print_err(
+                "The folder rp-keys/client-public could not be found/opened. Generate and share new keys to proceed."
+            )
+            return -1
+
+        # something went wrong if the number of keys in directories are unequal
+        if server_pk_count != client_pk_count:
+            return -1
+
+        sk_path = os.path.join(key_path, f"{self.role}-secret")
+
+        count = 0
+        try:
+            for _ in os.listdir(sk_path):
+                count += 1
+        except:
+            messages.print_err("Couldn't list key directory files.")
+            return -1
+
+        if server_pk_count != count:
+            return -1
+
+        return count
+
     def __create_key_directories(self) -> bool:
         messages.print_log("Creating key directories...")
-        
+
         try:
             # create secret key directory
             os.makedirs(
