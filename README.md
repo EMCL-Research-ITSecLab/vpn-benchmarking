@@ -1,6 +1,6 @@
-# Rosenpass Benchmarking
+# VPN Benchmarking
 
-This project aims to measure and compare the performance overhead of using a post-quantum-secure Rosenpass VPN connection and to visualize the resulting data.
+This project aims to measure and compare the performance overhead of using a VPN connection and to visualize the resulting data.
 
 ## Usage for Performance Measurements
 ### Installing libraries
