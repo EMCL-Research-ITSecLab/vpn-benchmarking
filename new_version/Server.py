@@ -55,6 +55,8 @@ class Server:
         )
 
         for i in range(number):
+            messages.print_log(f"Starting exchange {i+1}...")
+
             # open the VPN
             if not vpn.open():
                 return False
@@ -67,6 +69,7 @@ class Server:
             if not vpn.close():
                 return False
 
+        messages.print_log(f"Finished exchanges successfully.")
         return True
 
     def prepare(self) -> bool:

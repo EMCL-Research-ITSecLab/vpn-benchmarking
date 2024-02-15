@@ -1,6 +1,7 @@
 import messages
 
 import json
+import time
 
 hosts_path = "hosts.json"  # hosts file path, should not be changed
 
@@ -53,18 +54,37 @@ class Client:
         )
 
         for i in range(number):
+            messages.print_log(f"Starting exchange {i + 1}...")
+
             # open the VPN
             if not vpn.open():
                 return False
 
-            # do one exchange
-            if not exchange.run():
-                return False
+            # do one exchange, try multiple times if necessary
+            remaining_attempts = 50
+            slept = False
+
+            while True:
+                if remaining_attempts > 0:  # still attempts left, normal case
+                    if not exchange.run():
+                        remaining_attempts -= 1
+                    else:
+                        break
+                elif slept == False:  # if no more attempts but did not sleep yet
+                    time.sleep(2)
+                    remaining_attempts = 50
+                    slept = True
+                else:  # if no more attempts and already slept
+                    messages.print_err(
+                        "Too many exchange connection attempts. Did not finish successfully."
+                    )
+                    return False
 
             # close the VPN
             if not vpn.close():
                 return False
 
+        messages.print_log(f"Finished exchanges successfully.")
         return True
 
     def prepare(self) -> bool:

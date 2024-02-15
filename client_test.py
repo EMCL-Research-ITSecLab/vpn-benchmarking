@@ -6,4 +6,6 @@ from new_version.exchanges.HTTP import HTTP
 from new_version.vpns.NoVPN import NoVPN
 from new_version.vpns.Rosenpass import Rosenpass
 
-rosenpass = Rosenpass("server", "localhost", "lamron")
+client = Client()
+
+client.run(HTTP, NoVPN, 10000)
