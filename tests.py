@@ -8,4 +8,4 @@ from new_version.vpns.Rosenpass import Rosenpass
 
 rosenpass = Rosenpass("server", "localhost", "lamron")
 
-rosenpass.share_pubkeys("~/praktikum_itsec/project/rosenpass-benchmarking/new_version/rp-keys2/server-public")
+rosenpass.generate_keys(10)
