@@ -7,8 +7,6 @@ hosts_path = "hosts.json"  # hosts file path, should not be changed
 
 
 class Client:
-    setup_completed = False
-
     def __init__(self, ExchangeType, VPNType) -> None:
         # open the hosts file
         messages.print_log("Initializing client...")
@@ -56,11 +54,7 @@ class Client:
         return
 
     def run(self, number) -> bool:
-        if not self.setup_completed:
-            messages.print_err(
-                "The setup has not been completed yet. Run the setup first."
-            )
-            return False
+        # TODO
 
         for i in range(number):
             messages.print_log(f"Starting exchange {i + 1}...")
@@ -96,13 +90,16 @@ class Client:
         messages.print_log(f"Finished exchanges successfully.")
         return True
 
-    def setup(self, remote_path) -> bool:  # only needed for VPN usage
+    def keygen(self) -> bool:  # only needed for VPN usage
         messages.print_log("Generating key set on the client...")
 
         if not self.vpn.generate_keys():
             return False
 
         messages.print_log("All needed keys are set up (none if no VPN is used).")
+        return True
+
+    def keysend(self, remote_path) -> bool:  # only needed for VPN usage
         messages.print_log(
             "Transmitting public keys to the server (only if VPN is used)..."
         )
@@ -110,6 +107,5 @@ class Client:
         if not self.vpn.share_pubkeys(remote_path):
             return False
 
-        messages.print_log("Setup complete.")
-        self.setup_completed = True
+        messages.print_log("Keys were successfully transmitted.")
         return True

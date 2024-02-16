@@ -4,6 +4,10 @@ import new_version.helpers as helpers
 
 import os
 import subprocess
+import click
+import shutil
+
+key_path = "rp-keys"
 
 
 class Rosenpass(VPN):
@@ -15,23 +19,42 @@ class Rosenpass(VPN):
             f"Generating Rosenpass and Wireguard key set for {self.role}..."
         )
 
-        if not self.__create_key_directories():
-            return False
+        if not os.path.exists(key_path):
+            try:
+                os.mkdir(key_path)
+            except Exception as err:
+                messages.print_err(
+                    "Something went wrong when creating the key directory."
+                )
+                print(f"{err=}")
+                return False
+
+        sk_path = f"{key_path}/{self.role}.rosenpass-secret"
+        pk_path = f"{key_path}/{self.role}.rosenpass-public"
+
+        if os.path.exists(sk_path) or os.path.exists(pk_path):
+            messages.print_warn(
+                "The folders for the keys already exist (and possibly the keys)."
+            )
+            if click.confirm("Overwrite existing key folders and generate new keys?"):
+                shutil.rmtree(key_path, ignore_errors=False, onerror=None)
+            else:
+                return True
 
         try:
             subprocess.check_output(
                 [
                     "rp",
                     "genkey",
-                    f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
+                    sk_path,
                 ],
             )
             subprocess.check_output(
                 [
                     "rp",
                     "pubkey",
-                    f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
-                    f"rp-keys/{self.role}-public/{self.role}.rosenpass-public",
+                    sk_path,
+                    pk_path,
                 ],
             )
         except Exception as err:
@@ -54,13 +77,12 @@ class Rosenpass(VPN):
             return False
 
         try:
-            base_path = f"rp-keys/{self.role}-public/"
-            for folder in os.listdir(base_path):
+            for file_name in os.listdir(key_path):
                 success = helpers.send_file_to_host(
-                    os.path.join(base_path, folder),
+                    os.path.join(key_path, file_name),
                     self.remote_user,
                     self.remote_ip_addr,
-                    os.path.join(remote_path, base_path, folder),
+                    os.path.join(remote_path, key_path, file_name),
                 )
                 if not success:
                     return False
@@ -73,70 +95,4 @@ class Rosenpass(VPN):
         else:
             messages.print_log("Sent public keys to the server.")
 
-        return True
-
-    # TODO: Change so that only one folder with the correct number of keys exists
-    def __count_keys(self) -> int:
-        key_path = os.path.join(self.home_path, "rp-keys")
-        server_pk_path = os.path.join(key_path, "server-public")
-        client_pk_path = os.path.join(key_path, "client-public")
-
-        server_pk_count, client_pk_count = 0, 0
-
-        try:
-            for _ in os.listdir(server_pk_path):
-                server_pk_count += 1
-        except:
-            messages.print_err(
-                "The folder rp-keys/server-public could not be found/opened. Generate and share new keys to proceed."
-            )
-            return -1
-        try:
-            for _ in os.listdir(client_pk_path):
-                client_pk_count += 1
-        except:
-            messages.print_err(
-                "The folder rp-keys/client-public could not be found/opened. Generate and share new keys to proceed."
-            )
-            return -1
-
-        # something went wrong if the number of keys in directories are unequal
-        if server_pk_count != client_pk_count:
-            return -1
-
-        sk_path = os.path.join(key_path, f"{self.role}-secret")
-
-        count = 0
-        try:
-            for _ in os.listdir(sk_path):
-                count += 1
-        except:
-            messages.print_err("Couldn't list key directory files.")
-            return -1
-
-        if server_pk_count != count:
-            return -1
-
-        return count
-
-    def __create_key_directories(self) -> bool:
-        messages.print_log("  Creating key directories...")
-
-        try:
-            # create secret key directory
-            os.makedirs(
-                os.path.join(self.home_path, f"rp-keys/{self.role}-secret"),
-                exist_ok=True,
-            )
-
-            # create public key directory
-            os.makedirs(
-                os.path.join(self.home_path, f"rp-keys/{self.role}-public"),
-                exist_ok=True,
-            )
-        except:
-            messages.print_err("Unable to create key directories.")
-            return False
-
-        messages.print_log("  Created key directories.")
         return True

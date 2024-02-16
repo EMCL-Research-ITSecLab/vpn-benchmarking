@@ -9,4 +9,4 @@ from new_version.vpns.Rosenpass import Rosenpass
 
 server = Server(HTTP, Rosenpass)
 
-server.setup(10)
+server.keygen()
