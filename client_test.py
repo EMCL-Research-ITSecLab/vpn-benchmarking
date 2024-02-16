@@ -9,4 +9,4 @@ from new_version.vpns.Rosenpass import Rosenpass
 
 client = Client(HTTP, NoVPN)
 
-client.run(10000)
+client.setup(10)

@@ -7,6 +7,6 @@ from new_version.vpns.NoVPN import NoVPN
 from new_version.vpns.Rosenpass import Rosenpass
 
 
-server = Server(HTTP, NoVPN)
+server = Server(HTTP, Rosenpass)
 
-server.run(10000)
+server.setup(10)

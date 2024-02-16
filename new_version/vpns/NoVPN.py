@@ -15,7 +15,7 @@ class NoVPN(VPN):
         # does not close any vpn
         return True
 
-    def generate_keys(self, number):
+    def generate_keys(self):
         # no keys needed
         return True
 

@@ -25,7 +25,6 @@ class Rosenpass(VPN):
                     "genkey",
                     f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
                 ],
-                stderr=subprocess.PIPE,
             )
             subprocess.check_output(
                 [
@@ -34,12 +33,12 @@ class Rosenpass(VPN):
                     f"rp-keys/{self.role}-secret/{self.role}.rosenpass-secret",
                     f"rp-keys/{self.role}-public/{self.role}.rosenpass-public",
                 ],
-                stderr=subprocess.PIPE,
             )
-        except:
+        except Exception as err:
             messages.print_err(
                 "Unable to generate keys: Perhaps Rosenpass is not installed or the key set already exists."
             )
+            print(f"{err=}")
             return False
 
         messages.print_log(f"Generated keys for the {self.role}.")
@@ -121,7 +120,7 @@ class Rosenpass(VPN):
         return count
 
     def __create_key_directories(self) -> bool:
-        messages.print_log("Creating key directories...")
+        messages.print_log("  Creating key directories...")
 
         try:
             # create secret key directory
@@ -139,5 +138,5 @@ class Rosenpass(VPN):
             messages.print_err("Unable to create key directories.")
             return False
 
-        messages.print_log("Created key directories.")
+        messages.print_log("  Created key directories.")
         return True
