@@ -77,15 +77,15 @@ class Rosenpass(VPN):
             return False
 
         try:
-            for file_name in os.listdir(key_path):
-                success = helpers.send_file_to_host(
-                    os.path.join(key_path, file_name),
-                    self.remote_user,
-                    self.remote_ip_addr,
-                    os.path.join(remote_path, key_path, file_name),
-                )
-                if not success:
-                    return False
+            file_name = f"{self.role}.rosenpass-public"
+            success = helpers.send_file_to_host(
+                os.path.join(key_path, file_name),
+                self.remote_user,
+                self.remote_ip_addr,
+                os.path.join(remote_path, key_path, file_name),
+            )
+            if not success:
+                return False
         except:
             messages.print_err("Keys do not exist. Generate new keys with 'main.py'.")
             return False
