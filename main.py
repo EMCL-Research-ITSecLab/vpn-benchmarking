@@ -137,7 +137,7 @@ class HandleInput:
 
         monitor.start(auto=self.auto)
         ### start test
-        self.instance.run(self.iterations)
+        self.instance.run(self.iterations, monitor)
         ### end test
         monitor.stop()
 

@@ -53,17 +53,17 @@ class Client:
 
         return
 
-    def run(self, number) -> bool:
-        # TODO
-
+    def run(self, number, monitor) -> bool:
         for i in range(number):
             messages.print_log(f"Starting exchange {i + 1}...")
 
             # open the VPN
+            monitor.poll("Client.run(): before opening VPN connection")
             if not self.vpn.open():
                 return False
 
             # do one exchange, try multiple times if necessary
+            monitor.poll("Client.run(): before doing next round of exchange")
             remaining_attempts = 50
             slept = False
 
@@ -84,6 +84,7 @@ class Client:
                     return False
 
             # close the VPN
+            monitor.poll("Client.run(): before closing VPN connection")
             if not self.vpn.close():
                 return False
 

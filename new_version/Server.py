@@ -54,21 +54,22 @@ class Server:
 
         return
 
-    def run(self, number) -> bool:
-        # TODO: Add check for keys
-
+    def run(self, number, monitor) -> bool:
         for i in range(number):
             messages.print_log(f"Starting exchange {i+1}...")
 
             # open the VPN
+            monitor.poll("Server.run(): before opening VPN connection")
             if not self.vpn.open():
                 return False
 
             # do one exchange
+            monitor.poll("Server.run(): before doing next round of exchange")
             if not self.exchange.run():
                 return False
 
             # close the VPN
+            monitor.poll("Server.run(): before closing VPN connection")
             if not self.vpn.close():
                 return False
 
