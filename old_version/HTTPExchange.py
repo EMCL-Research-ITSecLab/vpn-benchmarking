@@ -10,19 +10,6 @@ hosts_path = "hosts.json"  # path and for the hosts file, should not be changed
 
 class HTTPExchange:
     class OnServer:
-        def __init__(self) -> None:
-            self.host_name = "NOT_IMPLEMENTED"
-            self.port = 0
-
-        def run(self, reps, monitor):
-            for _ in range(reps):
-                monitor.poll("onServer: before creating server")
-                server = HTTPServer(
-                    (self.host_name, self.port), HTTPExchange.OnServer.Server
-                )
-                server.handle_request()
-                server.server_close()
-
         def run_with_rp(self, iterations, monitor):
             # check if the number of keys is consistent
             keys = self.__count_rp_keys()
@@ -140,36 +127,7 @@ class HTTPExchange:
                 else:
                     print("ending iteration", i, "with key", i + 1)
 
-        def gen_keys(self, iterations):
-            pass
-
-        def send_public_keys_to_client(self, remote_path):
-            pass
-
-        def __count_rp_keys(self):
-            pass
-
-        class Server(BaseHTTPRequestHandler):
-            def do_GET(self):
-                self.send_response(200)
-                self.end_headers()
-
     class OnClient:
-        def __init__(self) -> None:
-            self.host_name = "NOT_IMPLEMENTED"
-            self.port = 0
-
-        def run(self, reps, monitor):
-            i = reps
-            while i > 0:
-                try:
-                    monitor.poll("onClient: before connecting")
-                    self.__http_get(f"http://{self.host_name}:{self.port}")
-                    i -= 1
-                # in case the server was not ready yet
-                except:
-                    continue
-
         # when having errors try "sudo ip addr flush dev rosenpass0"
 
         def run_with_rp(self, iterations, monitor):
@@ -289,30 +247,3 @@ class HTTPExchange:
                     print("ending iteration", i)
                 else:
                     print("ending iteration", i, "with key", i + 1)
-
-        def gen_keys(self, iterations):
-            pass
-
-        def send_public_keys_to_server(self, remote_path):
-            pass
-
-        def __count_rp_keys(self):
-            pass
-
-        def __http_get(self, url, iface=None):
-            c = pycurl.Curl()
-            c.setopt(pycurl.URL, url)
-            c.setopt(pycurl.HTTPGET, True)
-            c.setopt(pycurl.TIMEOUT, 10)
-            if iface:
-                c.setopt(pycurl.INTERFACE, iface)
-            c.perform()
-            c.close()
-
-    def count_rp_keys(self):
-        pass
-
-    def send_file_to_host(self, file, target_user, target_ip_addr, target_path):
-        pass
-
-    # TODO: Add function to delete old keys
