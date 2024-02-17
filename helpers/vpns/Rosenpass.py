@@ -1,6 +1,6 @@
-from new_version.VPN import VPN
-import messages
-import new_version.helpers as helpers
+from helpers.VPN import VPN
+import helpers.messages as messages
+import helpers.helpers as helpers
 
 import os
 import subprocess

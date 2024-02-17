@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import subprocess
 import pycurl
-from messages import print_err, print_warn
+from helpers.messages import print_err, print_warn
 import json
 
 hosts_path = "hosts.json"  # path and for the hosts file, should not be changed
@@ -12,7 +12,7 @@ class HTTPExchange:
     class OnServer:
         def run_with_rp(self, iterations, monitor):
             # check if the number of keys is consistent
-            keys = self.__count_rp_keys()
+            keys = 1
             use_iterations = True
 
             if keys <= -1:
@@ -75,7 +75,7 @@ class HTTPExchange:
                         "dev",
                         "rosenpass0",
                         "listen",
-                        f"{self.host_name}:{self.port}",
+                        "localhost:9999",
                         "peer",
                         client_key_path,
                         "allowed-ips",
@@ -120,7 +120,7 @@ class HTTPExchange:
                 print(f"exchange {i} is ready...")
 
                 # else
-                self.run(1, monitor)
+                # self.run(1, monitor)
                 proc.kill()
                 if use_iterations:
                     print("ending iteration", i)
@@ -132,7 +132,7 @@ class HTTPExchange:
 
         def run_with_rp(self, iterations, monitor):
             # check if the number of keys is consistent
-            keys = self.__count_rp_keys()
+            keys = 1
             use_iterations = True
 
             if keys == -1:
@@ -198,7 +198,7 @@ class HTTPExchange:
                         "peer",
                         server_key_path,
                         "endpoint",
-                        f"{self.host_name}:{self.port}",
+                        "localhost:9999",
                         "allowed-ips",
                         "fe80::/64",
                     ],
@@ -241,7 +241,7 @@ class HTTPExchange:
                 print(f"exchange {i} is ready...")
 
                 # else
-                self.run(1, monitor)
+                # self.run(1, monitor)
                 proc.kill()
                 if use_iterations:
                     print("ending iteration", i)

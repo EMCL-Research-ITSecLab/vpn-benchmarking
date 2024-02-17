@@ -1,5 +1,5 @@
-from new_version.Exchange import Exchange
-import messages
+from helpers.Exchange import Exchange
+import helpers.messages as messages
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import pycurl

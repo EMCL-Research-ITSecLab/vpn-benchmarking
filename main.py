@@ -1,11 +1,11 @@
 from enum import auto
-from Monitoring import Monitoring
-from new_version.Server import *
-from new_version.Client import *
-from new_version.vpns.NoVPN import *
-from new_version.vpns.Rosenpass import *
-from new_version.exchanges.HTTP import *
-import messages
+from helpers.Monitoring import Monitoring
+from helpers.Server import *
+from helpers.Client import *
+from helpers.vpns.NoVPN import *
+from helpers.vpns.Rosenpass import *
+from helpers.exchanges.HTTP import *
+import helpers.messages as messages
 
 import click
 
@@ -52,7 +52,7 @@ class HandleInput:
 
     def execute(self) -> bool:
         if not self.valid_inputs:
-            messages.print_err("Inputs are not valid. Please start again.")
+            helpers.messages.print_err("Inputs are not valid. Please start again.")
             return False
 
         if not self.__create_instance():
@@ -73,27 +73,27 @@ class HandleInput:
 
     def __check_values(self) -> bool:
         if self.role not in ("server", "client"):
-            messages.print_err("Invalid ROLE argument. Has to be server|client.")
+            helpers.messages.print_err("Invalid ROLE argument. Has to be server|client.")
             return False
 
         if self.vpn_option not in ("novpn", "rosenpass"):
-            messages.print_err(
+            helpers.messages.print_err(
                 "Invalid VPN_OPTION argument. Has to be novpn|rosenpass."
             )
             return False
 
         if self.exchange_type not in ("http"):
-            messages.print_err("Invalid EXCHANGE_TYPE argument. Has to be http.")
+            helpers.messages.print_err("Invalid EXCHANGE_TYPE argument. Has to be http.")
             return False
 
         if self.operation not in ("keygen", "keysend", "exchange"):
-            messages.print_err(
+            helpers.messages.print_err(
                 "Invalid OPERATION argument. Has to be keygen|keysend|exchange."
             )
             return False
 
         if self.iterations < 1:
-            messages.print_err("Invalid ITERATIONS option. Has to be positive.")
+            helpers.messages.print_err("Invalid ITERATIONS option. Has to be positive.")
             return False
 
         return True

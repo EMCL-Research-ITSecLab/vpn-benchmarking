@@ -1,6 +1,6 @@
 from http import server
 from wsgiref.simple_server import server_version
-import messages
+import helpers.messages as messages
 
 
 class Exchange:

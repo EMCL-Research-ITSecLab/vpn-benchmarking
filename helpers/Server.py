@@ -1,4 +1,4 @@
-import messages
+import helpers.messages as messages
 
 import json
 

@@ -1,6 +1,6 @@
-from new_version.VPN import VPN
+from helpers.VPN import VPN
 
-import messages
+import helpers.messages as messages
 
 
 class NoVPN(VPN):
