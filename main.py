@@ -1,3 +1,5 @@
+from enum import auto
+from Monitoring import Monitoring
 from new_version.Server import *
 from new_version.Client import *
 from new_version.vpns.NoVPN import *
@@ -35,7 +37,7 @@ class HandleInput:
     valid_inputs = False
 
     def __init__(
-        self, role, vpn_option, exchange_type, operation, iterations, directory
+        self, role, vpn_option, exchange_type, operation, iterations, directory, auto
     ) -> None:
         self.role = role
         self.vpn_option = vpn_option
@@ -43,6 +45,7 @@ class HandleInput:
         self.operation = operation
         self.iterations = iterations
         self.directory = directory
+        self.auto = auto
 
         if self.__check_values():
             self.valid_inputs = True
@@ -130,7 +133,13 @@ class HandleInput:
         self.instance.keysend(self.directory)
 
     def __handle_exchange(self):
+        monitor = Monitoring(self.role, self.vpn_option)
+
+        monitor.start(auto=self.auto)
+        ### start test
         self.instance.run(self.iterations)
+        ### end test
+        monitor.stop()
 
 
 @click.command()
@@ -141,13 +150,14 @@ class HandleInput:
     type=str,
     help="directory to save the keys (only for keysend option)",
 )
+@click.option("--auto", help="monitor in auto mode", is_flag=True)
 @click.argument("role", type=str)
 @click.argument("vpn_option", type=str)
 @click.argument("exchange_type", type=str)
 @click.argument("operation", type=str)
-def cli(role, vpn_option, exchange_type, operation, iterations, directory):
+def cli(role, vpn_option, exchange_type, operation, iterations, directory, auto):
     handler = HandleInput(
-        role, vpn_option, exchange_type, operation, iterations, directory
+        role, vpn_option, exchange_type, operation, iterations, directory, auto
     )
     handler.execute()
 

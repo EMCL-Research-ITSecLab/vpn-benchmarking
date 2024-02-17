@@ -1,0 +1,1552 @@
+{
+  "data": [
+    {
+      "hardware": [
+        {
+          "cpu_percent": 22.2,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 0,
+          "bytes_sent": 0,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:35.201406"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 795,
+          "bytes_sent": 795,
+          "pps_recv": 60,
+          "pps_sent": 60
+        }
+      ],
+      "time": "2024-02-17T14:07:35.302385"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 1512,
+          "bytes_sent": 1512,
+          "pps_recv": 60,
+          "pps_sent": 70
+        }
+      ],
+      "time": "2024-02-17T14:07:35.403968"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 4.7,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 6680,
+          "bytes_sent": 1644,
+          "pps_recv": 60,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2024-02-17T14:07:35.507093"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 3.2,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 6878,
+          "bytes_sent": 4842,
+          "pps_recv": 30,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2024-02-17T14:07:35.609720"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 6878,
+          "bytes_sent": 4842,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:35.710724"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7047,
+          "bytes_sent": 4908,
+          "pps_recv": 10,
+          "pps_sent": 10
+        }
+      ],
+      "time": "2024-02-17T14:07:35.812934"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7431,
+          "bytes_sent": 5292,
+          "pps_recv": 50,
+          "pps_sent": 50
+        }
+      ],
+      "time": "2024-02-17T14:07:35.914465"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 3.2,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7431,
+          "bytes_sent": 5292,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.016060"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7431,
+          "bytes_sent": 5292,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.116564"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 7.9,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7431,
+          "bytes_sent": 5292,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.217139"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7431,
+          "bytes_sent": 5292,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.318751"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7736,
+          "bytes_sent": 5292,
+          "pps_recv": 10,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.419739"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 8.3,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 7736,
+          "bytes_sent": 5292,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.520150"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 8521,
+          "bytes_sent": 6077,
+          "pps_recv": 40,
+          "pps_sent": 40
+        }
+      ],
+      "time": "2024-02-17T14:07:36.620692"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 8521,
+          "bytes_sent": 6077,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.721185"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 8521,
+          "bytes_sent": 6077,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.822665"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 8521,
+          "bytes_sent": 6077,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:36.924068"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 8521,
+          "bytes_sent": 6077,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:37.024682"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 3.3,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 9116,
+          "bytes_sent": 6077,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:37.125365"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.7,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 9438,
+          "bytes_sent": 6489,
+          "pps_recv": 60,
+          "pps_sent": 50
+        }
+      ],
+      "time": "2024-02-17T14:07:37.226874"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10168,
+          "bytes_sent": 7219,
+          "pps_recv": 40,
+          "pps_sent": 40
+        }
+      ],
+      "time": "2024-02-17T14:07:37.327493"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10473,
+          "bytes_sent": 7219,
+          "pps_recv": 10,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:37.428806"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10473,
+          "bytes_sent": 7219,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:37.529297"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10473,
+          "bytes_sent": 7219,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:37.629904"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10473,
+          "bytes_sent": 7219,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:37.730529"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10634,
+          "bytes_sent": 7380,
+          "pps_recv": 30,
+          "pps_sent": 30
+        }
+      ],
+      "time": "2024-02-17T14:07:37.832043"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10634,
+          "bytes_sent": 7380,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:37.932582"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10634,
+          "bytes_sent": 7380,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:38.033179"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10634,
+          "bytes_sent": 7380,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:38.134817"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10634,
+          "bytes_sent": 7380,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:38.236309"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 10634,
+          "bytes_sent": 7380,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:38.337862"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 11193,
+          "bytes_sent": 7634,
+          "pps_recv": 40,
+          "pps_sent": 30
+        }
+      ],
+      "time": "2024-02-17T14:07:38.438326"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 11193,
+          "bytes_sent": 7634,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:38.538903"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 50.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 17128,
+          "bytes_sent": 13569,
+          "pps_recv": 170,
+          "pps_sent": 170
+        }
+      ],
+      "time": "2024-02-17T14:07:38.639452"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 17180,
+          "bytes_sent": 13621,
+          "pps_recv": 20,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2024-02-17T14:07:38.740943"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 17180,
+          "bytes_sent": 13621,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:38.841631"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 4.8,
+          "ram_percent": 26.4
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 17722,
+          "bytes_sent": 14163,
+          "pps_recv": 30,
+          "pps_sent": 30
+        }
+      ],
+      "time": "2024-02-17T14:07:38.943265"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 4.8,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 23555,
+          "bytes_sent": 19996,
+          "pps_recv": 90,
+          "pps_sent": 90
+        }
+      ],
+      "time": "2024-02-17T14:07:39.043975"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.7,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 26629,
+          "bytes_sent": 23070,
+          "pps_recv": 90,
+          "pps_sent": 90
+        }
+      ],
+      "time": "2024-02-17T14:07:39.145941"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 26875,
+          "bytes_sent": 23316,
+          "pps_recv": 30,
+          "pps_sent": 30
+        }
+      ],
+      "time": "2024-02-17T14:07:39.246505"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27168,
+          "bytes_sent": 23609,
+          "pps_recv": 40,
+          "pps_sent": 40
+        }
+      ],
+      "time": "2024-02-17T14:07:39.347318"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27473,
+          "bytes_sent": 23609,
+          "pps_recv": 10,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:39.450762"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27473,
+          "bytes_sent": 23609,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:39.552132"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27473,
+          "bytes_sent": 23609,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:39.652760"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27473,
+          "bytes_sent": 23609,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:39.753336"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27473,
+          "bytes_sent": 23609,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:39.853981"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27596,
+          "bytes_sent": 23732,
+          "pps_recv": 20,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2024-02-17T14:07:39.955740"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27663,
+          "bytes_sent": 23799,
+          "pps_recv": 10,
+          "pps_sent": 10
+        }
+      ],
+      "time": "2024-02-17T14:07:40.056182"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27715,
+          "bytes_sent": 23851,
+          "pps_recv": 10,
+          "pps_sent": 10
+        }
+      ],
+      "time": "2024-02-17T14:07:40.156841"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27838,
+          "bytes_sent": 23974,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:40.258773"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 27838,
+          "bytes_sent": 23974,
+          "pps_recv": 20,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2024-02-17T14:07:40.359750"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 40,
+          "pps_sent": 30
+        }
+      ],
+      "time": "2024-02-17T14:07:40.461371"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 10,
+          "pps_sent": 10
+        }
+      ],
+      "time": "2024-02-17T14:07:40.562145"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 4.8,
+          "ram_percent": 26.3
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:40.662697"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 8.2,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:40.763266"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:40.863805"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:40.964384"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.064983"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 5.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.165552"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.266275"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28449,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.366954"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 10,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.467515"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.568058"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.668594"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.769216"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.869806"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:41.970464"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:42.071220"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.7,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:42.171954"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:42.272618"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 28754,
+          "bytes_sent": 24280,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:42.373262"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29182,
+          "bytes_sent": 24403,
+          "pps_recv": 20,
+          "pps_sent": 10
+        }
+      ],
+      "time": "2024-02-17T14:07:42.473878"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29182,
+          "bytes_sent": 24403,
+          "pps_recv": 10,
+          "pps_sent": 10
+        }
+      ],
+      "time": "2024-02-17T14:07:42.574516"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29182,
+          "bytes_sent": 24403,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:42.675104"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 17.2,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29182,
+          "bytes_sent": 24403,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:42.775763"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29301,
+          "bytes_sent": 24522,
+          "pps_recv": 20,
+          "pps_sent": 20
+        }
+      ],
+      "time": "2024-02-17T14:07:42.876354"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29301,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:42.977005"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29301,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.077571"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29301,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.178159"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29301,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.278735"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29301,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.379304"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29606,
+          "bytes_sent": 24522,
+          "pps_recv": 10,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.479885"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29606,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.580513"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 0.0,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29606,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.681074"
+    },
+    {
+      "hardware": [
+        {
+          "cpu_percent": 1.6,
+          "ram_percent": 26.2
+        }
+      ],
+      "name": "automatic poll",
+      "network": [
+        {
+          "bytes_recv": 29606,
+          "bytes_sent": 24522,
+          "pps_recv": 0,
+          "pps_sent": 0
+        }
+      ],
+      "time": "2024-02-17T14:07:43.781685"
+    }
+  ]
+}
