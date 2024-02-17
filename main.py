@@ -7,6 +7,29 @@ import messages
 
 import click
 
+### USAGE ###
+# EXCHANGE:
+# python main.py
+#   -i|--iterations 100
+#   server|client
+#   novpn|rosenpass
+#   http
+#   exchange
+
+# KEY GENERATION:
+# python main.py
+#   server|client
+#   novpn|rosenpass
+#   http
+#   keygen
+
+# SENDING PUBLIC KEYS:
+# python main.py
+#   server|client
+#   novpn|rosenpass
+#   http
+#   keysend
+
 
 class HandleInput:
     valid_inputs = False
@@ -108,29 +131,6 @@ class HandleInput:
 
     def __handle_exchange(self):
         self.instance.run(self.iterations)
-
-
-# EXCHANGE:
-# python main.py
-#   -i|--iterations 100
-#   server|client
-#   novpn|rosenpass
-#   http
-#   exchange
-
-# KEY GENERATION:
-# python main.py
-#   server|client
-#   novpn|rosenpass
-#   http
-#   keygen
-
-# SENDING PUBLIC KEYS:
-# python main.py
-#   server|client
-#   novpn|rosenpass
-#   http
-#   keysend
 
 
 @click.command()
