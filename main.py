@@ -1,7 +1,8 @@
 from new_version.Server import *
 from new_version.Client import *
-from new_version.vpns import NoVPN, Rosenpass
-from new_version.exchanges import HTTP
+from new_version.vpns.NoVPN import *
+from new_version.vpns.Rosenpass import *
+from new_version.exchanges.HTTP import *
 import messages
 
 import click
@@ -11,14 +12,14 @@ class HandleInput:
     valid_inputs = False
 
     def __init__(
-        self, role, vpn_option, exchange_type, operation, iterations, dir
+        self, role, vpn_option, exchange_type, operation, iterations, directory
     ) -> None:
         self.role = role
         self.vpn_option = vpn_option
         self.exchange_type = exchange_type
         self.operation = operation
         self.iterations = iterations
-        self.directory = dir
+        self.directory = directory
 
         if self.__check_values():
             self.valid_inputs = True
@@ -40,7 +41,7 @@ class HandleInput:
         elif self.operation == "exchange":
             if not self.__handle_exchange():
                 return False
-        else:  # can not happen as long as values were checked and not changed
+        else:
             return False
         return True
 
@@ -73,33 +74,29 @@ class HandleInput:
 
     def __create_instance(self) -> bool:
         if self.role == "server":
-            match self.exchange_type:
-                case "http":
-                    match self.vpn_option:
-                        case "novpn":
-                            self.instance = Server(HTTP, NoVPN)
-                            return True
-                        case "rosenpass":
-                            self.instance = Server(HTTP, Rosenpass)
-                            return True
-                        case _:
-                            return False
-                case _:
+            if self.exchange_type == "http":
+                if self.vpn_option == "novpn":
+                    self.instance = Server(HTTP, NoVPN)
+                    return True
+                elif self.vpn_option == "rosenpass":
+                    self.instance = Server(HTTP, Rosenpass)
+                    return True
+                else:
                     return False
+            else:
+                return False
         elif self.role == "client":
-            match self.exchange_type:
-                case "http":
-                    match self.vpn_option:
-                        case "novpn":
-                            self.instance = Client(HTTP, NoVPN)
-                            return True
-                        case "rosenpass":
-                            self.instance = Client(HTTP, Rosenpass)
-                            return True
-                        case _:
-                            return False
-                case _:
+            if self.exchange_type == "http":
+                if self.vpn_option == "novpn":
+                    self.instance = Client(HTTP, NoVPN)
+                    return True
+                elif self.vpn_option == "rosenpass":
+                    self.instance = Client(HTTP, Rosenpass)
+                    return True
+                else:
                     return False
+            else:
+                return False
         else:
             return False
 
@@ -139,18 +136,21 @@ class HandleInput:
 @click.command()
 @click.option("-i", "--iterations", type=int, default=1, help="number of iterations")
 @click.option(
-    "-d", "--dir", type=str, help="directory to save the keys (only for keysend option)"
+    "-d",
+    "--directory",
+    type=str,
+    help="directory to save the keys (only for keysend option)",
 )
 @click.argument("role", type=str)
 @click.argument("vpn_option", type=str)
 @click.argument("exchange_type", type=str)
 @click.argument("operation", type=str)
-def cli(role, vpn_option, exchange_type, operation, iterations, dir):
-    return (role, vpn_option, exchange_type, operation, iterations, dir)
+def cli(role, vpn_option, exchange_type, operation, iterations, directory):
+    handler = HandleInput(
+        role, vpn_option, exchange_type, operation, iterations, directory
+    )
+    handler.execute()
 
 
 if __name__ == "__main__":
-    inputs = cli()
-    handler = HandleInput(
-        inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5]
-    )
+    cli()
