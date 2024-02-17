@@ -1,10 +1,10 @@
-# VPN Benchmarking
+# VPN Benchmarking Framework
 
-This project aims to measure and compare the performance overhead of using a VPN connection and to visualize the resulting data.
+This project aims to measure and compare the performance overhead of using a VPN connection and to visualize the resulting data. The framework can be used for different tasks (like sending an HTTP GET packet or a big file) using different VPNs (like Wireguard or Rosenpass).
 
 ## Usage for Performance Measurements
 ### Installing libraries
-As a first step, it is required to set up a virtual environment for the installation. For this, install `venv` on your machines and use
+As a first step, it is recommended to set up a virtual environment for the installation. For this, install `venv` on your machines and use
 ```
 $ python -m venv DIRECTORY
 ```
@@ -19,6 +19,9 @@ Now, you need to install necessary libraries by executing the following command 
 ```
 $ sudo python install_requirements.py
 ```
+Alternatively, you can use the framework without a virtual environment. In that case, you will have to install the necessary modules yourself: `psutil`, `click`, `inquirer`, `numpy`, `pycurl`.
+
+TODO: DELETE IF NOT NEEDED:
 
 Set the device's role in the exchange by executing:
 ```
@@ -41,36 +44,36 @@ Note, that both options `--server` and `--client` have to be set on both hosts.
 After setting the hosts, you will be asked if you want to set the same hosts for the ansible hosts file. This can be used in the next step, to install Rosenpass on the hosts. Confirm on `master` if you need to install or update Rosenpass. The file is not needed on `server` and `client`, but can be generated and copied to `master` if needed.
 
 ### Install latest Rosenpass version
-For setting up the environment, install Ansible on a third device (master), set up SSH keys on both hosts, copy the ansible hosts file from one of the hosts to master and use:
+For setting up the environment if you want to measure the performance of Rosenpass, either install Rosenpass from their official GitHub page, or install Ansible on a third device (master), set up SSH keys on both hosts, copy the ansible hosts file from one of the hosts to master and use:
 ```
 user@master:~/ansible_files$ ansible-playbook install_rosenpass.yml --ask-become-pass
 ```
 You will be asked to enter the password for the remote machine. At the moment, it is only possible to update machines with the same password by running the command once.
 
-### Generate Rosenpass keys and share public keys
+If you want to test different VPNs, consider implementing the functionality as shown in the section of testing different VPNs.
+
+### Generate keys and share public keys
 All the following functions can be used by executing `main.py` with different arguments and options.
 
-#### Generating Rosenpass keys
+#### Generating keys
 To generate the necessary keys, use the command:
 ```
-user@server:~$ python main.py server keygen [-i/--iterations ITERATIONS]
+user@server:~$ python main.py server VPN_OPTION EXCHANGE_TYPE keygen
 ```
 ```
-user@client:~$ python main.py client keygen [-i/--iterations ITERATIONS]
+user@client:~$ python main.py client VPN_OPTION EXCHANGE_TYPE keygen
 ```
-with `ITERATIONS` being the number of key sets that need to be generated. By default, this value is 1. By specifying the number of keys manually, you can create several different Rosenpass key sets. In the exchange, every connection will use a different key set. By setting the number to 1 (default), only one key will be generated and used in the exchange. The number of iterations can then be specified later when executing the exchange.
+with `VPN_OPTION` being the VPN you want to use (currently you can use `NoVPN` (baseline) and `Rosenpass`). `EXCHANGE_TYPE` describes what kind of exchange should be executed (currently you can use `HTTP` for sending a specified number of GET packets from the client to the server).
 
-For a successful exchange, both hosts have to generate the same number of key sets.
-
-#### Sharing Rosenpass public keys with the other host
+#### Sharing public keys with the other host
 For sharing the keys, it is necessary to set up SSH keys on both the server and the client. To share the keys, execute:
 ```
-user@server:~$ python main.py server keysend -d REMOTE_CLIENT_DIRECTORY
+user@server:~$ python main.py server VPN_OPTION EXCHANGE_TYPE keysend -d REMOTE_CLIENT_DIRECTORY
 ```
 ```
-user@client:~$ python main.py client keysend -d REMOTE_SERVER_DIRECTORY
+user@client:~$ python main.py client VPN_OPTION EXCHANGE_TYPE keysend -d REMOTE_SERVER_DIRECTORY
 ```
-`REMOTE_SERVER_DIRECTORY` and `REMOTE_CLIENT_DIRECTORY` specify the working directory on the remote host, in which the folder `rp-keys` for the keys is existent.
+`REMOTE_SERVER_DIRECTORY` and `REMOTE_CLIENT_DIRECTORY` specify the working directory on the remote host, in which the folder `rp-keys` for the keys is existent (TODO: CHECK).
 
 If an error occurs after execution, make sure you have the correct SSH keys set up and shared on the hosts and have enabled and started `ssh`. To make sure, run the commands on both hosts:
 ```
@@ -84,10 +87,10 @@ Now the keys and hosts should be ready to start and monitor exchanges.
 #### HTTP exchange using no vpn (baseline)
 Start the baseline HTTP exchange, by running the following commands:
 ```
-user@server:~$ python main.py server novpn -i/--iterations ITERATIONS [--auto]
+user@server:~$ python main.py server novpn http exchange -i/--iterations ITERATIONS [--auto]
 ```
 ```
-user@client:~$ python main.py client novpn -i/--iterations ITERATIONS [--auto]
+user@client:~$ python main.py client novpn http exchange -i/--iterations ITERATIONS [--auto]
 ```
 Note, that it is necessary to give the iterations as input.
 
@@ -98,12 +101,12 @@ Important: In exchanges with a high number of iterations you may be asked for yo
 
 Start the HTTP exchange with Rosenpass VPN, by running the following commands:
 ```
-user@server:~$ python main.py server rp [-i/--iterations ITERATIONS] [--auto]
+user@server:~$ python main.py server rosenpass http exchange -i/--iterations ITERATIONS [--auto]
 ```
 ```
-user@client:~$ python main.py client rp [-i/--iterations ITERATIONS] [--auto]
+user@client:~$ python main.py client rosenpass http exchange -i/--iterations ITERATIONS [--auto]
 ```
-Without setting the iterations, there will be as many exchanges as key sets in the corresponding folder. If you only created a single key beforehand, you can enter a number as `ITERATIONS` and the exchange will be repeated as often as you entered, using the same key.
+Enter a number as `ITERATIONS` and the exchange will be repeated as often as you entered, using the previously generated key set.
 
 The `--auto` option works as described in the baseline HTTP exchange above.
 
@@ -125,7 +128,7 @@ ROLE-VPN_OPTION:TIMESTAMP.json
 
 `ROLE`: Role of the device (by default either `server` or `client`)
 
-`VPN_OPTION`: VPN name (by default either `novpn` or `rp`)
+`VPN_OPTION`: VPN name (by default either `novpn` or `rosenpass`)
 
 `TIMESTAMP`: Timestamp, must be in ISO Format: `YYYY-MM-DD HH:MM:SS.mmmmmm`
 

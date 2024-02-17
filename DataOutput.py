@@ -1,4 +1,3 @@
-from genericpath import isdir
 import json
 import matplotlib.pyplot as plt
 import numpy as np
@@ -471,7 +470,7 @@ class DataOutput:
                 # adjust title
                 if self.vpn_option == "novpn":
                     title += "without VPN "
-                elif self.vpn_option == "rp":
+                elif self.vpn_option == "rosenpass":
                     title += "using Rosenpass "
                 else:
                     title += f"(VPN: {self.vpn_option}) "

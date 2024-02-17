@@ -4,8 +4,6 @@ from helpers.messages import print_err, print_log
 
 def install_requirements():
     print_log("Installing requirements...")
-    if not install_psutil():
-        return
     if not install_click():
         return
     if not install_inquirer():
@@ -13,6 +11,8 @@ def install_requirements():
     if not install_numpy():
         return
     if not install_pycurl():
+        return
+    if not install_psutil():
         return
     print("done.")
 
@@ -95,13 +95,11 @@ def install_pycurl():
     try:
         subprocess.check_output(
             ["bin/pip", "install", "pycurl"],
-            stdout=subprocess.PIPE,
         )
     except:
         try:
             subprocess.check_output(
                 ["bin/pip", "install", "python3-pycurl"],
-                stdout=subprocess.PIPE,
             )
         except:
             print("failed.")
