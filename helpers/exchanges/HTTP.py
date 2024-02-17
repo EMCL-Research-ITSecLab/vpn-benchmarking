@@ -1,4 +1,4 @@
-from helpers.Exchange import Exchange
+from helpers.exchanges.Exchange import Exchange
 import helpers.messages as messages
 
 from http.server import BaseHTTPRequestHandler, HTTPServer

@@ -1,5 +1,3 @@
-from http import server
-from wsgiref.simple_server import server_version
 import helpers.messages as messages
 
 

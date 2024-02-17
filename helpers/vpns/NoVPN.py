@@ -1,4 +1,4 @@
-from helpers.VPN import VPN
+from helpers.vpns.VPN import VPN
 
 import helpers.messages as messages
 

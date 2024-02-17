@@ -139,3 +139,9 @@ After executing the command, you will have to determine what graphs should be cr
 You will also be asked if you want to generate the full relative graphs (0 to 100 percent) or only the part where values are present. You can also choose both.
 
 You can also choose to create min/max/median graphs.
+
+## Using the framework with different VPNs/different exchange types
+
+Currently, the framework provides the class `HTTP` in the `helpers/exchanges` directory for exchange types and the classes `NoVPN` and `Rosenpass` in the `helpers/vpns` directory for different VPNs.
+
+To implement new VPNs or new exchanges, simply add new classes inheriting from the classes `VPN`/`Exchange` and implement their functions. Additionally, you will have to adjust the methods `__check_values` and `__create_instance` in the `HandleInput` class in `main.py`. Add the name of your added functionality and the corresponding creation of `Server`/`Client` by inputting your new class.
