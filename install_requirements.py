@@ -17,7 +17,7 @@ def install_requirements():
     print("done.")
 
 
-def install_psutil():
+def install_psutil() -> bool:
     print("Install psutil... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "psutil"])
@@ -35,7 +35,7 @@ def install_psutil():
     return True
 
 
-def install_click():
+def install_click() -> bool:
     print("Install click... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "click"])
@@ -53,7 +53,7 @@ def install_click():
     return True
 
 
-def install_inquirer():
+def install_inquirer() -> bool:
     print("Install inquirer... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "inquirer"])
@@ -71,7 +71,7 @@ def install_inquirer():
     return True
 
 
-def install_numpy():
+def install_numpy() -> bool:
     print("Install numpy... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "numpy"])
@@ -89,7 +89,7 @@ def install_numpy():
     return True
 
 
-def install_pycurl():
+def install_pycurl() -> bool:
     print("Install pycurl... ", end="", flush=True)
 
     try:

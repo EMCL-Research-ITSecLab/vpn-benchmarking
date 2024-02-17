@@ -1,7 +1,5 @@
 from helpers.vpns.VPN import VPN
 
-import helpers.messages as messages
-
 
 class NoVPN(VPN):
     def __init__(self, role, remote_ip_addr, remote_user) -> None:

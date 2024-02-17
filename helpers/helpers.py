@@ -15,5 +15,5 @@ def send_file_to_host(file, target_user, target_ip_addr, target_path) -> bool:
         )
         print(f"{err=}")
         return False
-    
+
     return True
