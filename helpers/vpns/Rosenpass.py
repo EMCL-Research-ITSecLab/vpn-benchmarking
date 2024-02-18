@@ -6,13 +6,32 @@ import os
 import subprocess
 import click
 import shutil
+import time
 
 key_path = "rp-keys"
 
 
 class Rosenpass(VPN):
+    keys_generated = False
+    keys_shared = False
+
     def __init__(self, role, remote_ip_addr, remote_user) -> None:
         super().__init__(role, remote_ip_addr, remote_user)
+
+    def open(self) -> bool:
+        # check if keys were generated and shared
+        # possibly they were deleted -> then Rosenpass will throw an error
+        if not (self.keys_generated and self.keys_shared):
+            messages.print_err(
+                "Keys are not correctly initialized. Try generating new keys and send them to the other host."
+            )
+            return False
+
+        # FOR SERVER:
+        self.process = self.__start_rosenpass_key_exchange_on_server()
+        time.sleep(5)
+
+        return False
 
     def generate_keys(self) -> bool:
         messages.print_log(
@@ -64,6 +83,7 @@ class Rosenpass(VPN):
             print(f"{err=}")
             return False
 
+        self.keys_generated = True
         messages.print_log(f"Generated keys for the {self.role}.")
 
         return True
@@ -90,9 +110,38 @@ class Rosenpass(VPN):
             messages.print_err("Keys do not exist. Generate new keys with 'main.py'.")
             return False
 
+        self.keys_shared = True
         if self.role == "server":
             messages.print_log("Sent public keys to the client.")
         else:
             messages.print_log("Sent public keys to the server.")
 
         return True
+
+    def __start_rosenpass_key_exchange_on_server(self):
+        server_sk_dir = os.path.join(key_path, "server.rosenpass-secret")
+        client_pk_dir = os.path.join(key_path, "client.rosenpass-public")
+    
+        try:
+            process = subprocess.check_output(
+                [
+                    "sudo",
+                    "rp",
+                    "exchange",
+                    server_sk_dir,  # server keys
+                    "dev",
+                    "rosenpass0",
+                    "listen",
+                    "localhost:9999",
+                    "peer",
+                    client_pk_dir,  # client keys
+                    "allowed-ips",
+                    "fe80::/64",
+                ],
+            )
+        except Exception as err:
+            messages.print_err("Rosenpass key exchange was not successful!")
+            print(f"{err=}")
+            return
+        
+        return process

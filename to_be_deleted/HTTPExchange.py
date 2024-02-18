@@ -42,7 +42,7 @@ class HTTPExchange:
             # only used for use_iterations == True, needed to avoid unbound variables
             server_key_path = os.path.join(
                 os.getcwd(),
-                f"rp-keys/server-secret/server.rosenpass-secret",
+                f"rp-keys/server.rosenpass-secret",
             )
             client_key_path = os.path.join(
                 os.getcwd(),
