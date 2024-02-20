@@ -283,7 +283,6 @@ class DataOutput:
                 plt.clf()
                 print(f"File saved as {short_path}/{l}.png.")
 
-    # private methods
     def __make_graph(self, file_name, full, median):
         # check if 'data' is correct
         if not self.__check_data():
@@ -343,7 +342,7 @@ class DataOutput:
                         data = self.__partition_data(self.lists[value])
 
                         if data == None:
-                            print_err("Data is empty. Not printing the graph.")
+                            print_err("  Data is empty. Not printing the graph.")
                             return
 
                         # set plot parameters: xlabel
@@ -399,7 +398,7 @@ class DataOutput:
                         data = self.__partition_data(self.lists[value])
 
                         if data == None:
-                            print_err("Data is empty. Not printing the graph.")
+                            print_err("  Data is empty. Not printing the graph.")
                             return
 
                         # set plot parameters: xlabel
@@ -441,7 +440,7 @@ class DataOutput:
                         data = self.__partition_data(self.lists[value])
 
                         if data == None:
-                            print_err("Data is empty. Not printing the graph.")
+                            print_err("  Data is empty. Not printing the graph.")
                             return
 
                         # set plot parameters: xlabel
@@ -464,7 +463,7 @@ class DataOutput:
                         # plot
                         plt.plot(timestamps, self.lists[value])
                 else:
-                    print_err(f"Unknown performance parameter '{value}'.")
+                    print_err(f"  Unknown performance parameter '{value}'.")
                     return
 
                 # adjust title
@@ -506,14 +505,14 @@ class DataOutput:
                 Path(graph_file_path).mkdir(parents=True, exist_ok=True)
                 plt.savefig(os.path.join(graph_file_path, specific_value))
                 print_log(
-                    f"File saved as {graph_dir_path}/{value}/{specific_value}.png."
+                    f"  File saved as {graph_dir_path}/{value}/{specific_value}.png."
                 )
 
                 # clean up
                 plt.clf()
                 no_data = False
         if no_data == True:
-            print_warn("No data. Not printing any graphs.")
+            print_warn("  No data. Not printing any graphs.")
 
         # reset data lists
         self.__reset_lists()
@@ -563,13 +562,13 @@ class DataOutput:
                     raise KeyError
 
         except KeyError:
-            print_warn(f"Skipping file {self.file_name}: Incorrect or no data!")
+            print_warn(f"  Skipping file {self.file_name}: Incorrect or no data!")
             return False
         except ValueError:
-            print_warn(f"Skipping file {self.file_name}: Incorrect timestamp format!")
+            print_warn(f"  Skipping file {self.file_name}: Incorrect timestamp format!")
             return False
         except Exception as err:
-            print_err(f"Unexpected {err=}, {type(err)=}")
+            print_err(f"  Unexpected {err=}, {type(err)=}")
             return False
 
         return True
@@ -604,19 +603,19 @@ class DataOutput:
 
         except KeyError:
             print_warn(
-                f"Skipping {file_name}: The format of the file name is incorrect."
+                f"  Skipping {file_name}: The format of the file name is incorrect."
             )
             return False
         except ValueError:
             print_warn(
-                f"Skipping {file_name}: The format of the file name is incorrect: wrong timestamp format."
+                f"  Skipping {file_name}: The format of the file name is incorrect: wrong timestamp format."
             )
             return False
         except TypeError:
-            print_warn(f"Skipping {file_name}: Not a file name.")
+            print_warn(f"  Skipping {file_name}: Not a file name.")
             return False
         except Exception as err:
-            print_err(f"Unexpected {err=}, {type(err)=}")
+            print_err(f"  Unexpected {err=}, {type(err)=}")
             return False
 
         return True
@@ -648,7 +647,7 @@ class DataOutput:
 
             initial_time = datetime.fromisoformat(timestamp)
         except:
-            print_err("Incorrect timestamp.")
+            print_err("  Incorrect timestamp.")
             return
 
         i = 0
@@ -669,7 +668,7 @@ class DataOutput:
                     cur_time += sub_time
                     continue
             except:
-                print_err("Incorrect timestamp.")
+                print_err("  Incorrect timestamp.")
                 return
 
             sub_data.append(initial_data[i])
@@ -686,7 +685,7 @@ class DataOutput:
             if (time - initial_time).total_seconds() <= cur_time:
                 data.append(sub_data)
         except:
-            print_err("Incorrect timestamp.")
+            print_err("  Incorrect timestamp.")
             return
 
         return (data, sub_time)
@@ -749,49 +748,49 @@ class DataOutput:
                 else:
                     return f"{unit}iB"
             bytes = bytes / 1024
-        print_err("Number of bytes is too large!")
+        print_err("  Number of bytes is too large!")
 
     def __get_timestamp(self, entry):
         try:
             return self.data["data"][entry]["time"]
         except:
-            print_err("Could not get timestamp.")
+            print_err("  Could not get timestamp.")
 
     def __get_cpu_percent(self, entry):
         try:
             return self.data["data"][entry]["hardware"][0]["cpu_percent"]
         except:
-            print_err("Could not get cpu percent value.")
+            print_err("  Could not get cpu percent value.")
 
     def __get_ram_percent(self, entry):
         try:
             return self.data["data"][entry]["hardware"][0]["ram_percent"]
         except:
-            print_err("Could not get ram percent value.")
+            print_err("  Could not get ram percent value.")
 
     def __get_bytes_recv(self, entry):
         try:
             return self.data["data"][entry]["network"][0]["bytes_recv"]
         except:
-            print_err("Could not get bytes recv value.")
+            print_err("  Could not get bytes recv value.")
 
     def __get_bytes_sent(self, entry):
         try:
             return self.data["data"][entry]["network"][0]["bytes_sent"]
         except:
-            print_err("Could not get bytes sent value.")
+            print_err("  Could not get bytes sent value.")
 
     def __get_pps_recv(self, entry):
         try:
             return self.data["data"][entry]["network"][0]["pps_recv"]
         except:
-            print_err("Could not get pps recv value.")
+            print_err("  Could not get pps recv value.")
 
     def __get_pps_sent(self, entry):
         try:
             return self.data["data"][entry]["network"][0]["pps_sent"]
         except:
-            print_err("Could not get pps sent value.")
+            print_err("  Could not get pps sent value.")
 
 
 @click.command()

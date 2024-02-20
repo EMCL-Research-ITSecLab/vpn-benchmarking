@@ -6,6 +6,8 @@ import os
 import subprocess
 import click
 import shutil
+import signal
+import sys
 import time
 
 key_path = "rp-keys"
@@ -18,12 +20,13 @@ class Rosenpass(VPN):
         super().__init__(role, remote_ip_addr, remote_user)
 
     def __del__(self) -> None:
-        self.__clean_up()
+        self.close()
 
     def open(self) -> bool:
         messages.print_log("Preparing...")
         self.__clean_up()
 
+        messages.print_log("Starting key exchange processes...")
         if self.role == "server":
             self.process = self.__start_rosenpass_key_exchange_on_server()
         elif self.role == "client":
@@ -36,15 +39,16 @@ class Rosenpass(VPN):
             return False
 
         if not self.__assign_ip_addr_to_interface():
-            self.process.terminate()
+            self.__clean_up()
             return False
 
-        time.sleep(10)
-
+        messages.print_log("Rosenpass connection established.")
         return True
 
     def close(self) -> bool:
-        return super().close()  # TODO
+        self.__clean_up()
+        messages.print_log("Rosenpass connection closed.")
+        return True
 
     def generate_keys(self) -> bool:
         messages.print_log(
@@ -132,7 +136,7 @@ class Rosenpass(VPN):
         return True
 
     def __start_rosenpass_key_exchange_on_server(self):
-        messages.print_log("Starting process for Rosenpass key exchange...")
+        messages.print_log("  Starting process for Rosenpass key exchange...")
 
         server_sk_dir = os.path.join(key_path, "server.rosenpass-secret")
         client_pk_dir = os.path.join(key_path, "client.rosenpass-public")
@@ -156,18 +160,18 @@ class Rosenpass(VPN):
                 ],
             )
         except Exception:
-            messages.print_err("Rosenpass key exchange was not successful!")
+            messages.print_err("  Rosenpass key exchange was not successful!")
             successful = False
 
         if successful:
-            messages.print_log("Rosenpass key exchange successfully started.")
+            messages.print_log("  Rosenpass key exchange successfully started.")
             return process
         else:
-            process.kill()
+            self.__clean_up()
             return None
 
     def __start_rosenpass_key_exchange_on_client(self):
-        messages.print_log("Starting process for Rosenpass key exchange...")
+        messages.print_log("  Starting process for Rosenpass key exchange...")
 
         client_sk_dir = os.path.join(key_path, "client.rosenpass-secret")
         server_pk_dir = os.path.join(key_path, "server.rosenpass-public")
@@ -192,18 +196,18 @@ class Rosenpass(VPN):
                 ],
             )
         except Exception:
-            messages.print_err("Rosenpass key exchange was not successful!")
+            messages.print_err("  Rosenpass key exchange was not successful!")
             successful = False
 
         if successful:
-            messages.print_log("Rosenpass key exchange successfully started.")
+            messages.print_log("  Rosenpass key exchange successfully started.")
             return process
         else:
-            process.kill()
+            self.__clean_up()
             return None
 
     def __assign_ip_addr_to_interface(self) -> bool:
-        messages.print_log("Assigning IP address to rosenpass0...")
+        messages.print_log("  Assigning IP address to rosenpass0...")
 
         if self.role == "server":
             number = 1  # number in IP address
@@ -241,15 +245,24 @@ class Rosenpass(VPN):
         # if adding an ip address failed
         if j == 0:
             messages.print_err(
-                f"Too many attempts assigning IP address! Please try again."
+                f"  Too many attempts assigning IP address! Please try again."
             )
             return False
 
-        messages.print_log("IP address assigned.")
+        messages.print_log("  IP address assigned.")
         return True
 
     def __clean_up(self):
         if self.process != None:
-            self.process.terminate()
+            self.process.kill()
 
-        subprocess.Popen(["sudo", "pkill", "rosenpass"])
+        messages.print_log("  Terminating all running Rosenpass processes...")
+
+        try:
+            for line in os.popen("ps ax | grep rosenpass | grep -v grep"):
+                fields = line.split()
+                pid = fields[0]
+                os.kill(int(pid), signal.SIGKILL)
+            messages.print_log("  Rosenpass processes terminated.")
+        except:
+            messages.print_log("  Nothing to terminate.")
