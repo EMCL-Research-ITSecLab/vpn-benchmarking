@@ -12,24 +12,26 @@ key_path = "rp-keys"
 
 
 class Rosenpass(VPN):
-    keys_generated = False
-    keys_shared = False
-
     def __init__(self, role, remote_ip_addr, remote_user) -> None:
         super().__init__(role, remote_ip_addr, remote_user)
 
     def open(self) -> bool:
-        # check if keys were generated and shared
-        # possibly they were deleted -> then Rosenpass will throw an error
-        if not (self.keys_generated and self.keys_shared):
-            messages.print_err(
-                "Keys are not correctly initialized. Try generating new keys and send them to the other host."
-            )
-            return False
-
+        # if keys not correct, Rosenpass will throw an error
         # FOR SERVER:
         self.process = self.__start_rosenpass_key_exchange_on_server()
-        time.sleep(5)
+        
+
+        if self.process == None:  # Something went wrong
+            return False
+        
+        
+        if not self.__assign_ip_addr_to_interface():
+            return False
+
+        print("Now sleeping...")
+        time.sleep(50)
+
+        self.process.kill()
 
         return False
 
@@ -118,12 +120,12 @@ class Rosenpass(VPN):
 
         return True
 
-    def __start_rosenpass_key_exchange_on_server(self):
+    def start_rosenpass_key_exchange_on_server(self):
         server_sk_dir = os.path.join(key_path, "server.rosenpass-secret")
         client_pk_dir = os.path.join(key_path, "client.rosenpass-public")
-    
+
         try:
-            process = subprocess.check_output(
+            process = subprocess.Popen(
                 [
                     "sudo",
                     "rp",
@@ -132,16 +134,50 @@ class Rosenpass(VPN):
                     "dev",
                     "rosenpass0",
                     "listen",
-                    "localhost:9999",
+                    "9999",
                     "peer",
                     client_pk_dir,  # client keys
                     "allowed-ips",
                     "fe80::/64",
                 ],
             )
-        except Exception as err:
+        except Exception:
             messages.print_err("Rosenpass key exchange was not successful!")
-            print(f"{err=}")
-            return
-        
+            return None
+
         return process
+
+    def __assign_ip_addr_to_interface(self) -> bool:
+        print("Now assigning IP")
+        j = 1000  # number of attempts
+        while j > 0:
+            try:
+                subprocess.check_output(
+                    [
+                        "sudo",
+                        "ip",
+                        "a",
+                        "add",
+                        "fe80::1/64",
+                        "dev",
+                        "rosenpass0",
+                    ],
+                    stderr=subprocess.PIPE,
+                )
+            except subprocess.CalledProcessError as e:
+                # RTNETLINK answers: File exists error
+                if "exit status 2" in str(e):
+                    subprocess.run(["sudo", "ip", "addr", "flush", "dev", "rosenpass0"])
+                j -= 1
+                print(j)
+            except Exception as err:
+                print(f"{err=}")
+                return False
+        # if adding an ip address failed
+        if j == 0:
+            messages.print_err(
+                f"Too many attempts assigning IP address! Please try again."
+            )
+            return False
+
+        return True

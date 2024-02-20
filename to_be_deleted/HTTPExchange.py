@@ -75,7 +75,7 @@ class HTTPExchange:
                         "dev",
                         "rosenpass0",
                         "listen",
-                        "localhost:9999",
+                        "9999",
                         "peer",
                         client_key_path,
                         "allowed-ips",
