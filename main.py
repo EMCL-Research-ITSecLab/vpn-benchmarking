@@ -1,4 +1,6 @@
 from enum import auto
+
+from traitlets import default
 from helpers.Monitoring import Monitoring
 from helpers.Server import *
 from helpers.Client import *
@@ -73,7 +75,9 @@ class HandleInput:
 
     def __check_values(self) -> bool:
         if self.role not in ("server", "client"):
-            helpers.messages.print_err("Invalid ROLE argument. Has to be server|client.")
+            helpers.messages.print_err(
+                "Invalid ROLE argument. Has to be server|client."
+            )
             return False
 
         if self.vpn_option not in ("novpn", "rosenpass"):
@@ -83,7 +87,9 @@ class HandleInput:
             return False
 
         if self.exchange_type not in ("http"):
-            helpers.messages.print_err("Invalid EXCHANGE_TYPE argument. Has to be http.")
+            helpers.messages.print_err(
+                "Invalid EXCHANGE_TYPE argument. Has to be http."
+            )
             return False
 
         if self.operation not in ("keygen", "keysend", "exchange"):
@@ -149,6 +155,7 @@ class HandleInput:
     "--directory",
     type=str,
     help="directory to save the keys (only for keysend option)",
+    default="~",
 )
 @click.option("--auto", help="monitor in auto mode", is_flag=True)
 @click.argument("role", type=str)

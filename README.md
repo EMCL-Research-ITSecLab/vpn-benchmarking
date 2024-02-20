@@ -68,10 +68,10 @@ with `VPN_OPTION` being the VPN you want to use (currently you can use `NoVPN` (
 #### Sharing public keys with the other host
 For sharing the keys, it is necessary to set up SSH keys on both the server and the client. To share the keys, execute:
 ```
-user@server:~$ python main.py server VPN_OPTION EXCHANGE_TYPE keysend -d REMOTE_CLIENT_DIRECTORY
+user@server:~$ python main.py server VPN_OPTION EXCHANGE_TYPE keysend [-d REMOTE_CLIENT_DIRECTORY]
 ```
 ```
-user@client:~$ python main.py client VPN_OPTION EXCHANGE_TYPE keysend -d REMOTE_SERVER_DIRECTORY
+user@client:~$ python main.py client VPN_OPTION EXCHANGE_TYPE keysend [-d REMOTE_SERVER_DIRECTORY]
 ```
 `REMOTE_SERVER_DIRECTORY` and `REMOTE_CLIENT_DIRECTORY` specify the working directory on the remote host, in which the folder `rp-keys` for the keys is existent (TODO: CHECK).
 

@@ -13,7 +13,7 @@ key_path = "rp-keys"
 
 class Rosenpass(VPN):
     process = None
-    
+
     def __init__(self, role, remote_ip_addr, remote_user) -> None:
         super().__init__(role, remote_ip_addr, remote_user)
 
@@ -21,10 +21,16 @@ class Rosenpass(VPN):
         self.__clean_up()
 
     def open(self) -> bool:
+        messages.print_log("Preparing...")
         self.__clean_up()
-        
-        # FOR SERVER:
-        self.process = self.__start_rosenpass_key_exchange_on_server()
+
+        if self.role == "server":
+            self.process = self.__start_rosenpass_key_exchange_on_server()
+        elif self.role == "client":
+            self.process = self.__start_rosenpass_key_exchange_on_client()
+        else:
+            messages.print_err("Something went wrong! Unexpected role.")
+            return False
 
         if self.process == None:  # Something went wrong
             return False
@@ -35,9 +41,10 @@ class Rosenpass(VPN):
 
         time.sleep(10)
 
-        self.process.terminate()
+        return True
 
-        return False
+    def close(self) -> bool:
+        return super().close()  # TODO
 
     def generate_keys(self) -> bool:
         messages.print_log(
@@ -125,6 +132,8 @@ class Rosenpass(VPN):
         return True
 
     def __start_rosenpass_key_exchange_on_server(self):
+        messages.print_log("Starting process for Rosenpass key exchange...")
+
         server_sk_dir = os.path.join(key_path, "server.rosenpass-secret")
         client_pk_dir = os.path.join(key_path, "client.rosenpass-public")
 
@@ -151,14 +160,59 @@ class Rosenpass(VPN):
             successful = False
 
         if successful:
+            messages.print_log("Rosenpass key exchange successfully started.")
+            return process
+        else:
+            process.kill()
+            return None
+
+    def __start_rosenpass_key_exchange_on_client(self):
+        messages.print_log("Starting process for Rosenpass key exchange...")
+
+        client_sk_dir = os.path.join(key_path, "client.rosenpass-secret")
+        server_pk_dir = os.path.join(key_path, "server.rosenpass-public")
+
+        successful = True
+        server_ip_addr = self.remote_ip_addr
+        try:
+            process = subprocess.Popen(
+                [
+                    "sudo",
+                    "rp",
+                    "exchange",
+                    client_sk_dir,  # client keys
+                    "dev",
+                    "rosenpass0",
+                    "peer",
+                    server_pk_dir,  # server keys
+                    "endpoint",
+                    f"{server_ip_addr}:9999",
+                    "allowed-ips",
+                    "fe80::/64",
+                ],
+            )
+        except Exception:
+            messages.print_err("Rosenpass key exchange was not successful!")
+            successful = False
+
+        if successful:
+            messages.print_log("Rosenpass key exchange successfully started.")
             return process
         else:
             process.kill()
             return None
 
     def __assign_ip_addr_to_interface(self) -> bool:
-        print("Now assigning IP")
+        messages.print_log("Assigning IP address to rosenpass0...")
+
+        if self.role == "server":
+            number = 1  # number in IP address
+        elif self.role == "client":
+            number = 2
+        else:
+            return False
         j = 1000  # number of attempts
+
         while j > 0:
             try:
                 subprocess.check_output(
@@ -167,7 +221,7 @@ class Rosenpass(VPN):
                         "ip",
                         "a",
                         "add",
-                        "fe80::1/64",
+                        f"fe80::{number}/64",
                         "dev",
                         "rosenpass0",
                     ],
@@ -191,6 +245,7 @@ class Rosenpass(VPN):
             )
             return False
 
+        messages.print_log("IP address assigned.")
         return True
 
     def __clean_up(self):
