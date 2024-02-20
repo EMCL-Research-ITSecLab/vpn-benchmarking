@@ -16,20 +16,17 @@ class Rosenpass(VPN):
         super().__init__(role, remote_ip_addr, remote_user)
 
     def open(self) -> bool:
-        # if keys not correct, Rosenpass will throw an error
         # FOR SERVER:
         self.process = self.__start_rosenpass_key_exchange_on_server()
-        
 
         if self.process == None:  # Something went wrong
             return False
-        
-        
+
         if not self.__assign_ip_addr_to_interface():
+            self.process.kill()
             return False
 
-        print("Now sleeping...")
-        time.sleep(50)
+        time.sleep(10)
 
         self.process.kill()
 
@@ -120,10 +117,11 @@ class Rosenpass(VPN):
 
         return True
 
-    def start_rosenpass_key_exchange_on_server(self):
+    def __start_rosenpass_key_exchange_on_server(self):
         server_sk_dir = os.path.join(key_path, "server.rosenpass-secret")
         client_pk_dir = os.path.join(key_path, "client.rosenpass-public")
 
+        successful = True
         try:
             process = subprocess.Popen(
                 [
@@ -143,9 +141,13 @@ class Rosenpass(VPN):
             )
         except Exception:
             messages.print_err("Rosenpass key exchange was not successful!")
-            return None
+            successful = False
 
-        return process
+        if successful:
+            return process
+        else:
+            process.kill()
+            return None
 
     def __assign_ip_addr_to_interface(self) -> bool:
         print("Now assigning IP")
@@ -164,12 +166,14 @@ class Rosenpass(VPN):
                     ],
                     stderr=subprocess.PIPE,
                 )
-            except subprocess.CalledProcessError as e:
+                break
+            except subprocess.CalledProcessError:
                 # RTNETLINK answers: File exists error
-                if "exit status 2" in str(e):
-                    subprocess.run(["sudo", "ip", "addr", "flush", "dev", "rosenpass0"])
+                subprocess.Popen(
+                    ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"],
+                    stderr=subprocess.PIPE,
+                )
                 j -= 1
-                print(j)
             except Exception as err:
                 print(f"{err=}")
                 return False
