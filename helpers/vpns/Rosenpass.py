@@ -12,10 +12,17 @@ key_path = "rp-keys"
 
 
 class Rosenpass(VPN):
+    process = None
+    
     def __init__(self, role, remote_ip_addr, remote_user) -> None:
         super().__init__(role, remote_ip_addr, remote_user)
 
+    def __del__(self) -> None:
+        self.__clean_up()
+
     def open(self) -> bool:
+        self.__clean_up()
+        
         # FOR SERVER:
         self.process = self.__start_rosenpass_key_exchange_on_server()
 
@@ -23,12 +30,12 @@ class Rosenpass(VPN):
             return False
 
         if not self.__assign_ip_addr_to_interface():
-            self.process.kill()
+            self.process.terminate()
             return False
 
         time.sleep(10)
 
-        self.process.kill()
+        self.process.terminate()
 
         return False
 
@@ -185,3 +192,9 @@ class Rosenpass(VPN):
             return False
 
         return True
+
+    def __clean_up(self):
+        if self.process != None:
+            self.process.terminate()
+
+        subprocess.Popen(["sudo", "pkill", "rosenpass"])
