@@ -82,7 +82,7 @@ $ sudo systemctl start ssh
 ```
 
 ### Execute HTTP exchange
-Now the keys and hosts should be ready to start and monitor exchanges.
+Now the keys and hosts should be ready to start and monitor exchanges. In all exchanges, make sure to start the server first. Otherwise the client will return an error.
 
 #### HTTP exchange using no vpn (baseline)
 Start the baseline HTTP exchange, by running the following commands:

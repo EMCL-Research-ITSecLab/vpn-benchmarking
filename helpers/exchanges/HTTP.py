@@ -3,6 +3,7 @@ import helpers.messages as messages
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import pycurl
+from io import BytesIO
 
 
 class HTTP(Exchange):
@@ -28,21 +29,26 @@ class HTTP(Exchange):
                 return False
             return True
         if self.role == "client":
+            buffer = BytesIO()
+            url = f"http://{self.server_name}:{self.server_port}"
+            c = pycurl.Curl()
+            c.setopt(pycurl.URL, url)
+            c.setopt(pycurl.HTTPGET, True)
+            c.setopt(pycurl.TIMEOUT, 10)
+            c.setopt(pycurl.WRITEDATA, buffer)
+
             try:
-                url = f"http://{self.server_name}:{self.server_port}"
-                c = pycurl.Curl()
-                c.setopt(pycurl.URL, url)
-                c.setopt(pycurl.HTTPGET, True)
-                c.setopt(pycurl.TIMEOUT, 10)
                 c.perform()
+                response_code = c.getinfo(pycurl.RESPONSE_CODE)
                 c.close()
-            except Exception as err:
-                messages.print_err(
-                    "Something went wrong while running the HTTP exchange (client)."
-                )
-                print(f"{err=}")
+
+                if response_code == 200:
+                    messages.print_log("Request successful!")
+                    return True
+                else:
+                    return False
+            except:
                 return False
-            return True
 
         return False
 
