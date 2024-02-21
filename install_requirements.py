@@ -14,7 +14,7 @@ def install_requirements():
         return
     if not install_psutil():
         return
-    print("done.")
+    print_log("All dependencies installed.")
 
 
 def install_psutil() -> bool:
