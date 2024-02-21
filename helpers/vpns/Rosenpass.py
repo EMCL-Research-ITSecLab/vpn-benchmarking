@@ -155,6 +155,7 @@ class Rosenpass(VPN):
                     "allowed-ips",
                     "fe80::/64",
                 ],
+                stdout=subprocess.PIPE,
             )
         except Exception:
             messages.print_err("  Rosenpass key exchange was not successful!")
@@ -191,6 +192,7 @@ class Rosenpass(VPN):
                     "allowed-ips",
                     "fe80::/64",
                 ],
+                stdout=subprocess.PIPE,
             )
         except Exception:
             messages.print_err("  Rosenpass key exchange was not successful!")
@@ -258,8 +260,9 @@ class Rosenpass(VPN):
         try:
             for line in os.popen("ps ax | grep rosenpass | grep -v grep"):
                 fields = line.split()
-                pid = fields[0]
-                os.kill(int(pid), signal.SIGKILL)
+                if "main.py" not in line:
+                    pid = fields[0]
+                    os.kill(int(pid), signal.SIGKILL)
             messages.print_log("  Rosenpass processes terminated.")
         except:
             messages.print_log("  Nothing to terminate.")
