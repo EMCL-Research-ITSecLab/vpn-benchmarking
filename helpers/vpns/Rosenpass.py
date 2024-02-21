@@ -236,6 +236,7 @@ class Rosenpass(VPN):
                 subprocess.Popen(
                     ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"],
                     stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
                 )
                 j -= 1
             except Exception as err:
