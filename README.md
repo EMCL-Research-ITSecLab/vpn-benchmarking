@@ -97,14 +97,14 @@ Note, that it is necessary to give the iterations as input.
 The `--auto` option lets the software save the hardware/network performance every 0.1 seconds automatically, additionally to the values when a new exchange starts. This makes sure that you get values during the entire exchange, without breaks in the execution stopping the values from being saved.
 
 #### HTTP exchange via Rosenpass connection
-Important: In exchanges with a high number of iterations you may be asked for your password multiple times. Enter your `sudo` password and the exchange will continue.
+Important: In exchanges with a high number of iterations you may be asked for your password multiple times. Enter your `sudo` password and the exchange will continue. TODO: CHECK
 
 Start the HTTP exchange with Rosenpass VPN, by running the following commands:
 ```
-user@server:~$ python main.py server rosenpass http exchange -i/--iterations ITERATIONS [--auto]
+user@server:~$ sudo python main.py server rosenpass http exchange -i/--iterations ITERATIONS [--auto]
 ```
 ```
-user@client:~$ python main.py client rosenpass http exchange -i/--iterations ITERATIONS [--auto]
+user@client:~$ sudo python main.py client rosenpass http exchange -i/--iterations ITERATIONS [--auto]
 ```
 Enter a number as `ITERATIONS` and the exchange will be repeated as often as you entered, using the previously generated key set.
 
