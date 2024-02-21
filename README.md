@@ -63,7 +63,7 @@ user@server:~$ python main.py server VPN_OPTION EXCHANGE_TYPE keygen
 ```
 user@client:~$ python main.py client VPN_OPTION EXCHANGE_TYPE keygen
 ```
-with `VPN_OPTION` being the VPN you want to use (currently you can use `NoVPN` (baseline) and `Rosenpass`). `EXCHANGE_TYPE` describes what kind of exchange should be executed (currently you can use `HTTP` for sending a specified number of GET packets from the client to the server).
+with `VPN_OPTION` being the VPN you want to use (currently you can use `novpn` (baseline) and `rosenpass`). `EXCHANGE_TYPE` describes what kind of exchange should be executed (currently you can use `http` for sending a specified number of GET packets from the client to the server).
 
 #### Sharing public keys with the other host
 For sharing the keys, it is necessary to set up SSH keys on both the server and the client. To share the keys, execute:

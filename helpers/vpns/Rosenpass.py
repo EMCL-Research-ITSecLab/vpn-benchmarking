@@ -19,9 +19,6 @@ class Rosenpass(VPN):
     def __init__(self, role, remote_ip_addr, remote_user) -> None:
         super().__init__(role, remote_ip_addr, remote_user)
 
-    def __del__(self) -> None:
-        self.close()
-
     def open(self) -> bool:
         messages.print_log("Preparing...")
         self.__clean_up()
