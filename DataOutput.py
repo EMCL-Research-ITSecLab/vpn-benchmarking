@@ -24,14 +24,17 @@ class DataOutput:
     }
 
     def __init__(
-        self,
-        cpu_percent=True,
-        ram_percent=True,
-        bytes_recv=True,
-        bytes_sent=True,
-        pps_recv=True,
-        pps_sent=True,
+            self,
+            cpu_percent=True,
+            ram_percent=True,
+            bytes_recv=True,
+            bytes_sent=True,
+            pps_recv=True,
+            pps_sent=True,
     ) -> None:
+        self.data = None
+        self.file = None
+        self.file_name = None
         self.cpu_percent = cpu_percent
         self.ram_percent = ram_percent
         self.bytes_recv = bytes_recv
@@ -159,7 +162,7 @@ class DataOutput:
                 for i in range(len(self.data["data"])):
                     bytes_recv = self.__get_bytes_recv(i)
                     bytes_sent = self.__get_bytes_sent(i)
-                    if bytes_recv != None and bytes_sent != None:
+                    if bytes_recv is not None and bytes_sent is not None:
                         cur_b_recv = bytes_recv
                         cur_b_sent = bytes_sent
                         if cur_b_recv > max_bytes_recv:
@@ -178,7 +181,7 @@ class DataOutput:
                 self.data = json.load(self.file)
 
                 # get the timestamps from the file
-                if self.lists["time"] == []:
+                if not self.lists["time"]:
                     for i in range(len(self.data["data"])):
                         self.lists["time"].append(self.__get_timestamp(i))
 
@@ -205,7 +208,7 @@ class DataOutput:
                 full_path = os.path.join(os.getcwd(), short_path)
 
                 if (
-                    self.lists[l] != [] and l != "time"
+                        self.lists[l] != [] and l != "time"
                 ):  # make sure the file contains data that is not timestamps
                     data_exists = True
                     Path(full_path).mkdir(parents=True, exist_ok=True)
@@ -274,7 +277,7 @@ class DataOutput:
                 # reset data lists
                 self.__reset_lists()
 
-            if data_exists == False:
+            if not data_exists:
                 print("No data in at least one of the files. Not printing the graph.")
             else:
                 # create the graph with the picked data
@@ -289,7 +292,7 @@ class DataOutput:
             return
 
         # check file name and set attributes short_file_name, role and vpn_option
-        if self.__check_file_name_and_set_attributes(file_name) == False:
+        if not self.__check_file_name_and_set_attributes(file_name):
             return
 
         # get path names and create directory
@@ -341,7 +344,7 @@ class DataOutput:
                     if median:
                         data = self.__partition_data(self.lists[value])
 
-                        if data == None:
+                        if not data:
                             print_err("  Data is empty. Not printing the graph.")
                             return
 
@@ -365,7 +368,7 @@ class DataOutput:
                         # plot
                         plt.plot(timestamps, self.lists[value])
                 elif (
-                    value == "cpu_percent" or value == "ram_percent"
+                        value == "cpu_percent" or value == "ram_percent"
                 ):  # relative values
                     # set plot parameters: ylabel
                     if value == "cpu_percent":
@@ -397,7 +400,7 @@ class DataOutput:
                     if median:
                         data = self.__partition_data(self.lists[value])
 
-                        if data == None:
+                        if not data:
                             print_err("  Data is empty. Not printing the graph.")
                             return
 
@@ -439,7 +442,7 @@ class DataOutput:
                     if median:
                         data = self.__partition_data(self.lists[value])
 
-                        if data == None:
+                        if not data:
                             print_err("  Data is empty. Not printing the graph.")
                             return
 
@@ -480,10 +483,10 @@ class DataOutput:
                 if value == "cpu_percent" or value == "ram_percent":
                     graph_file_path = os.path.join(graph_dir_path, "hardware", value)
                 elif (
-                    value == "bytes_recv"
-                    or value == "bytes_sent"
-                    or value == "pps_recv"
-                    or value == "pps_sent"
+                        value == "bytes_recv"
+                        or value == "bytes_sent"
+                        or value == "pps_recv"
+                        or value == "pps_sent"
                 ):
                     graph_file_path = os.path.join(graph_dir_path, "network", value)
                 else:
@@ -511,7 +514,7 @@ class DataOutput:
                 # clean up
                 plt.clf()
                 no_data = False
-        if no_data == True:
+        if no_data:
             print_warn("  No data. Not printing any graphs.")
 
         # reset data lists
@@ -532,25 +535,25 @@ class DataOutput:
 
                 # check hardware values
                 if (
-                    not isinstance(dictionary["hardware"], list)
-                    or len(dictionary["hardware"]) != 1
-                    or not isinstance(dictionary["hardware"][0], dict)
-                    or len(dictionary["hardware"][0]) != 2
-                    or not isinstance(dictionary["hardware"][0]["cpu_percent"], float)
-                    or not isinstance(dictionary["hardware"][0]["ram_percent"], float)
+                        not isinstance(dictionary["hardware"], list)
+                        or len(dictionary["hardware"]) != 1
+                        or not isinstance(dictionary["hardware"][0], dict)
+                        or len(dictionary["hardware"][0]) != 2
+                        or not isinstance(dictionary["hardware"][0]["cpu_percent"], float)
+                        or not isinstance(dictionary["hardware"][0]["ram_percent"], float)
                 ):
                     raise KeyError
 
                 # check network values
                 if (
-                    not isinstance(dictionary["network"], list)
-                    or len(dictionary["network"]) != 1
-                    or not isinstance(dictionary["network"][0], dict)
-                    or len(dictionary["network"][0]) != 4
-                    or not isinstance(dictionary["network"][0]["bytes_recv"], int)
-                    or not isinstance(dictionary["network"][0]["bytes_sent"], int)
-                    or not isinstance(dictionary["network"][0]["pps_recv"], int)
-                    or not isinstance(dictionary["network"][0]["pps_sent"], int)
+                        not isinstance(dictionary["network"], list)
+                        or len(dictionary["network"]) != 1
+                        or not isinstance(dictionary["network"][0], dict)
+                        or len(dictionary["network"][0]) != 4
+                        or not isinstance(dictionary["network"][0]["bytes_recv"], int)
+                        or not isinstance(dictionary["network"][0]["bytes_sent"], int)
+                        or not isinstance(dictionary["network"][0]["pps_recv"], int)
+                        or not isinstance(dictionary["network"][0]["pps_sent"], int)
                 ):
                     raise KeyError
 
@@ -593,9 +596,9 @@ class DataOutput:
 
             tmp_split_name = role_and_vpn_option.split("-")
             if (
-                len(tmp_split_name) != 2
-                or not isinstance(tmp_split_name[0], str)
-                or not isinstance(tmp_split_name[1], str)
+                    len(tmp_split_name) != 2
+                    or not isinstance(tmp_split_name[0], str)
+                    or not isinstance(tmp_split_name[1], str)
             ):
                 raise KeyError
 
@@ -661,7 +664,7 @@ class DataOutput:
                 time = datetime.fromisoformat(timestamp)
 
                 if (
-                    time - initial_time
+                        time - initial_time
                 ).total_seconds() > cur_time:  # if all values in interval have been added
                     data.append(sub_data)
                     sub_data = []
@@ -688,7 +691,7 @@ class DataOutput:
             print_err("  Incorrect timestamp.")
             return
 
-        return (data, sub_time)
+        return data, sub_time
 
     def __fill_lists(self):
         if not self.__check_data():
@@ -696,17 +699,17 @@ class DataOutput:
 
         for i in range(len(self.data["data"])):
             self.lists["time"].append(self.__get_timestamp(i))
-            if self.cpu_percent == True:
+            if self.cpu_percent:
                 self.lists["cpu_percent"].append(self.__get_cpu_percent(i))
-            if self.ram_percent == True:
+            if self.ram_percent:
                 self.lists["ram_percent"].append(self.__get_ram_percent(i))
-            if self.bytes_recv == True:
+            if self.bytes_recv:
                 self.lists["bytes_recv"].append(self.__get_bytes_recv(i))
-            if self.bytes_sent == True:
+            if self.bytes_sent:
                 self.lists["bytes_sent"].append(self.__get_bytes_sent(i))
-            if self.pps_recv == True:
+            if self.pps_recv:
                 self.lists["pps_recv"].append(self.__get_pps_recv(i))
-            if self.pps_sent == True:
+            if self.pps_sent:
                 self.lists["pps_sent"].append(self.__get_pps_sent(i))
 
     def __get_timestamps(self):
@@ -732,22 +735,22 @@ class DataOutput:
             cur_time = datetime.fromisoformat(self.lists["time"][i])
             timestamps.append(
                 (
-                    (cur_time - initial_time).total_seconds()
-                    / (end_time - initial_time).total_seconds()
+                        (cur_time - initial_time).total_seconds()
+                        / (end_time - initial_time).total_seconds()
                 )
                 * 100
             )
 
         return timestamps
 
-    def __get_unit(self, bytes):
+    def __get_unit(self, n):
         for unit in ["", "K", "M", "G", "T", "P"]:
-            if bytes < 1024:
+            if n < 1024:
                 if unit == "":
                     return "B"
                 else:
                     return f"{unit}iB"
-            bytes = bytes / 1024
+            n = n / 1024
         print_err("  Number of bytes is too large!")
 
     def __get_timestamp(self, entry):
@@ -833,19 +836,19 @@ def cli(compare, path):
 
     answers = inquirer.prompt(questions)
     # check if no boxes are checked
-    if answers == None:
+    if not answers:
         print_err("Something went wrong!")
         return
 
     for a in answers:
-        if a == None:
+        if not a:
             print_err("Something went wrong!")
             return
 
     if "all" in answers["values"]:
-        all = True
+        all_true = True
     else:
-        all = False
+        all_true = False
 
     if answers["full"] == "only full graphs (0 to 100 percent)":
         full_graphs = True
@@ -871,12 +874,12 @@ def cli(compare, path):
         # if path is directory
         if os.path.isdir(path):
             output = DataOutput(
-                cpu_percent="cpu_percent" in answers["values"] or all,
-                ram_percent="ram_percent" in answers["values"] or all,
-                bytes_recv="bytes_recv" in answers["values"] or all,
-                bytes_sent="bytes_sent" in answers["values"] or all,
-                pps_recv="pps_recv" in answers["values"] or all,
-                pps_sent="pps_sent" in answers["values"] or all,
+                cpu_percent="cpu_percent" in answers["values"] or all_true,
+                ram_percent="ram_percent" in answers["values"] or all_true,
+                bytes_recv="bytes_recv" in answers["values"] or all_true,
+                bytes_sent="bytes_sent" in answers["values"] or all_true,
+                pps_recv="pps_recv" in answers["values"] or all_true,
+                pps_sent="pps_sent" in answers["values"] or all_true,
             )
             print("Creating graphs for all json files in the directory...")
             if full_graphs and median_graphs:
@@ -890,12 +893,12 @@ def cli(compare, path):
         # if path is json file
         elif os.path.isfile(path) and path[-5:] == ".json":
             output = DataOutput(
-                cpu_percent="cpu_percent" in answers["values"] or all,
-                ram_percent="ram_percent" in answers["values"] or all,
-                bytes_recv="bytes_recv" in answers["values"] or all,
-                bytes_sent="bytes_sent" in answers["values"] or all,
-                pps_recv="pps_recv" in answers["values"] or all,
-                pps_sent="pps_sent" in answers["values"] or all,
+                cpu_percent="cpu_percent" in answers["values"] or all_true,
+                ram_percent="ram_percent" in answers["values"] or all_true,
+                bytes_recv="bytes_recv" in answers["values"] or all_true,
+                bytes_sent="bytes_sent" in answers["values"] or all_true,
+                pps_recv="pps_recv" in answers["values"] or all_true,
+                pps_sent="pps_sent" in answers["values"] or all_true,
             )
             print("Creating graphs for the file...")
             if full_graphs and median_graphs:
@@ -914,12 +917,12 @@ def cli(compare, path):
             print_err("The given path does not exist.")
     elif compare >= 2:
         output = DataOutput(
-            cpu_percent="cpu_percent" in answers["values"] or all,
-            ram_percent="ram_percent" in answers["values"] or all,
-            bytes_recv="bytes_recv" in answers["values"] or all,
-            bytes_sent="bytes_sent" in answers["values"] or all,
-            pps_recv="pps_recv" in answers["values"] or all,
-            pps_sent="pps_sent" in answers["values"] or all,
+            cpu_percent="cpu_percent" in answers["values"] or all_true,
+            ram_percent="ram_percent" in answers["values"] or all_true,
+            bytes_recv="bytes_recv" in answers["values"] or all_true,
+            bytes_sent="bytes_sent" in answers["values"] or all_true,
+            pps_recv="pps_recv" in answers["values"] or all_true,
+            pps_sent="pps_sent" in answers["values"] or all_true,
         )
         output.compare_graphs(path, compare)
     else:

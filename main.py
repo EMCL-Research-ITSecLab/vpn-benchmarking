@@ -7,6 +7,7 @@ from helpers.exchanges.HTTP import *
 
 import click
 
+
 ### USAGE ###
 # EXCHANGE:
 # python main.py
@@ -35,7 +36,7 @@ class HandleInput:
     valid_inputs = False
 
     def __init__(
-        self, role, vpn_option, exchange_type, operation, iterations, directory, auto
+            self, role, vpn_option, exchange_type, operation, iterations, directory, auto
     ) -> None:
         self.role = role
         self.vpn_option = vpn_option
