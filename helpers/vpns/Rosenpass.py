@@ -234,7 +234,7 @@ class Rosenpass(VPN):
                 break
             except subprocess.CalledProcessError:
                 # RTNETLINK answers: File exists error
-                subprocess.Popen(
+                subprocess.run(
                     ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"],
                     stderr=subprocess.PIPE,
                     stdout=subprocess.PIPE,
@@ -254,7 +254,7 @@ class Rosenpass(VPN):
         return True
 
     def __clean_up(self):
-        if self.process != None:
+        if self.process:
             self.process.kill()
 
         messages.print_log("  Terminating all running Rosenpass processes...")
