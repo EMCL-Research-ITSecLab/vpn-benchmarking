@@ -1,3 +1,6 @@
+import socket
+
+from HostsManager import HostsManager
 from helpers.exchanges.Exchange import Exchange
 import helpers.messages as messages
 
@@ -7,15 +10,13 @@ from io import BytesIO
 
 
 class HTTP(Exchange):
-    def __init__(self, role, server_name, server_port) -> None:
-        super().__init__(role, server_name, server_port)
+    def __init__(self, role, open_server_address, interface) -> None:
+        super().__init__(role, open_server_address, 80, interface)
 
     def run(self) -> bool:
-        # TODO: Add monitor
-
         if self.role == "server":
             try:
-                server = HTTPServer((self.server_name, self.server_port), HTTP.Server)
+                server = HTTPServerV6((self.open_server_address, self.open_server_port), HTTP.Server)
                 print("Awaiting request... ", end="", flush=True)
                 server.handle_request()
 
@@ -30,10 +31,15 @@ class HTTP(Exchange):
             return True
         if self.role == "client":
             buffer = BytesIO()
-            url = f"http://{self.server_name}:{self.server_port}"
+            url = f"http://{self.open_server_address}:{self.open_server_port}"
             c = pycurl.Curl()
             c.setopt(pycurl.URL, url)
             c.setopt(pycurl.HTTPGET, True)
+
+            # if the VPN uses a different interface, get its name
+            if self.interface:
+                c.setopt(pycurl.INTERFACE, self.interface)
+
             c.setopt(pycurl.TIMEOUT, 10)
             c.setopt(pycurl.WRITEDATA, buffer)
 
@@ -56,3 +62,7 @@ class HTTP(Exchange):
         def do_GET(self):
             self.send_response(200)
             self.end_headers()
+
+
+class HTTPServerV6(HTTPServer):
+    address_family = socket.AF_INET6

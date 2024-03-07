@@ -1,23 +1,24 @@
+from HostsManager import HostsManager
 import helpers.messages as messages
 
 import os
 
 
 class VPN:
-    def __init__(self, role, remote_ip_addr, remote_user) -> None:
+    interface_name = None
+    open_server_address = None
+
+    def __init__(self, role) -> None:
         self.home_path = os.getcwd()
-        self.role = None
-        self.remote_ip_addr = remote_ip_addr
-        self.remote_user = remote_user
+        self.hosts = HostsManager()
 
         if role not in ("server", "client"):
             messages.print_err(
                 "Unable to open VPN connection: unknown role. Known: server, client"
             )
-            return
+            raise Exception("Unknown role")
         else:
             self.role = role
-            return
 
     def open(self) -> bool:
         messages.print_err("VPN.open(self): NOT IMPLEMENTED")

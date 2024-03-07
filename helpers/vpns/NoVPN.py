@@ -2,8 +2,8 @@ from helpers.vpns.VPN import VPN
 
 
 class NoVPN(VPN):
-    def __init__(self, role, remote_ip_addr, remote_user) -> None:
-        super().__init__(role, remote_ip_addr, remote_user)
+    def __init__(self, role) -> None:
+        super().__init__(role)
 
     def open(self) -> bool:
         # does not open any vpn

@@ -1,20 +1,20 @@
 import helpers.messages as messages
+from HostsManager import HostsManager
 
 
 class Exchange:
-    def __init__(self, role, server_name, server_port) -> None:
-        self.role = None
-        self.server_name = server_name
-        self.server_port = server_port
+    def __init__(self, role, open_server_address, open_server_port=9999, interface=None) -> None:
+        self.open_server_address = open_server_address
+        self.open_server_port = open_server_port
+        self.interface = interface
 
         if role not in ("server", "client"):
             messages.print_err(
                 "Unable to initialize exchange: unknown role. Known: server, client"
             )
-            return
+            raise Exception("Unknown role")
         else:
             self.role = role
-            return
 
     def run(self) -> bool:
         messages.print_err("Exchange.run(self): NOT IMPLEMENTED")

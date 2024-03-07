@@ -16,8 +16,10 @@ key_path = "rp-keys"
 class Rosenpass(VPN):
     process = None
 
-    def __init__(self, role, remote_ip_addr, remote_user) -> None:
-        super().__init__(role, remote_ip_addr, remote_user)
+    def __init__(self, role) -> None:
+        super().__init__(role)
+        self.interface_name = "rosenpass0"
+        self.open_server_address = "[fe80::1]"
 
     def open(self) -> bool:
         messages.print_log("Preparing...")
@@ -32,7 +34,7 @@ class Rosenpass(VPN):
             messages.print_err("Something went wrong! Unexpected role.")
             return False
 
-        if self.process == None:  # Something went wrong
+        if not self.process:  # Something went wrong
             return False
 
         if not self.__assign_ip_addr_to_interface():
@@ -175,7 +177,6 @@ class Rosenpass(VPN):
         server_pk_dir = os.path.join(key_path, "server.rosenpass-public")
 
         successful = True
-        server_ip_addr = self.remote_ip_addr
         try:
             process = subprocess.Popen(
                 [
@@ -188,7 +189,7 @@ class Rosenpass(VPN):
                     "peer",
                     server_pk_dir,  # server keys
                     "endpoint",
-                    f"{server_ip_addr}:9999",
+                    f"{self.hosts.server_address}:9999",
                     "allowed-ips",
                     "fe80::/64",
                 ],

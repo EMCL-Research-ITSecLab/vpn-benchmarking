@@ -3,52 +3,21 @@ import helpers.messages as messages
 import json
 import time
 
-hosts_path = "hosts.json"  # hosts file path, should not be changed
+from HostsManager import HostsManager
 
 
 class Client:
     def __init__(self, ExchangeType, VPNType) -> None:
         # open the hosts file
         messages.print_log("Initializing client...")
-        try:
-            file = open(hosts_path, "r")
-        except:
-            messages.print_err(
-                "File 'hosts.json' could not be opened. Create the file using 'set_hosts.py'."
-            )
-            return
 
-        # load data and set server name and port
-        try:
-            hosts = json.load(file)
-            no_data = True
-
-            for e in hosts["hosts"]:
-                if e["role"] == "server":
-                    self.server_name = e["ip_addr"]
-                    self.server_port = int(e["port"])
-                    self.server_user = e["user"]
-                    no_data = False
-                elif e["role"] == "client":
-                    self.client_ip_addr = e["ip_addr"]
-                    self.client_user = e["user"]
-                    no_data = False
-
-            if no_data:
-                raise Exception
-        except:
-            messages.print_err(
-                "Data in 'hosts.json' is incorrect or empty. Repair the file using 'set_hosts.py'."
-            )
-            return
+        self.hosts = HostsManager()
 
         messages.print_log("Client initialized.")
 
+        self.vpn = VPNType(role="client")
         self.exchange = ExchangeType(
-            role="client", server_name=self.server_name, server_port=self.server_port
-        )
-        self.vpn = VPNType(
-            role="client", remote_ip_addr=self.server_name, remote_user=self.server_user
+            role="client", open_server_address=self.vpn.open_server_address, interface=self.vpn.interface_name
         )
 
         return
@@ -73,7 +42,7 @@ class Client:
                         remaining_attempts -= 1
                     else:
                         break
-                elif slept == False:  # if no more attempts but did not sleep yet
+                elif not slept:  # if no more attempts but did not sleep yet
                     time.sleep(2)
                     remaining_attempts = 50
                     slept = True
