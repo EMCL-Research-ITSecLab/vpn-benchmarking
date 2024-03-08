@@ -56,7 +56,8 @@ class HTTP(Exchange):
     @staticmethod
     def __run_client(address, port, interface) -> bool:
         """
-        Generates the GET packet for the server. Specifies the interface to be used for sending, if a VPN is used. Expects '200 OK' response.
+        Generates the GET packet for the server. Specifies the interface to be used for sending, if a VPN is used.
+        Expects '200 OK' response.
         :param address: address on which the server runs
         :param port: open server port
         :param interface: interface to be used for transmission, has to exist
