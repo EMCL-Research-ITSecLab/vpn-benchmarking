@@ -12,17 +12,30 @@ from src.vpns.VPN import VPN
 key_path = "rp-keys"
 opening_port = 9999
 
+
 class Rosenpass(VPN):
+    """
+    Implements the post-quantum secure Rosenpass VPN, that uses Wireguard.
+    """
     process = None
 
     def __init__(self, role) -> None:
+        """
+        Calls VPNs __init__. Additionally, sets the Rosenpass interface name to 'rosenpass0' and the address of the
+        server to 'fe80::1'.
+        :param role: role of the host
+        """
         super().__init__(role)
         self.interface_name = "rosenpass0"
         self.open_server_address = "[fe80::1]"
 
     def open(self) -> bool:
+        """
+        Opens the Rosenpass VPN. Will stay open after completion. Can be closed with the close method.
+        :return: True for success, False otherwise
+        """
         messages.print_log("Preparing...")
-        self.__clean_up()
+        self.__clean_up()  # close existing Rosenpass processes
 
         messages.print_log("Starting key exchange processes...")
         if self.role == "server":
@@ -30,12 +43,12 @@ class Rosenpass(VPN):
         elif self.role == "client":
             self.process = self.__start_rosenpass_key_exchange_on_client()
         else:
-            messages.print_err("Something went wrong! Unexpected role.")
-            return False
+            raise Exception("Unexpected role")
 
         if not self.process:  # Process was not opened correctly
             return False
 
+        # add an ip address to the interface
         if not self.__assign_ip_addr_to_interface():
             self.__clean_up()
             return False
@@ -44,15 +57,26 @@ class Rosenpass(VPN):
         return True
 
     def close(self) -> bool:
+        """
+        Closes the Rosenpass VPN.
+        :return: True for success
+        """
         self.__clean_up()
         messages.print_log("Rosenpass connection closed.")
         return True
 
     def generate_keys(self) -> bool:
+        """
+        Generates the necessary keys for Rosenpass. Creates or uses existing rp-keys directory,
+        creates [role].rosenpass-secret and [role].rosenpass-public directories for Wireguard and Rosenpass secret
+        and public keys. If key directories already exist, asks for overwriting, otherwise keeps existing keys.
+        :return: True for success, False otherwise
+        """
         messages.print_log(
             f"Generating Rosenpass and Wireguard key set for {self.role}..."
         )
 
+        # Create directory if not existent
         if not os.path.exists(key_path):
             try:
                 os.mkdir(key_path)
@@ -66,6 +90,7 @@ class Rosenpass(VPN):
         sk_path = f"{key_path}/{self.role}.rosenpass-secret"
         pk_path = f"{key_path}/{self.role}.rosenpass-public"
 
+        # If key directories exist, ask for overwriting, otherwise keep old keys.
         if os.path.exists(sk_path) or os.path.exists(pk_path):
             messages.print_warn(
                 "The folders for the keys already exist (and possibly the keys)."
@@ -91,6 +116,9 @@ class Rosenpass(VPN):
                     pk_path,
                 ],
             )
+
+            messages.print_log(f"Generated keys for the {self.role}.")
+            return True
         except Exception as err:
             messages.print_err(
                 "Unable to generate keys: Perhaps Rosenpass is not installed or the key set already exists."
@@ -98,11 +126,13 @@ class Rosenpass(VPN):
             print(f"{err=}")
             return False
 
-        messages.print_log(f"Generated keys for the {self.role}.")
-
-        return True
-
     def share_pubkeys(self, remote_path) -> bool:
+        """
+        Sends the before generated public Wireguard and Rosenpass keys to the other host. Will use the rp-keys/...
+        directories on the remote host's remote_path. Key directories on the other host must exist.
+        :param remote_path: path in which the rp-keys directory exists on the remote host
+        :return: True for success, False otherwise
+        """
         if self.role == "server":
             messages.print_log("Sending public keys to the client...")
             remote_user = self.hosts.client_user
@@ -137,6 +167,10 @@ class Rosenpass(VPN):
         return True
 
     def __start_rosenpass_key_exchange_on_server(self):
+        """
+        Executes the command for starting the server key exchange.
+        :return: True for success, False otherwise
+        """
         messages.print_log("Starting process for Rosenpass key exchange...")
 
         server_sk_dir = os.path.join(key_path, "server.rosenpass-secret")
@@ -170,6 +204,10 @@ class Rosenpass(VPN):
         return process
 
     def __start_rosenpass_key_exchange_on_client(self):
+        """
+        Executes the command for starting the client key exchange.
+        :return: True for success, False otherwise
+        """
         messages.print_log("Starting process for Rosenpass key exchange...")
 
         client_sk_dir = os.path.join(key_path, "client.rosenpass-secret")
@@ -203,6 +241,12 @@ class Rosenpass(VPN):
         return process
 
     def __assign_ip_addr_to_interface(self) -> bool:
+        """
+        Assigns the IP address 'fe80::1' to the server or 'fe80::2' to the client interface. Interface has to exist.
+        Attempts multiple times, since the interface might not be ready for a few tries. Flushes the interface after
+        invalid attempt.
+        :return: True for success, False otherwise
+        """
         messages.print_log("Assigning IP address to rosenpass0...")
 
         if self.role == "server":
@@ -211,8 +255,8 @@ class Rosenpass(VPN):
             number = 2
         else:
             return False
-        j = 1000  # number of attempts
 
+        j = 1000  # number of attempts
         while j > 0:
             try:
                 subprocess.check_output(
@@ -229,7 +273,7 @@ class Rosenpass(VPN):
                 )
                 break
             except subprocess.CalledProcessError:
-                # RTNETLINK answers: File exists error
+                # flushes the interface for the case in which 'RTNETLINK answers: File exists error' occurs
                 subprocess.run(
                     ["sudo", "ip", "addr", "flush", "dev", "rosenpass0"],
                     stderr=subprocess.PIPE,
@@ -240,7 +284,7 @@ class Rosenpass(VPN):
                 print(f"{err=}")
                 return False
 
-        # if adding an ip address failed
+        # if adding an IP address failed
         if j == 0:
             messages.print_err(
                 f"Too many attempts assigning IP address! Please try again."
@@ -251,6 +295,9 @@ class Rosenpass(VPN):
         return True
 
     def __clean_up(self):
+        """
+        Terminates all running Rosenpass processes.
+        """
         if self.process:
             self.process.kill()
 
@@ -263,5 +310,5 @@ class Rosenpass(VPN):
                     pid = fields[0]
                     os.kill(int(pid), signal.SIGKILL)
             messages.print_log("Rosenpass processes terminated.")
-        except:
+        except:  # no Rosenpass processes running
             messages.print_log("Nothing to terminate.")

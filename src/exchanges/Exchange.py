@@ -22,7 +22,7 @@ class Exchange:
             messages.print_err(
                 "Unable to initialize exchange: unknown role. Known: server, client"
             )
-            raise Exception("Unknown role")
+            raise Exception("Unexpected role")
 
         self.role = role
 
