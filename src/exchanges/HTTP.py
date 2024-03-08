@@ -15,6 +15,11 @@ class HTTP(Exchange):
     """
 
     def __init__(self, role, open_server_address, interface) -> None:
+        """
+        :param role: role of the host
+        :param open_server_address: address to be opened on the server, or already open for the client
+        :param interface: name of the interface for the client to use
+        """
         super().__init__(role, open_server_address, 80, interface)
 
     def run(self) -> bool:
