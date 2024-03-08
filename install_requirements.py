@@ -1,6 +1,6 @@
 import subprocess
 
-from helpers.messages import print_err, print_log
+from src.messages import print_err, print_log
 
 
 def install_requirements():

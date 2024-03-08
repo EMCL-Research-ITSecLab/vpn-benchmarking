@@ -5,9 +5,9 @@ import subprocess
 
 import click
 
-import helpers.helpers as helpers
-import helpers.messages as messages
-from helpers.vpns.VPN import VPN
+import src.helpers as helpers
+import src.messages as messages
+from src.vpns.VPN import VPN
 
 key_path = "rp-keys"
 opening_port = 9999

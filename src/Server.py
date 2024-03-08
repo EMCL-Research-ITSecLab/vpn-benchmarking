@@ -1,6 +1,6 @@
-import helpers.messages as messages
+import src.messages as messages
 
-from helpers.HostsManager import HostsManager
+from src.HostsManager import HostsManager
 
 
 class Server:

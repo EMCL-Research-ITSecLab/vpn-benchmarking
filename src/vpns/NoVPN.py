@@ -1,4 +1,4 @@
-from helpers.vpns.VPN import VPN
+from src.vpns.VPN import VPN
 
 
 class NoVPN(VPN):

@@ -1,6 +1,6 @@
 import json
 
-from helpers import messages
+from src import messages
 
 hosts_path = "../hosts.json"  # hosts file path, should not be changed
 

@@ -4,8 +4,8 @@ from io import BytesIO
 
 import pycurl
 
-import helpers.messages as messages
-from helpers.exchanges.Exchange import Exchange
+import src.messages as messages
+from src.exchanges.Exchange import Exchange
 
 
 class HTTP(Exchange):

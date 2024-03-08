@@ -1,11 +1,11 @@
 import click
 
-from helpers.Client import *
-from helpers.Monitoring import Monitoring
-from helpers.Server import *
-from helpers.exchanges.HTTP import *
-from helpers.vpns.NoVPN import *
-from helpers.vpns.Rosenpass import *
+from src.Client import *
+from src.Monitoring import Monitoring
+from src.Server import *
+from src.exchanges.HTTP import *
+from src.vpns.NoVPN import *
+from src.vpns.Rosenpass import *
 
 
 class HandleInput:

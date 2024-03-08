@@ -4,7 +4,7 @@ import time
 
 import psutil
 
-from helpers.DataHandling import DataHandling
+from src.DataHandling import DataHandling
 
 
 class Monitoring:

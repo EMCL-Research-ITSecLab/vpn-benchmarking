@@ -3,7 +3,7 @@ from pathlib import Path
 
 import click
 
-from helpers.messages import print_err, print_log
+from src.messages import print_err, print_log
 
 
 def set_up_folder_structure(host):
