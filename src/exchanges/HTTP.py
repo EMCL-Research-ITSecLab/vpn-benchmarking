@@ -9,60 +9,100 @@ from src.exchanges.Exchange import Exchange
 
 
 class HTTP(Exchange):
+    """
+    Implements an HTTP exchange. The server opens port 80 and waits. The client sends one HTTP GET packet and expects
+    a '200 OK' response. The server closes after handling the packet.
+    """
+
     def __init__(self, role, open_server_address, interface) -> None:
         super().__init__(role, open_server_address, 80, interface)
 
     def run(self) -> bool:
+        """
+        Decides what is executed based on the role.
+        :return: True for success, False otherwise
+        """
         if self.role == "server":
-            try:
-                server = HTTPServerV6((self.open_server_address, self.open_server_port), HTTP.Server)
-                print("Awaiting request... ", end="", flush=True)
-                server.handle_request()
+            self.__run_server(self.open_server_address, self.open_server_port)
+        elif self.role == "client":
+            self.__run_client(self.open_server_address, self.open_server_port, self.interface)
 
-                messages.print_log("Closing server.")
-                server.server_close()
-            except Exception as err:
-                messages.print_err(
-                    "Something went wrong while running the HTTP exchange (server)."
-                )
-                print(f"{err=}")
-                return False
+        return False  # if role was not server or client
+
+    @staticmethod
+    def __run_server(address, port) -> bool:
+        """
+        Creates the IPv6 HTTP Server and waits for one request. Closes afterward.
+        :param address: address for opening the server
+        :param port: port for opening the server
+        :return: True for success, False otherwise
+        """
+        try:
+            server = HTTPServerV6((address, port), HTTP.RequestHandler)
+
+            print("Awaiting request... ", end="", flush=True)
+            server.handle_request()
+
+            messages.print_log("Closing server.")
+            server.server_close()
             return True
-        if self.role == "client":
-            buffer = BytesIO()
-            url = f"http://{self.open_server_address}:{self.open_server_port}"
-            messages.print_log(f"Sending packet to {url}...")
-            c = pycurl.Curl()
-            c.setopt(pycurl.URL, url)
-            c.setopt(pycurl.HTTPGET, True)
+        except Exception as err:
+            messages.print_err(
+                "Something went wrong while running the HTTP exchange (server)."
+            )
+            print(f"{err=}")
+            return False
 
-            # if the VPN uses a different interface, get its name
-            if self.interface:
-                c.setopt(pycurl.INTERFACE, self.interface)
+    @staticmethod
+    def __run_client(address, port, interface) -> bool:
+        """
+        Generates the GET packet for the server. Specifies the interface to be used for sending, if a VPN is used. Expects '200 OK' response.
+        :param address: address on which the server runs
+        :param port: open server port
+        :param interface: interface to be used for transmission, has to exist
+        :return: True for success, False otherwise
+        """
+        buffer = BytesIO()  # buffer for storing response
 
-            c.setopt(pycurl.TIMEOUT, 10)
-            c.setopt(pycurl.WRITEDATA, buffer)
+        url = f"http://{address}:{port}"
+        messages.print_log(f"Sending packet to {url}...")
 
-            try:
-                c.perform()
-                response_code = c.getinfo(pycurl.RESPONSE_CODE)
-                c.close()
+        # set Curl parameters
+        c = pycurl.Curl()
+        c.setopt(pycurl.URL, url)
+        c.setopt(pycurl.HTTPGET, True)
 
-                if response_code == 200:
-                    messages.print_log("Request successful!")
-                    return True
-                else:
-                    return False
-            except:
-                return False
+        # if the VPN uses a different interface, get its name
+        if interface:
+            c.setopt(pycurl.INTERFACE, interface)
 
-        return False
+        c.setopt(pycurl.TIMEOUT, 10)
+        c.setopt(pycurl.WRITEDATA, buffer)
 
-    class Server(BaseHTTPRequestHandler):
+        try:
+            c.perform()
+            response_code = c.getinfo(pycurl.RESPONSE_CODE)
+            c.close()
+        except Exception as err:
+            print(f"{err=}")
+            return False
+
+        if response_code == 200:
+            messages.print_log("Request successful!")
+            return True
+
+    class RequestHandler(BaseHTTPRequestHandler):
+        """
+        Specifies the response to a GET packet. Only sends '200 OK'.
+        """
+
         def do_GET(self):
             self.send_response(200)
             self.end_headers()
 
 
 class HTTPServerV6(HTTPServer):
+    """
+    Normal HTTP Server using IPv6.
+    """
     address_family = socket.AF_INET6
