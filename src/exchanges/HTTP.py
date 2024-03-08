@@ -31,6 +31,7 @@ class HTTP(Exchange):
         if self.role == "client":
             buffer = BytesIO()
             url = f"http://{self.open_server_address}:{self.open_server_port}"
+            messages.print_log(f"Sending packet to {url}...")
             c = pycurl.Curl()
             c.setopt(pycurl.URL, url)
             c.setopt(pycurl.HTTPGET, True)

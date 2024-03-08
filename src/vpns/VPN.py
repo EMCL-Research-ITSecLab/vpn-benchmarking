@@ -5,12 +5,12 @@ from src.HostsManager import HostsManager
 
 
 class VPN:
-    interface_name = None
-    open_server_address = None
-
     def __init__(self, role) -> None:
         self.home_path = os.getcwd()
         self.hosts = HostsManager()
+
+        self.interface_name = None
+        self.open_server_address = self.hosts.server_address
 
         if role not in ("server", "client"):
             messages.print_err(

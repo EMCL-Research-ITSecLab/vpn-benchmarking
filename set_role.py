@@ -11,13 +11,13 @@ def set_up_folder_structure(host):
     try:
         base_path = os.getcwd()
         if host == "server":
-            Path(base_path, "rp-keys", "client-public").mkdir(
+            Path(base_path, "rp-keys", "client.rosenpass-public").mkdir(
                 parents=True, exist_ok=True
             )
             print("done.")
             print_log("This device now has role server.")
         elif host == "client":
-            Path(base_path, "rp-keys", "server-public").mkdir(
+            Path(base_path, "rp-keys", "server.rosenpass-public").mkdir(
                 parents=True, exist_ok=True
             )
             print("done.")

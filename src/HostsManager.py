@@ -2,7 +2,7 @@ import json
 
 from src import messages
 
-hosts_path = "../hosts.json"  # hosts file path, should not be changed
+hosts_path = "hosts.json"  # hosts file path, should not be changed
 
 
 class HostsManager:
