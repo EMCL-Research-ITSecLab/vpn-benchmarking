@@ -1,7 +1,7 @@
-from HostsManager import HostsManager
-import helpers.messages as messages
-
 import os
+
+import helpers.messages as messages
+from helpers.HostsManager import HostsManager
 
 
 class VPN:

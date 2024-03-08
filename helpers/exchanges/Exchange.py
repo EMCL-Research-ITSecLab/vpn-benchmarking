@@ -1,5 +1,4 @@
 import helpers.messages as messages
-from HostsManager import HostsManager
 
 
 class Exchange:

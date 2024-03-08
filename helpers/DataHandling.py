@@ -1,7 +1,7 @@
-import json
 import datetime
-from pathlib import Path
+import json
 from json import JSONEncoder
+from pathlib import Path
 
 
 class DataHandling:
@@ -17,7 +17,7 @@ class DataHandling:
             json.dump(self.data, indent=2, sort_keys=True, fp=file, cls=DateTimeEncoder)
 
     def add_data(
-        self, name, time, cpu_perc, ram_perc, pps_sent, pps_recv, bytes_sent, bytes_recv
+            self, name, time, cpu_perc, ram_perc, pps_sent, pps_recv, bytes_sent, bytes_recv
     ):
         new_data = {
             "name": name,

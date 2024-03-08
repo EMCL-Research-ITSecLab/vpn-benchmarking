@@ -1,9 +1,7 @@
-import helpers.messages as messages
-
-import json
 import time
 
-from HostsManager import HostsManager
+import helpers.messages as messages
+from helpers.HostsManager import HostsManager
 
 
 class Client:

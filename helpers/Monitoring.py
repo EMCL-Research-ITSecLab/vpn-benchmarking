@@ -1,7 +1,8 @@
-import psutil
+import datetime
 import threading
 import time
-import datetime
+
+import psutil
 
 from helpers.DataHandling import DataHandling
 

@@ -1,9 +1,11 @@
-import click
 import json
 import os
-from helpers.messages import print_err, print_warn
-import inquirer
 from pathlib import Path
+
+import click
+import inquirer
+
+from helpers.messages import print_err, print_warn
 
 hosts = {"hosts": []}
 hosts_path = "hosts.json"
@@ -107,14 +109,14 @@ def cli(server, client):
                 answers = inquirer.prompt(questions)
                 if answers != None:
                     if (
-                        answers["keep"]
-                        == "keep existing file and do not update the information"
+                            answers["keep"]
+                            == "keep existing file and do not update the information"
                     ):
                         print("The information was not updated.")
                         return
                     elif (
-                        answers["keep"]
-                        == "keep existing data and update server and client information"
+                            answers["keep"]
+                            == "keep existing data and update server and client information"
                     ):
                         for e in existing_data["hosts"]:
                             if e["role"] != "server" and e["role"] != "client":
@@ -130,8 +132,8 @@ def cli(server, client):
                             f"The client's information was updated to {c_user}@{c_ip_addr}."
                         )
                     elif (
-                        answers["keep"]
-                        == "delete existing data and update server and client information"
+                            answers["keep"]
+                            == "delete existing data and update server and client information"
                     ):
                         os.remove(hosts_path)
                         Path("data").mkdir(parents=True, exist_ok=True)
@@ -158,8 +160,8 @@ def cli(server, client):
                 answers = inquirer.prompt(questions)
                 if answers != None:
                     if (
-                        answers["keep"]
-                        == "keep existing file and do not update the information"
+                            answers["keep"]
+                            == "keep existing file and do not update the information"
                     ):
                         print("The information was not updated.")
                         return
@@ -192,14 +194,14 @@ def cli(server, client):
                 answers = inquirer.prompt(questions)
                 if answers != None:
                     if (
-                        answers["keep"]
-                        == "keep existing file and do not update the information"
+                            answers["keep"]
+                            == "keep existing file and do not update the information"
                     ):
                         print("The information was not updated.")
                         return
                     elif (
-                        answers["keep"]
-                        == "keep existing data and update server information"
+                            answers["keep"]
+                            == "keep existing data and update server information"
                     ):
                         for e in existing_data["hosts"]:
                             if e["role"] != "server":
@@ -211,8 +213,8 @@ def cli(server, client):
                             f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
                         )
                     elif (
-                        answers["keep"]
-                        == "delete existing data and update server information"
+                            answers["keep"]
+                            == "delete existing data and update server information"
                     ):
                         os.remove(hosts_path)
                         with open(hosts_path, "a") as file:
@@ -235,8 +237,8 @@ def cli(server, client):
                 answers = inquirer.prompt(questions)
                 if answers != None:
                     if (
-                        answers["keep"]
-                        == "keep existing file and do not update the information"
+                            answers["keep"]
+                            == "keep existing file and do not update the information"
                     ):
                         print("The information was not updated.")
                         return
@@ -265,14 +267,14 @@ def cli(server, client):
                 answers = inquirer.prompt(questions)
                 if answers != None:
                     if (
-                        answers["keep"]
-                        == "keep existing file and do not update the information"
+                            answers["keep"]
+                            == "keep existing file and do not update the information"
                     ):
                         print("The information was not updated.")
                         return
                     elif (
-                        answers["keep"]
-                        == "keep existing data and update client information"
+                            answers["keep"]
+                            == "keep existing data and update client information"
                     ):
                         for e in existing_data["hosts"]:
                             if e["role"] != "client":
@@ -284,8 +286,8 @@ def cli(server, client):
                             f"The client's information was updated to {c_user}@{c_ip_addr}."
                         )
                     elif (
-                        answers["keep"]
-                        == "delete existing data and update client information"
+                            answers["keep"]
+                            == "delete existing data and update client information"
                     ):
                         os.remove(hosts_path)
                         with open(hosts_path, "a") as file:
@@ -308,8 +310,8 @@ def cli(server, client):
                 answers = inquirer.prompt(questions)
                 if answers != None:
                     if (
-                        answers["keep"]
-                        == "keep existing file and do not update the information"
+                            answers["keep"]
+                            == "keep existing file and do not update the information"
                     ):
                         print("The information was not updated.")
                         return
@@ -338,7 +340,7 @@ def cli(server, client):
 
     if os.path.exists("ansible_files/hosts"):
         if click.confirm(
-            "\nDerive ansible hosts file (this will overwrite the existing file)?"
+                "\nDerive ansible hosts file (this will overwrite the existing file)?"
         ):
             derive_ansible_hosts(s_user, s_ip_addr, c_user, c_ip_addr)
     else:

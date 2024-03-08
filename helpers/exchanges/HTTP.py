@@ -1,12 +1,11 @@
 import socket
-
-from HostsManager import HostsManager
-from helpers.exchanges.Exchange import Exchange
-import helpers.messages as messages
-
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import pycurl
 from io import BytesIO
+
+import pycurl
+
+import helpers.messages as messages
+from helpers.exchanges.Exchange import Exchange
 
 
 class HTTP(Exchange):

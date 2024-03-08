@@ -1,6 +1,6 @@
-import helpers.messages as messages
-
 import subprocess
+
+import helpers.messages as messages
 
 
 def send_file_to_host(file, target_user, target_ip_addr, target_path) -> bool:

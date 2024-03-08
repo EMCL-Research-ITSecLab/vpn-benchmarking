@@ -1,8 +1,6 @@
 import helpers.messages as messages
 
-import json
-
-from HostsManager import HostsManager
+from helpers.HostsManager import HostsManager
 
 
 class Server:
