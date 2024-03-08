@@ -12,14 +12,13 @@ hosts_path = "hosts.json"
 
 
 @click.command()
-@click.option("--server", default="", help="server: [user]@[ip_address]:[port]")
+@click.option("--server", default="", help="server: [user]@[ip_address]")
 @click.option("--client", default="", help="client: [user]@[ip_address]")
 def cli(server, client):
     # check if at both of the options is set
-    # TODO: Add option to only enter one value
-    if server == "" or client == "":
+    if not (server and client):
         click.echo(
-            "Usage: set_hosts.py --server [user]@[ip_address]:[port] --client [user]@[ip_address]"
+            "Usage: set_hosts.py --server [user]@[ip_address] --client [user]@[ip_address]"
         )
         return
 
@@ -27,7 +26,6 @@ def cli(server, client):
     # server
     s_user = ""
     s_ip_addr = ""
-    s_port = ""
     # client
     c_user = ""
     c_ip_addr = ""
@@ -36,20 +34,17 @@ def cli(server, client):
     if server != "":
         try:
             s_user = server.split("@")[0]
-            server = server.split("@")[1]
-            s_ip_addr = server.split(":")[0]
-            s_port = int(server.split(":")[1])
+            s_ip_addr = server.split("@")[1]
 
             server = {
                 "role": "server",
                 "ip_addr": s_ip_addr,
-                "port": s_port,
                 "user": s_user,
             }
             hosts["hosts"].append(server)
         except:
             print_err(
-                "The format of the information about the server was incorrect. Correct format: [user]@[ip_address]:[port]"
+                "The format of the information about the server was incorrect. Correct format: [user]@[ip_address]"
             )
 
     # get information about the client
@@ -158,7 +153,7 @@ def cli(server, client):
                     ),
                 ]
                 answers = inquirer.prompt(questions)
-                if answers != None:
+                if answers:
                     if (
                             answers["keep"]
                             == "keep existing file and do not update the information"
@@ -170,7 +165,7 @@ def cli(server, client):
                         with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
-                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                            f"The server's information was updated to {s_user}@{s_ip_addr}."
                         )
                         print(
                             f"The client's information was updated to {c_user}@{c_ip_addr}."
@@ -192,7 +187,7 @@ def cli(server, client):
                     ),
                 ]
                 answers = inquirer.prompt(questions)
-                if answers != None:
+                if answers:
                     if (
                             answers["keep"]
                             == "keep existing file and do not update the information"
@@ -210,7 +205,7 @@ def cli(server, client):
                         with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
-                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                            f"The server's information was updated to {s_user}@{s_ip_addr}."
                         )
                     elif (
                             answers["keep"]
@@ -220,7 +215,7 @@ def cli(server, client):
                         with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
-                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                            f"The server's information was updated to {s_user}@{s_ip_addr}."
                         )
                     else:
                         return
@@ -247,7 +242,7 @@ def cli(server, client):
                         with open(hosts_path, "a") as file:
                             json.dump(hosts, indent=2, fp=file)
                         print(
-                            f"The server's information was updated to {s_user}@{s_ip_addr}:{s_port}."
+                            f"The server's information was updated to {s_user}@{s_ip_addr}."
                         )
                     else:
                         return
@@ -265,7 +260,7 @@ def cli(server, client):
                     ),
                 ]
                 answers = inquirer.prompt(questions)
-                if answers != None:
+                if answers:
                     if (
                             answers["keep"]
                             == "keep existing file and do not update the information"
@@ -329,13 +324,13 @@ def cli(server, client):
             os.remove(hosts_path)
             with open(hosts_path, "a") as file:
                 json.dump(hosts, indent=2, fp=file)
-            print(f"The server's information was set to {s_user}@{s_ip_addr}:{s_port}.")
+            print(f"The server's information was set to {s_user}@{s_ip_addr}.")
             print(f"The client's information was set to {c_user}@{c_ip_addr}.")
     else:  # file does not exist
         Path("data").mkdir(parents=True, exist_ok=True)
         with open(hosts_path, "a") as file:
             json.dump(hosts, indent=2, fp=file)
-        print(f"The server's information was set to {s_user}@{s_ip_addr}:{s_port}.")
+        print(f"The server's information was set to {s_user}@{s_ip_addr}.")
         print(f"The client's information was set to {c_user}@{c_ip_addr}.")
 
     if os.path.exists("ansible_files/hosts"):

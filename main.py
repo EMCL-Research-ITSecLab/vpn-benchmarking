@@ -8,30 +8,6 @@ from helpers.vpns.NoVPN import *
 from helpers.vpns.Rosenpass import *
 
 
-### USAGE ###
-# EXCHANGE:
-# python main.py
-#   -i|--iterations 100
-#   server|client
-#   novpn|rosenpass
-#   http
-#   exchange
-
-# KEY GENERATION:
-# python main.py
-#   server|client
-#   novpn|rosenpass
-#   http
-#   keygen
-
-# SENDING PUBLIC KEYS:
-# python main.py
-#   server|client
-#   novpn|rosenpass
-#   http
-#   keysend
-
-
 class HandleInput:
     valid_inputs = False
 

@@ -10,7 +10,7 @@ import helpers.messages as messages
 from helpers.vpns.VPN import VPN
 
 key_path = "rp-keys"
-
+opening_port = 9999
 
 class Rosenpass(VPN):
     process = None
@@ -152,7 +152,7 @@ class Rosenpass(VPN):
                     "dev",
                     "rosenpass0",
                     "listen",
-                    "9999",
+                    opening_port,
                     "peer",
                     client_pk_dir,  # client keys
                     "allowed-ips",
@@ -187,7 +187,7 @@ class Rosenpass(VPN):
                     "peer",
                     server_pk_dir,  # server keys
                     "endpoint",
-                    f"{self.hosts.server_address}:9999",
+                    f"{self.hosts.server_address}:{opening_port}",
                     "allowed-ips",
                     "fe80::/64",
                 ],
