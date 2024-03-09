@@ -1,19 +1,24 @@
 import json
-import matplotlib.pyplot as plt
-import numpy as np
 import os
-from pathlib import Path
 from datetime import datetime
-from src.messages import print_err, print_warn, print_log
-from prompt_toolkit import prompt
-from prompt_toolkit.completion import PathCompleter
+from pathlib import Path
+
 import click
 import inquirer
+import matplotlib.pyplot as plt
+import numpy as np
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import PathCompleter
+
+from src.messages import print_err, print_warn, print_log
 
 
 class DataOutput:
-    # lists for the values
-    lists = {
+    """
+    Handles the creation of graphs. Graphs can be created from single data files, or directories with data files.
+    """
+
+    lists = {  # lists for the values
         "time": [],
         "cpu_percent": [],
         "ram_percent": [],
@@ -32,6 +37,14 @@ class DataOutput:
             pps_recv=True,
             pps_sent=True,
     ) -> None:
+        """
+        :param cpu_percent: True (default) if a cpu_percent graph should be created, False otherwise
+        :param ram_percent: True (default) if a ram_percent graph should be created, False otherwise
+        :param bytes_recv: True (default) if a bytes_recv graph should be created, False otherwise
+        :param bytes_sent: True (default) if a bytes_sent graph should be created, False otherwise
+        :param pps_recv: True (default) if a pps_recv graph should be created, False otherwise
+        :param pps_sent: True (default) if a pps_sent graph should be created, False otherwise
+        """
         self.data = None
         self.file = None
         self.file_name = None
@@ -42,8 +55,7 @@ class DataOutput:
         self.pps_recv = pps_recv
         self.pps_sent = pps_sent
 
-    # public methods
-    def make_graphs_for_directory(self, dir_path, full, median):
+    def make_graphs_for_directory(self, dir_path, full, median) -> bool:
         # goes through files in a directory and calls make_graphs_for_file
         try:
             files_exist = False

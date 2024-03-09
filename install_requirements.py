@@ -1,35 +1,47 @@
 import subprocess
 
-from src.messages import print_err, print_log
+from src.messages import print_log, print_warn
 
 
-def install_requirements():
+def install_requirements() -> None:
+    """
+    Installs all requirements. Outputs success if all dependencies were installed. If one or more installations
+    failed, outputs a warning.
+    """
     print_log("Installing requirements...")
+    successful = True
+
     if not install_click():
-        return
+        successful = False
     if not install_inquirer():
-        return
+        successful = False
     if not install_numpy():
-        return
+        successful = False
     if not install_pycurl():
-        return
+        successful = False
     if not install_psutil():
+        successful = False
+
+    if successful:
+        print_log("All dependencies installed.")
         return
-    print_log("All dependencies installed.")
+
+    print_warn("Not all dependencies could be installed!")
 
 
 def install_psutil() -> bool:
+    """
+    Installs psutil to venv using pip.
+    :return: True for success, False otherwise
+    """
     print("Install psutil... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "psutil"])
-    except:
+    except FileNotFoundError:
         try:
             subprocess.check_output(["bin/pip", "install", "python3-psutil"])
-        except:
+        except FileNotFoundError:
             print("failed.")
-            print_err(
-                "Could not install requirements. Module 'psutil' could not be installed."
-            )
             return False
 
     print("done.")
@@ -37,17 +49,18 @@ def install_psutil() -> bool:
 
 
 def install_click() -> bool:
+    """
+    Installs click to venv using pip.
+    :return: True for success, False otherwise
+    """
     print("Install click... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "click"])
-    except:
+    except FileNotFoundError:
         try:
             subprocess.check_output(["bin/pip", "install", "python3-click"])
-        except:
+        except FileNotFoundError:
             print("failed.")
-            print_err(
-                "Could not install requirements. Module 'click' could not be installed."
-            )
             return False
 
     print("done.")
@@ -55,17 +68,18 @@ def install_click() -> bool:
 
 
 def install_inquirer() -> bool:
+    """
+    Installs inquirer to venv using pip.
+    :return: True for success, False otherwise
+    """
     print("Install inquirer... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "inquirer"])
-    except:
+    except FileNotFoundError:
         try:
             subprocess.check_output(["bin/pip", "install", "python3-inquirer"])
-        except:
+        except FileNotFoundError:
             print("failed.")
-            print_err(
-                "Could not install requirements. Module 'inquirer' could not be installed."
-            )
             return False
 
     print("done.")
@@ -73,17 +87,18 @@ def install_inquirer() -> bool:
 
 
 def install_numpy() -> bool:
+    """
+    Installs numpy to venv using pip.
+    :return: True for success, False otherwise
+    """
     print("Install numpy... ", end="", flush=True)
     try:
         subprocess.check_output(["bin/pip", "install", "numpy"])
-    except:
+    except FileNotFoundError:
         try:
             subprocess.check_output(["bin/pip", "install", "python3-numpy"])
-        except:
+        except FileNotFoundError:
             print("failed.")
-            print_err(
-                "Could not install requirements. Module 'numpy' could not be installed."
-            )
             return False
 
     print("done.")
@@ -91,22 +106,23 @@ def install_numpy() -> bool:
 
 
 def install_pycurl() -> bool:
+    """
+    Installs pycurl to venv using pip.
+    :return: True for success, False otherwise
+    """
     print("Install pycurl... ", end="", flush=True)
 
     try:
         subprocess.check_output(
             ["bin/pip", "install", "pycurl"],
         )
-    except:
+    except FileNotFoundError:
         try:
             subprocess.check_output(
                 ["bin/pip", "install", "python3-pycurl"],
             )
-        except:
+        except FileNotFoundError:
             print("failed.")
-            print_err(
-                "Could not install requirements. Module 'pycurl' could not be installed.\nRun 'sudo apt install libcurl4-gnutls-dev librtmp-dev && sudo apt install python3-pycurl && bin/pip install pycurl' manually."
-            )
             return False
 
     print("done.")
