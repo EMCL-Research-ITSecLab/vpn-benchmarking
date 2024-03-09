@@ -18,19 +18,16 @@ class Client:
         :param exchange_type: Class to be used as Exchange type
         :param vpn_type: Class to be used as VPN type
         """
-        # open the hosts file
         messages.print_log("Initializing client...")
 
         self.hosts = HostsManager()
-
-        messages.print_log("Client initialized.")
 
         self.vpn = vpn_type(role="client")
         self.exchange = exchange_type(
             role="client", open_server_address=self.vpn.open_server_address, interface=self.vpn.interface_name
         )
 
-        return
+        messages.print_log("Client initialized.")
 
     def run(self, number, monitor) -> bool:
         """
@@ -94,9 +91,9 @@ class Client:
 
     def keysend(self, remote_path) -> bool:  # only needed for VPN usage
         """
-        Sends the before generated public keys to the other host's remote_path. Only needed when a VPN is used,
+        Sends the before generated public keys to the server's remote_path. Only needed when a VPN is used,
         does nothing except for printing the messages in other case.
-        :param remote_path: working directory on the remote host, place keys into this directory
+        :param remote_path: working directory on the server, place keys into this directory
         :return: True for success, False otherwise
         """
         messages.print_log(

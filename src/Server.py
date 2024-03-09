@@ -4,18 +4,36 @@ from src.HostsManager import HostsManager
 
 
 class Server:
-    def __init__(self, ExchangeType, VPNType) -> None:
-        # open the hosts file
+    """
+    Bundles all the functions for the server. Calls the respective methods the server uses with the correct
+    parameters. Allows running the actual exchanges as often as given as input through the given VPN and generating
+    and sharing keys for the given VPN.
+    """
+
+    def __init__(self, exchange_type, vpn_type) -> None:
+        """
+        Loads the hosts addresses and creates instances of the given VPN and exchange classes with the correct
+        parameters.
+        :param exchange_type: Class to be used as Exchange type
+        :param vpn_type: Class to be used as VPN type
+        """
         messages.print_log("Initializing server...")
 
         self.hosts = HostsManager()
 
+        self.vpn = vpn_type(role="server")
+        self.exchange = exchange_type(role="server", open_server_address="::", interface=self.vpn.interface_name)
+
         messages.print_log("Server initialized.")
 
-        self.vpn = VPNType(role="server")
-        self.exchange = ExchangeType(role="server", open_server_address="::", interface=self.vpn.interface_name)
-
     def run(self, number, monitor) -> bool:
+        """
+        Runs the exchange as often as given as input. Every exchange first opens the VPN, runs the exchange and
+        closes the VPN. Does a manual poll before each step.
+        :param number: number of exchanges to be executed
+        :param monitor: monitor for handling the polls
+        :return: True for success, False otherwise
+        """
         for i in range(number):
             messages.print_log(f"Starting exchange {i + 1}...")
 
@@ -38,6 +56,11 @@ class Server:
         return True
 
     def keygen(self) -> bool:  # only needed for VPN usage
+        """
+        Generates the necessary keys for the VPN. Only needed when a VPN is used, does nothing except for printing
+        the messages in other case.
+        :return: True for success, False otherwise
+        """
         messages.print_log("Generating key set on the server...")
 
         if not self.vpn.generate_keys():
@@ -47,6 +70,12 @@ class Server:
         return True
 
     def keysend(self, remote_path) -> bool:  # only needed for VPN usage
+        """
+        Sends the before generated public keys to the client's remote_path. Only needed when a VPN is used,
+        does nothing except for printing the messages in other case.
+        :param remote_path: working directory on the client, place keys into this directory
+        :return: True for success, False otherwise
+        """
         messages.print_log(
             "Transmitting public keys to the client (only if VPN is used)..."
         )
