@@ -310,5 +310,6 @@ class Rosenpass(VPN):
                     pid = fields[0]
                     os.kill(int(pid), signal.SIGKILL)
             messages.print_log("Rosenpass processes terminated.")
-        except:  # no Rosenpass processes running
+        except Exception as err:  # no Rosenpass processes running
+            print(f"{err=}")
             messages.print_log("Nothing to terminate.")

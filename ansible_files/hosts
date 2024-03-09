@@ -1,5 +1,5 @@
 [senders]
-server ansible_host=192.168.2.228 ansible_user=kali
+server ansible_host=999.999.999.999 ansible_user=server
 
 [receivers]
-client ansible_host=192.168.2.227 ansible_user=kali
+client ansible_host=888.888.888.888 ansible_user=client

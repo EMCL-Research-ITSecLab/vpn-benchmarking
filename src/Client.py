@@ -1,7 +1,7 @@
 import time
 
 import src.messages as messages
-from src.HostsManager import HostsManager
+from HostsManager import HostsManager
 
 
 class Client:
@@ -21,6 +21,8 @@ class Client:
         messages.print_log("Initializing client...")
 
         self.hosts = HostsManager()
+        if not self.hosts.load_from_file():
+            return
 
         self.vpn = vpn_type(role="client")
         self.exchange = exchange_type(

@@ -1,7 +1,7 @@
 import os
 
 import src.messages as messages
-from src.HostsManager import HostsManager
+from HostsManager import HostsManager
 
 
 class VPN:
@@ -17,7 +17,11 @@ class VPN:
         :param role: role of the host, server or client
         """
         self.home_path = os.getcwd()
+
         self.hosts = HostsManager()
+        if not self.hosts.load_from_file():
+            return
+
         self.interface_name = None
         self.open_server_address = self.hosts.server_address
 
