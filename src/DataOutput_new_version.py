@@ -275,11 +275,15 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
             )
 
             generator.plot_graph()
-            # TODO: Put into method
+            # TODO: Change path and name
             graph_file_path = os.path.join(graph_dir_path, name_string)
-            Path(graph_file_path).mkdir(parents=True, exist_ok=True)
-            plt.savefig(graph_file_path)
-            plt.clf()
+            self.__save_figure(graph_file_path)
+
+    def __save_figure(self, file_path):
+        Path(file_path).mkdir(parents=True, exist_ok=True)
+        plt.savefig(file_path)
+        plt.clf()
+        self.__clean_up()
 
     def __load_data_from_file(self) -> bool:
         try:
@@ -388,6 +392,14 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
 
     def __get_single_timestamp(self, n: int):
         return self.data["data"][n]["time"]
+
+    def __clean_up(self):
+        self.value_lists = {}
+
+        if not self.__load_data_from_file():
+            raise Exception("Unable to load data from file!")
+        if not self.__fill_lists_from_data():
+            raise Exception(f"Incorrect data format in {self.file_path}")
 
 
 sgh = SingleFileGraphHandler("data.json", [CPUPercent, RAMPercent])
