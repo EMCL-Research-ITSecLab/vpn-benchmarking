@@ -7,7 +7,7 @@ import click
 from src import messages
 from src.messages import print_warn, print_log
 
-hosts_path = "hosts.json"  # hosts file path, should not be changed
+hosts_path = "../hosts.json"  # hosts file path, should not be changed
 
 
 class HostsManager:
@@ -47,7 +47,7 @@ class HostsManager:
         if not (
                 server_address or client_address or server_user or client_user
         ):
-            self.load_from_file()
+            self.__load_from_file()
             return
 
         raise ValueError
@@ -78,7 +78,7 @@ class HostsManager:
 
         print_log(f"File {hosts_path} was created and filled.")
 
-        if os.path.exists("ansible_files/hosts"):
+        if os.path.exists("../ansible_files/hosts"):
             if click.confirm(
                     "\nDerive ansible hosts file (this will overwrite the existing file)?"
             ):
@@ -119,17 +119,17 @@ class HostsManager:
         :param c_ip_addr: IP address of the client
         :return:
         """
-        if os.path.exists("ansible_files/hosts"):
-            os.remove("ansible_files/hosts")
+        if os.path.exists("../ansible_files/hosts"):
+            os.remove("../ansible_files/hosts")
 
-        Path("ansible_files").mkdir(parents=True, exist_ok=True)
-        with open("ansible_files/hosts", "a") as file:
+        Path("../ansible_files").mkdir(parents=True, exist_ok=True)
+        with open("../ansible_files/hosts", "a") as file:
             file.write("[senders]\n")
             file.write(f"server ansible_host={s_ip_addr} ansible_user={s_user}\n\n")
             file.write("[receivers]\n")
             file.write(f"client ansible_host={c_ip_addr} ansible_user={c_user}")
 
-    def load_from_file(self) -> bool:
+    def __load_from_file(self) -> bool:
         """
         Opens the hosts file and extracts the addresses and usernames of the server and client.
         :return: True for success, False otherwise

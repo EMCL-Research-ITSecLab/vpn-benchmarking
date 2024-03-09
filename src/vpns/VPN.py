@@ -1,7 +1,7 @@
 import os
 
 import src.messages as messages
-from HostsManager import HostsManager
+from src.HostsManager import HostsManager
 
 
 class VPN:
@@ -19,8 +19,6 @@ class VPN:
         self.home_path = os.getcwd()
 
         self.hosts = HostsManager()
-        if not self.hosts.load_from_file():
-            return
 
         self.interface_name = None
         self.open_server_address = self.hosts.server_address

@@ -1,6 +1,6 @@
 import click
 
-from HostsManager import HostsManager
+from src.HostsManager import HostsManager
 
 
 # hosts = {"hosts": []}

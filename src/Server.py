@@ -1,6 +1,6 @@
 import src.messages as messages
 
-from HostsManager import HostsManager
+from src.HostsManager import HostsManager
 
 
 class Server:
@@ -20,8 +20,6 @@ class Server:
         messages.print_log("Initializing server...")
 
         self.hosts = HostsManager()
-        if not self.hosts.load_from_file():
-            return
 
         self.vpn = vpn_type(role="server")
         self.exchange = exchange_type(role="server", open_server_address="::", interface=self.vpn.interface_name)
