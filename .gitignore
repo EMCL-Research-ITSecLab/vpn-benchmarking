@@ -164,3 +164,4 @@ data_graphs/
 data/
 rp-keys/
 .idea/
+ansible_files/hosts
