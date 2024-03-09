@@ -42,7 +42,7 @@ class DataHandling:
         """
         Adds the given data fields to an internal data structure. Format of the information is split up into name,
         timestamp, hardware values and network values.
-        :param name: description of the situation in which the poll was created
+        :param name: short description of the situation in which the poll was created
         :param time: timestamp of the poll
         :param cpu_perc: relative CPU usage value
         :param ram_perc: relative RAM usage value

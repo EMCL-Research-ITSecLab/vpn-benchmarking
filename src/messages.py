@@ -5,7 +5,7 @@ Specifies the message formats in different cases.
 """
 
 
-def print_log(message):
+def print_log(message) -> None:
     """
     Message in 'normal' case. Logging information. Adds a timestamp.
     :param message: message of the log
@@ -14,7 +14,7 @@ def print_log(message):
 
 
 # warning messages
-def print_warn(message):
+def print_warn(message) -> None:
     """
     Message as a warning. Used for not critical warnings. Adds a timestamp.
     :param message: message of the warning
@@ -23,7 +23,7 @@ def print_warn(message):
 
 
 # error messages
-def print_err(message):
+def print_err(message) -> None:
     """
     Message as an error. Used for errors and exceptions. Adds a timestamp.
     :param message: description of the error

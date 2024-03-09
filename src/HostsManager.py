@@ -14,7 +14,7 @@ class HostsManager:
     server_user = None  # username on the server
     client_user = None  # username on the client
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Loads the hosts information from the hosts file.
         """
