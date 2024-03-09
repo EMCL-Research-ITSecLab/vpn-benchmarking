@@ -6,22 +6,32 @@ hosts_path = "hosts.json"  # hosts file path, should not be changed
 
 
 class HostsManager:
-    server_address = None
-    client_address = None
-    server_user = None
-    client_user = None
+    """
+    Manages the hosts information imported from the hosts file.
+    """
+    server_address = None  # IP address of the server
+    client_address = None  # IP address of the client
+    server_user = None  # username on the server
+    client_user = None  # username on the client
 
     def __init__(self):
+        """
+        Loads the hosts information from the hosts file.
+        """
         self.__load_from_file()
 
-    def __load_from_file(self):
+    def __load_from_file(self) -> bool:
+        """
+        Opens the hosts file and extracts the addresses and usernames of the server and client.
+        :return: True for success, False otherwise
+        """
         try:
             file = open(hosts_path, "r")
         except:
             messages.print_err(
                 "File 'hosts.json' could not be opened. Create the file using 'set_hosts.py'."
             )
-            return
+            return False
 
         # load data and set server name and port
         try:
@@ -39,9 +49,14 @@ class HostsManager:
                     no_data = False
 
             if no_data:
-                raise Exception
-        except:
+                raise ValueError
+
+            return True
+        except ValueError:
             messages.print_err(
                 "Data in 'hosts.json' is incorrect or empty. Repair the file using 'set_hosts.py'."
             )
-            return
+            return False
+        except Exception as err:
+            print(f"{err=}")
+            return False
