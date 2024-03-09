@@ -27,10 +27,16 @@ class HostsManager:
         """
         try:
             file = open(hosts_path, "r")
-        except:
+        except FileNotFoundError:
             messages.print_err(
                 "File 'hosts.json' could not be opened. Create the file using 'set_hosts.py'."
             )
+            return False
+        except Exception as err:
+            messages.print_err(
+                "File 'hosts.json' could not be opened."
+            )
+            print(f"{err=}")
             return False
 
         # load data and set server name and port
