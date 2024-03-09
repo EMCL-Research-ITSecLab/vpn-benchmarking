@@ -12,7 +12,7 @@ class Exchange:
         :param role: role of the host, server or client
         :param open_server_address: address on which the server will be reachable
         :param open_server_port: publicly reachable port to be opened, default: 9999
-        :param interface: name of the interface of the VPN used during the exchange or None
+        :param interface: name of the interface of the VPN used during the exchange or None (default)
         """
         self.open_server_address = open_server_address
         self.open_server_port = open_server_port
@@ -29,7 +29,7 @@ class Exchange:
     def run(self) -> bool:
         """
         Executes the exchange with the set parameters. Implementation is done in inheriting classes.
-        :return: True for success, False otherwise
+        :return: False since not implemented
         """
         messages.print_err("Exchange.run(self): NOT IMPLEMENTED")
         return False
