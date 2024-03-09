@@ -6,7 +6,11 @@ import click
 from src.messages import print_err, print_log
 
 
-def set_up_folder_structure(host):
+def set_up_folder_structure(host) -> None:
+    """
+    Creates the key (sub)directories.
+    :param host: role of the host
+    """
     print("Setting up folder structure for rosenpass keys... ", end="", flush=True)
     try:
         base_path = os.getcwd()
@@ -25,14 +29,18 @@ def set_up_folder_structure(host):
         else:
             print("failed.")
             print_err("ROLE must be server or client.")
-    except:
+    except Exception as err:
         print("failed.")
         print_err("Could not set up folder structure.")
+        print(f"{err=}")
 
 
 @click.command()
 @click.argument("role")
 def cli(role):
+    """
+    :param role: role of the host
+    """
     set_up_folder_structure(role)
 
 
