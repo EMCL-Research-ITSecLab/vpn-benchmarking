@@ -54,7 +54,12 @@ class DataHandling:
         new_data = {
             "name": name,
             "time": time,
-            "hardware": [{"cpu_percent": cpu_perc, "ram_percent": ram_perc}],
+            "hardware": [
+                {
+                    "cpu_percent": cpu_perc,
+                    "ram_percent": ram_perc
+                }
+            ],
             "network": [
                 {
                     "pps_sent": pps_sent,
