@@ -58,7 +58,7 @@ class Rosenpass(VPN):
 
     def close(self) -> bool:
         """
-        Closes the Rosenpass VPN.
+        Closes the Rosenpass VPN after cleanup.
         :return: True for success
         """
         self.__clean_up()
@@ -243,16 +243,16 @@ class Rosenpass(VPN):
     def __assign_ip_addr_to_interface(self) -> bool:
         """
         Assigns the IP address 'fe80::1' to the server or 'fe80::2' to the client interface. Interface has to exist.
-        Attempts multiple times, since the interface might not be ready for a few tries. Flushes the interface after
-        invalid attempt.
+        Attempts multiple times, since the interface might not be ready for the first few tries. Flushes the
+        interface after invalid attempt.
         :return: True for success, False otherwise
         """
         messages.print_log("Assigning IP address to rosenpass0...")
 
         if self.role == "server":
-            number = 1  # number in IP address
+            number = 1  # fe80::1
         elif self.role == "client":
-            number = 2
+            number = 2  # fe80::2
         else:
             return False
 
