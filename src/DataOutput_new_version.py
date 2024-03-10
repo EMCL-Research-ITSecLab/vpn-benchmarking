@@ -6,6 +6,76 @@ from SingleGraphGenerator import *
 from ValueType import *
 
 
+def validate_data(data, file_name: str) -> bool:
+    def check_data_fields():
+        # check if there is only one field 'data'
+        if len(data) != 1 or not isinstance(data["data"], list):
+            raise KeyError
+
+        if len(data["data"]) < 1:
+            raise KeyError
+
+    def check_dictionary_size():
+        if not isinstance(dictionary, dict) or len(dictionary) != 4:
+            raise KeyError
+
+    def check_hardware_values():
+        if (
+                not isinstance(dictionary["hardware"], list)
+                or len(dictionary["hardware"]) != 1
+                or not isinstance(dictionary["hardware"][0], dict)
+                or len(dictionary["hardware"][0]) != 2
+                or not isinstance(dictionary["hardware"][0]["cpu_percent"], float)
+                or not isinstance(dictionary["hardware"][0]["ram_percent"], float)
+        ):
+            raise KeyError
+
+    def check_network_values():
+        if (
+                not isinstance(dictionary["network"], list)
+                or len(dictionary["network"]) != 1
+                or not isinstance(dictionary["network"][0], dict)
+                or len(dictionary["network"][0]) != 4
+                or not isinstance(dictionary["network"][0]["bytes_recv"], int)
+                or not isinstance(dictionary["network"][0]["bytes_sent"], int)
+                or not isinstance(dictionary["network"][0]["pps_recv"], int)
+                or not isinstance(dictionary["network"][0]["pps_sent"], int)
+        ):
+            raise KeyError
+
+    def check_timestamp():
+        datetime.fromisoformat(dictionary["time"])
+
+    def check_name():
+        if not isinstance(dictionary["name"], str):
+            raise KeyError
+
+    try:
+        check_data_fields()
+
+        for dictionary in data["data"]:
+            check_dictionary_size()
+            check_hardware_values()
+            check_network_values()
+            check_timestamp()
+            check_name()
+
+        return True
+    except KeyError:
+        messages.print_warn(f"File {file_name} has incorrect or no data!")
+        return False
+    except ValueError:
+        messages.print_warn(f"File {file_name} has incorrect timestamp format!")
+        return False
+    except Exception as err:
+        print(f"{err=}")
+        return False
+
+
+def get_single_timestamp(data, n: int):
+    return data["data"][n]["time"]
+
+
 class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
     def __init__(self, file_path, value_types: list) -> None:
         """
@@ -146,13 +216,13 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
         return True
 
     def __fill_lists_from_data(self) -> bool:
-        if not self.__validate_data():
+        if not validate_data(self.data, self.file_name):
             return False
 
         self.value_lists["time"] = []
         for i in range(len(self.data["data"])):
             # add timestamp entry
-            self.value_lists["time"].append(self.__get_single_timestamp(i))
+            self.value_lists["time"].append(get_single_timestamp(self.data, i))
 
             # add value entries
             for value_type in self.value_types:
@@ -169,74 +239,6 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
                     self.value_lists[name_string].append(entry)
 
         return True
-
-    def __validate_data(self) -> bool:
-        def check_data_fields():
-            # check if there is only one field 'data'
-            if len(self.data) != 1 or not isinstance(self.data["data"], list):
-                raise KeyError
-
-            if len(self.data["data"]) < 1:
-                raise KeyError
-
-        def check_dictionary_size():
-            if not isinstance(dictionary, dict) or len(dictionary) != 4:
-                raise KeyError
-
-        def check_hardware_values():
-            if (
-                    not isinstance(dictionary["hardware"], list)
-                    or len(dictionary["hardware"]) != 1
-                    or not isinstance(dictionary["hardware"][0], dict)
-                    or len(dictionary["hardware"][0]) != 2
-                    or not isinstance(dictionary["hardware"][0]["cpu_percent"], float)
-                    or not isinstance(dictionary["hardware"][0]["ram_percent"], float)
-            ):
-                raise KeyError
-
-        def check_network_values():
-            if (
-                    not isinstance(dictionary["network"], list)
-                    or len(dictionary["network"]) != 1
-                    or not isinstance(dictionary["network"][0], dict)
-                    or len(dictionary["network"][0]) != 4
-                    or not isinstance(dictionary["network"][0]["bytes_recv"], int)
-                    or not isinstance(dictionary["network"][0]["bytes_sent"], int)
-                    or not isinstance(dictionary["network"][0]["pps_recv"], int)
-                    or not isinstance(dictionary["network"][0]["pps_sent"], int)
-            ):
-                raise KeyError
-
-        def check_timestamp():
-            datetime.fromisoformat(dictionary["time"])
-
-        def check_name():
-            if not isinstance(dictionary["name"], str):
-                raise KeyError
-
-        try:
-            check_data_fields()
-
-            for dictionary in self.data["data"]:
-                check_dictionary_size()
-                check_hardware_values()
-                check_network_values()
-                check_timestamp()
-                check_name()
-
-            return True
-        except KeyError:
-            messages.print_warn(f"File {self.file_name} has incorrect or no data!")
-            return False
-        except ValueError:
-            messages.print_warn(f"File {self.file_name} has incorrect timestamp format!")
-            return False
-        except Exception as err:
-            print(f"{err=}")
-            return False
-
-    def __get_single_timestamp(self, n: int):
-        return self.data["data"][n]["time"]
 
     def __clean_up(self):
         self.value_lists = {}
@@ -284,3 +286,64 @@ class MultiFileGraphHandler:
 
         if detailed_full[1] and normal_median[1]:
             self.generate_graphs(True, True)
+
+
+class ComparisonGraphHandler:
+    # TODO: Finish
+    def __init__(self, path, value_type):
+        self.file_list = []
+
+        if not os.path.isdir(path):
+            messages.print_warn(f"{path} is not a valid path.")
+            return
+
+        for file in os.listdir(path):
+            file_path = os.path.join(path, file)
+
+            if os.path.isfile(file_path) and file[-5:] == ".json":
+                self.file_list.append(file_path)
+
+        number_of_files = len(self.file_list)
+
+        if number_of_files < 2:
+            messages.print_warn("Minimal number of files in directory is 2!")
+            return
+
+        if number_of_files > 6:
+            messages.print_warn("Maximal number of files in directory is 6!")
+            return
+
+        self.path = path
+        self.value_type = value_type
+
+    def generate_graphs(self):
+        name_string = self.value_type.get_name_string(self.value_type)
+        category_string = self.value_type.get_category_string(self.value_type)
+
+        for file_path in self.file_list:
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+                timestamps = []
+                values = []
+
+                if not validate_data(data, file_path):
+                    raise ValueError
+
+                for i in range(len(data["data"])):
+                    timestamps.append(get_single_timestamp(data, i))
+                    entry = data["data"][i][category_string][0][name_string]
+                    values.append(entry)
+
+                generator = SingleGraphGenerator(self.value_type, timestamps, values, True, False, name_string)
+                generator.plot_graph()
+        self.__save_figure(os.path.join("data_graphs", "comparison", category_string), name_string)
+
+    @staticmethod
+    def __save_figure(file_path, file_name):
+        Path(file_path).mkdir(parents=True, exist_ok=True)
+        plt.savefig(os.path.join(file_path, file_name))
+        plt.clf()
+
+
+test = ComparisonGraphHandler("data", CPUPercent)
+test.generate_graphs()
