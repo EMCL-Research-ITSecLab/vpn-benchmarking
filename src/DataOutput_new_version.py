@@ -589,7 +589,23 @@ class MultiFileGraphHandler:
 
                 del single_file_handler
 
+    def generate_different_graphs(self, detailed_full: [bool, bool], normal_median: [bool, bool]):
+        if detailed_full == [False, False] or normal_median == [False, False]:
+            return
+
+        if detailed_full[0] and normal_median[0]:
+            self.generate_graphs(False, False)
+
+        if detailed_full[0] and normal_median[1]:
+            self.generate_graphs(False, True)
+
+        if detailed_full[1] and normal_median[0]:
+            self.generate_graphs(True, False)
+
+        if detailed_full[1] and normal_median[1]:
+            self.generate_graphs(True, True)
+
 
 mgh = MultiFileGraphHandler("data",
                             [CPUPercent, RAMPercent, RecvBytes, RecvPPS, SentPPS, SentBytes])
-mgh.generate_graphs(True, True)
+mgh.generate_different_graphs([True, True], [True, True])
