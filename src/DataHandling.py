@@ -24,10 +24,12 @@ class DataHandling:
         """
         Creates and/or opens the file and writes the data from the internal data structure to the JSON file.
 
-        File name consists of the name (role-vpn), ':' and the timestamp in ISO format. File is created in 'data'
-        directory.
+        File name consists of the name (role-vpn), '_' and the timestamp in ISO format (but with '_' instead of ':' for
+        compatibility reasons). File is created in 'data' directory.
         """
-        with open(f"data/{self.name}:{self.timestamp}.json", "w") as file:
+        timestamp = self.timestamp.replace(":", "_")
+
+        with open(f"data/{self.name}_{timestamp}.json", "w") as file:
             json.dump(
                 self.data,  # data to be stored in the file
                 indent=2,  # indent used for the lines

@@ -34,6 +34,10 @@ class ValueType:
         messages.print_err("ValueType.get_name_string(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
+    def get_description(self) -> str:
+        messages.print_err("ValueType.get_description(self): NOT IMPLEMENTED")
+        raise NotImplementedError
+
     def get_x_label(self, interval_length=None) -> str:
         if self.median:
             return "#time interval (of length {:.3f} s)".format(interval_length)
@@ -83,7 +87,9 @@ class RelativeValueType(ValueType):
 
 
 class AbsoluteValueType(ValueType):
-    def get_y_limit(self) -> list:
+    def get_y_limit(self) -> list | None:
+        if not max(self.values):
+            return None
         return [0, 1.05 * max(self.values)]
 
 
@@ -93,6 +99,9 @@ class CPUPercent(RelativeValueType):
 
     def get_category_string(self) -> str:
         return "hardware"
+
+    def get_description(self) -> str:
+        return "CPU usage"
 
     def get_y_label(self) -> str:
         return "CPU usage [%]"
@@ -105,6 +114,9 @@ class RAMPercent(RelativeValueType):
     def get_category_string(self) -> str:
         return "hardware"
 
+    def get_description(self) -> str:
+        return "RAM usage"
+
     def get_y_label(self) -> str:
         return "RAM usage [%]"
 
@@ -115,6 +127,9 @@ class RecvBytes(AbsoluteValueType):
 
     def get_category_string(self) -> str:
         return "network"
+
+    def get_description(self) -> str:
+        return "Total received bytes"
 
     def get_y_label(self) -> str:
         unit = get_smallest_bytes_unit(max(self.values))
@@ -137,6 +152,9 @@ class SentBytes(AbsoluteValueType):
     def get_category_string(self) -> str:
         return "network"
 
+    def get_description(self) -> str:
+        return "Total sent bytes"
+
     def get_y_label(self) -> str:
         unit = get_smallest_bytes_unit(max(self.values))
         return f"total bytes (sent) [{unit}]"
@@ -158,6 +176,9 @@ class RecvPPS(AbsoluteValueType):
     def get_category_string(self) -> str:
         return "network"
 
+    def get_description(self) -> str:
+        return "Received PPS"
+
     def get_y_label(self) -> str:
         return "packets per second (received)"
 
@@ -169,6 +190,9 @@ class SentPPS(AbsoluteValueType):
     def get_category_string(self) -> str:
         return "network"
 
+    def get_description(self) -> str:
+        return "Sent PPS"
+
     def get_y_label(self) -> str:
         return "packets per second (sent)"
 
@@ -178,7 +202,7 @@ class SingleGraphGenerator:
     Generates a graph from given data and adds it to an existing plot.
     """
 
-    def __init__(self, value_type, timestamps: list, values: list, full: bool, median: bool) -> None:
+    def __init__(self, value_type, timestamps: list, values: list, full: bool, median: bool, title: str = "") -> None:
         if not len(timestamps) == len(values):
             raise ValueError
 
@@ -187,8 +211,7 @@ class SingleGraphGenerator:
         self.values = values
         self.full = full
         self.median = median
-
-        # TODO: Check values
+        self.title = title
 
     def plot_graph(self):
         values = self.value_instance.get_adjusted_values()
@@ -207,8 +230,12 @@ class SingleGraphGenerator:
 
         if not self.median:
             self.__set_x_limit(self.value_instance.get_x_limit(max_timestamp))
+
         self.__set_y_limit(self.value_instance.get_y_limit())
-        # maybe set ticks
+
+        if self.title:
+            self.__set_title()
+
         self.__plot(values)
 
     def __plot(self, values):
@@ -266,6 +293,9 @@ class SingleGraphGenerator:
 
         return resulting_data, interval_length
 
+    def __set_title(self):
+        plt.title(self.title, fontweight="bold", fontsize=9)
+
     def __set_x_label(self, text):
         """
         Sets the x-label of the plot to text.
@@ -292,16 +322,17 @@ class SingleGraphGenerator:
         Sets the y-limit of the plot to the two values given in limits.
         :param limits: list of the two y-limits (min- and max-limit)
         """
-        plt.ylim(limits)
+        if limits:
+            plt.ylim(limits)
 
 
 class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
-    value_lists = {}
-
     def __init__(self, file_path, value_types: list) -> None:
         """
+        TODO
         :param value_types: list of ValueTypes for which a graph should be generated
         """
+        self.value_lists = {}
         self.value_types = value_types
 
         if not os.path.isfile(file_path):
@@ -310,7 +341,7 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
 
         self.file_path = file_path
         self.file_name = os.path.basename(file_path)
-        if not self.file_name[-5:] == ".json":
+        if self.file_name[-5:] != ".json":
             messages.print_warn(f"{file_path} is not a JSON file.")
             return
         self.short_file_name = self.file_name[:-5]
@@ -321,11 +352,18 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
             raise Exception(f"Incorrect data format in {self.file_path}")
 
     def generate_graphs(self, full: bool, median: bool):
+        def calculate_full_time() -> float:
+            initial_time = datetime.fromisoformat(self.value_lists["time"][0])
+            last_time = datetime.fromisoformat(self.value_lists["time"][len(self.value_lists["time"]) - 1])
+            return (last_time - initial_time).total_seconds()
+
         graph_dir_path = os.path.join("data_graphs", self.short_file_name)
 
         for value_type in self.value_types:
             name_string = value_type.get_name_string(value_type)
             category_string = value_type.get_category_string(value_type)
+
+            title = self.__get_title(value_type, calculate_full_time(), median)
 
             generator = SingleGraphGenerator(
                 value_type=value_type,
@@ -333,18 +371,84 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
                 values=self.value_lists[name_string],
                 full=full,
                 median=median,
+                title=title,
             )
 
             generator.plot_graph()
             file_path = os.path.join(graph_dir_path, category_string, name_string)
-            file_name = "TODO_filename"
+            file_name = self.__generate_filename(value_type, full, median)
             self.__save_figure(file_path, file_name)
+
+    def __generate_filename(self, value_type, full: bool, median: bool) -> str:
+        if issubclass(value_type, RelativeValueType):
+            if full and median:
+                return "full_min-max-median"
+            if full:
+                return "full"
+
+        if median:
+            return "min-max-median"
+
+        return "normal"
+
+        # bytes_recv/
+        #     normal
+        #     full
+        #     min-max-median
+        #     full_min-max-median
 
     def __save_figure(self, file_path, file_name):
         Path(file_path).mkdir(parents=True, exist_ok=True)
         plt.savefig(os.path.join(file_path, file_name))
         plt.clf()
         self.__clean_up()
+
+    def __get_title(self, value_type, full_time: float, median: bool) -> str:
+        def check_filename_format() -> bool:
+            tmp_split_name = self.short_file_name.split("_")
+
+            if len(tmp_split_name) != 4:
+                return False
+
+            role_and_vpn_option = tmp_split_name[0]
+
+            try:
+                datetime.fromisoformat(
+                    f"{tmp_split_name[1]}:{tmp_split_name[2]}:{tmp_split_name[3]}"
+                )
+            except Exception as err:
+                print(f"{err=}")
+                return False
+
+            tmp_split_name = role_and_vpn_option.split("-")
+            if (
+                    len(tmp_split_name) != 2
+                    or not isinstance(tmp_split_name[0], str)
+                    or not isinstance(tmp_split_name[1], str)
+            ):
+                return False
+
+            return True
+
+        def get_info_from_filename() -> [str, str]:
+            tmp_split_name = self.short_file_name.split("_")
+            role_and_vpn_option = tmp_split_name[0]
+            role, vpn_option = role_and_vpn_option.split("-")
+            return role, vpn_option
+
+        full_time = "{:.1f}".format(full_time)
+        value_type_information = value_type.get_description(value_type)
+        median_information = ""
+        if median:
+            median_information = " (min/max/median)"
+
+        if not check_filename_format():
+            return f"{value_type_information} ({full_time} s){median_information}"
+
+        vpn_information = f"(VPN: {get_info_from_filename()[1]})"
+        role_information = get_info_from_filename()[0].capitalize()
+
+        return f"{value_type_information} {vpn_information} ({role_information}, {full_time} s){median_information}"
 
     def __load_data_from_file(self) -> bool:
         try:
@@ -463,10 +567,29 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
             raise Exception(f"Incorrect data format in {self.file_path}")
 
 
-sgh = SingleFileGraphHandler("data_1.json", [CPUPercent, RAMPercent])
-sgh.generate_graphs(False, False)
+class MultiFileGraphHandler:
+    def __init__(self, path, value_types: list) -> None:
+        """
+        TODO
+        :param value_types: list of ValueTypes for which a graph should be generated
+        """
 
-# sgg = SingleGraphGenerator(RAMPercent,
-#                            ["2024-01-10T12:00:00.000000", "2024-01-10T12:00:02.400000", "2024-01-10T12:00:05.400000",
-#                             "2024-01-10T12:00:06.830000", "2024-01-10T12:00:08.000000"], [1, 2, 3, 4, 3], False, True)
-# print(sgg.partition_data([1, 2, 3, 4, 5], 4))
+        if not (os.path.isdir(path) or os.path.isfile(path)):
+            messages.print_warn(f"{path} is not a valid path.")
+            return
+
+        self.path = path
+        self.value_types = value_types
+
+    def generate_graphs(self, full: bool, median: bool):
+        if os.path.isdir(self.path):
+            for file_name in os.listdir(self.path):
+                single_file_handler = SingleFileGraphHandler(os.path.join(self.path, file_name), self.value_types)
+                single_file_handler.generate_graphs(full, median)
+
+                del single_file_handler
+
+
+mgh = MultiFileGraphHandler("data",
+                            [CPUPercent, RAMPercent, RecvBytes, RecvPPS, SentPPS, SentBytes])
+mgh.generate_graphs(True, True)
