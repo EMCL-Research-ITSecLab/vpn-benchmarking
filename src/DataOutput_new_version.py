@@ -34,12 +34,11 @@ class ValueType:
         messages.print_err("ValueType.get_name_string(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
-    def get_x_label(self) -> str:
-        if not self.median:
-            return "time [s]"
+    def get_x_label(self, interval_length=None) -> str:
+        if self.median:
+            return "#time interval (of length {:.3f} s)".format(interval_length)
 
-        messages.print_err("ValueType.get_x_label(self): NOT IMPLEMENTED")
-        raise NotImplementedError
+        return "time [s]"
 
     def get_y_label(self) -> str:
         messages.print_err("ValueType.get_y_label(self): NOT IMPLEMENTED")
@@ -49,8 +48,8 @@ class ValueType:
         if not self.median:
             return [0, max_value]
 
-        messages.print_err("ValueType.get_x_limit(self): NOT IMPLEMENTED")
-        raise NotImplementedError
+        messages.print_err("x-limit for median graphs is automatically set.")
+        raise ValueError
 
     def get_y_limit(self) -> list:
         messages.print_err("ValueType.get_y_limit(self): NOT IMPLEMENTED")
@@ -180,32 +179,53 @@ class SingleGraphGenerator:
     """
 
     def __init__(self, value_type, timestamps: list, values: list, full: bool, median: bool) -> None:
+        if not len(timestamps) == len(values):
+            raise ValueError
+
         self.value_instance = value_type(values, full, median)
         self.timestamps = timestamps
         self.values = values
         self.full = full
         self.median = median
 
+        # TODO: Check values
+
     def plot_graph(self):
         values = self.value_instance.get_adjusted_values()
-        max_timestamp = max(self.get_timestamps_as_absolute_difference())
+        max_timestamp = max(self.__get_timestamps_as_absolute_difference())
 
         self.__adjust_basic_plot_settings()
-        self.__set_x_label(self.value_instance.get_x_label())
+
+        # only median x-label needs interval_length argument
+        if self.median:
+            _, interval_length = self.__partition_data(values)
+            self.__set_x_label(self.value_instance.get_x_label(interval_length))
+        else:
+            self.__set_x_label(self.value_instance.get_x_label())
+
         self.__set_y_label(self.value_instance.get_y_label())
-        self.__set_x_limit(self.value_instance.get_x_limit(max_timestamp))
+
+        if not self.median:
+            self.__set_x_limit(self.value_instance.get_x_limit(max_timestamp))
         self.__set_y_limit(self.value_instance.get_y_limit())
         # maybe set ticks
         self.__plot(values)
 
     def __plot(self, values):
-        if not self.median:
-            timestamps = self.get_timestamps_as_absolute_difference()
-            plt.plot(timestamps, values)
+        if self.median:
+            partitioned_data, _ = self.__partition_data(values)
+            plt.boxplot(
+                partitioned_data,
+                showfliers=True,
+                flierprops=dict(marker="x", markeredgecolor="lightgrey"),
+                medianprops=dict(color="blue", linewidth=1.5),
+            )
+            return
 
-        # TODO
+        timestamps = self.__get_timestamps_as_absolute_difference()
+        plt.plot(timestamps, values)
 
-    def get_timestamps_as_absolute_difference(self) -> list:
+    def __get_timestamps_as_absolute_difference(self) -> list[float]:
         """
         Return the timestamps as absolute differences from the initial time.
         :return: list of absolute timestamps starting from 0.0
@@ -222,6 +242,29 @@ class SingleGraphGenerator:
     def __adjust_basic_plot_settings(self):
         plt.grid(True, "both", "y")  # turn on y-axis grid
         plt.minorticks_on()  # turn on ticks
+
+    def __partition_data(self, initial_data, number_blocks=8):
+        def calculate_block_number():
+            result = int((time_value * number_blocks) // full_time)
+
+            if result == number_blocks:  # the last value should be part of the last block
+                return number_blocks - 1
+
+            return result
+
+        resulting_data = []  # has number_blocks many empty data blocks
+        for _ in range(number_blocks):
+            resulting_data.append([])  # appends number_block empty lists
+
+        timestamps = self.__get_timestamps_as_absolute_difference()
+        full_time = max(timestamps)
+        interval_length = full_time / number_blocks
+
+        for i in range(len(initial_data)):
+            time_value = timestamps[i]
+            resulting_data[calculate_block_number()].append(initial_data[i])
+
+        return resulting_data, interval_length
 
     def __set_x_label(self, text):
         """
@@ -420,5 +463,10 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
             raise Exception(f"Incorrect data format in {self.file_path}")
 
 
-sgh = SingleFileGraphHandler("data.json", [CPUPercent, RAMPercent])
+sgh = SingleFileGraphHandler("data_1.json", [CPUPercent, RAMPercent])
 sgh.generate_graphs(False, False)
+
+# sgg = SingleGraphGenerator(RAMPercent,
+#                            ["2024-01-10T12:00:00.000000", "2024-01-10T12:00:02.400000", "2024-01-10T12:00:05.400000",
+#                             "2024-01-10T12:00:06.830000", "2024-01-10T12:00:08.000000"], [1, 2, 3, 4, 3], False, True)
+# print(sgg.partition_data([1, 2, 3, 4, 5], 4))
