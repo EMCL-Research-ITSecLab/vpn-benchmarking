@@ -28,33 +28,33 @@ class ValueType:
 
     def get_category_string(self) -> str:
         messages.print_err("ValueType.get_category_string(self): NOT IMPLEMENTED")
-        return ""
+        raise NotImplementedError
 
     def get_name_string(self) -> str:
         messages.print_err("ValueType.get_name_string(self): NOT IMPLEMENTED")
-        return ""
+        raise NotImplementedError
 
     def get_x_label(self) -> str:
         if not self.median:
             return "time [s]"
 
         messages.print_err("ValueType.get_x_label(self): NOT IMPLEMENTED")
-        return ""
+        raise NotImplementedError
 
     def get_y_label(self) -> str:
         messages.print_err("ValueType.get_y_label(self): NOT IMPLEMENTED")
-        return ""
+        raise NotImplementedError
 
-    def get_x_limit(self) -> list:
+    def get_x_limit(self, max_value) -> list:
         if not self.median:
-            return [0, self.length - 1]
+            return [0, max_value]
 
         messages.print_err("ValueType.get_x_limit(self): NOT IMPLEMENTED")
-        return [0, 0]
+        raise NotImplementedError
 
     def get_y_limit(self) -> list:
         messages.print_err("ValueType.get_y_limit(self): NOT IMPLEMENTED")
-        return [0, 0]
+        raise NotImplementedError
 
     def get_adjusted_values(self) -> list:
         """
@@ -188,19 +188,36 @@ class SingleGraphGenerator:
 
     def plot_graph(self):
         values = self.value_instance.get_adjusted_values()
+        max_timestamp = max(self.get_timestamps_as_absolute_difference())
+
         self.__adjust_basic_plot_settings()
         self.__set_x_label(self.value_instance.get_x_label())
         self.__set_y_label(self.value_instance.get_y_label())
-        self.__set_x_limit(self.value_instance.get_x_limit())
+        self.__set_x_limit(self.value_instance.get_x_limit(max_timestamp))
         self.__set_y_limit(self.value_instance.get_y_limit())
         # maybe set ticks
         self.__plot(values)
 
     def __plot(self, values):
         if not self.median:
-            plt.plot(self.timestamps, values)
+            timestamps = self.get_timestamps_as_absolute_difference()
+            plt.plot(timestamps, values)
 
         # TODO
+
+    def get_timestamps_as_absolute_difference(self) -> list:
+        """
+        Return the timestamps as absolute differences from the initial time.
+        :return: list of absolute timestamps starting from 0.0
+        """
+        timestamps = [0.0]
+        initial_time = datetime.fromisoformat(self.timestamps[0])
+
+        for i in range(1, len(self.timestamps)):
+            cur_time = datetime.fromisoformat(self.timestamps[i])
+            timestamps.append((cur_time - initial_time).total_seconds())
+
+        return timestamps
 
     def __adjust_basic_plot_settings(self):
         plt.grid(True, "both", "y")  # turn on y-axis grid
@@ -261,10 +278,11 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
             raise Exception(f"Incorrect data format in {self.file_path}")
 
     def generate_graphs(self, full: bool, median: bool):
-        graph_dir_path = os.path.join("data_graphs", self.short_file_name)  # directory path for the graph
+        graph_dir_path = os.path.join("data_graphs", self.short_file_name)
 
         for value_type in self.value_types:
             name_string = value_type.get_name_string(value_type)
+            category_string = value_type.get_category_string(value_type)
 
             generator = SingleGraphGenerator(
                 value_type=value_type,
@@ -275,13 +293,13 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
             )
 
             generator.plot_graph()
-            # TODO: Change path and name
-            graph_file_path = os.path.join(graph_dir_path, name_string)
-            self.__save_figure(graph_file_path)
+            file_path = os.path.join(graph_dir_path, category_string, name_string)
+            file_name = "TODO_filename"
+            self.__save_figure(file_path, file_name)
 
-    def __save_figure(self, file_path):
+    def __save_figure(self, file_path, file_name):
         Path(file_path).mkdir(parents=True, exist_ok=True)
-        plt.savefig(file_path)
+        plt.savefig(os.path.join(file_path, file_name))
         plt.clf()
         self.__clean_up()
 
