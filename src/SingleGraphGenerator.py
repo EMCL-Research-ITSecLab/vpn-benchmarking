@@ -6,10 +6,19 @@ from src.messages import *
 
 class SingleGraphGenerator:
     """
-    Generates a graph from given data and adds it to an existing plot.
+    Plots a graph from given data.
     """
 
     def __init__(self, value_type, timestamps: list, values: list, full: bool, median: bool, title: str = "") -> None:
+        """
+        Checks if timestamps and values are consistent regarding number of entries. Sets all parameters from arguments.
+        :param value_type: ValueType to plot the graph for
+        :param timestamps: timestamps to be used for the x-axis
+        :param values: values to be used for the graph
+        :param full: True if y-limit is 0 to 100 percent for relative ValueType, False for detailed scope
+        :param median: True if min-max-median graph should be plotted, False for normal graphs
+        :param title: title for the figure as string
+        """
         if not len(timestamps) == len(values):
             raise ValueError
 
@@ -21,6 +30,10 @@ class SingleGraphGenerator:
         self.title = title
 
     def plot_graph(self):
+        """
+        Prepares plotting by setting basic settings, labels, limits and title. Calls plot method, also prints log
+        messages.
+        """
         print_log("Plotting graph...")
 
         values = self.value_instance.get_adjusted_values()
@@ -49,6 +62,10 @@ class SingleGraphGenerator:
         print_log("Graph plotted.")
 
     def __plot(self, values):
+        """
+        Plots the data. Distinguishes between min-max-median graphs and normal graphs.
+        :param values: values to plot
+        """
         if self.median:
             partitioned_data, _ = self.__partition_data(values)
             plt.boxplot(
@@ -65,7 +82,7 @@ class SingleGraphGenerator:
     def __get_timestamps_as_absolute_difference(self) -> list[float]:
         """
         Return the timestamps as absolute differences from the initial time.
-        :return: list of absolute timestamps starting from 0.0
+        :return: list of absolute timestamps as floats starting from 0.0
         """
         timestamps = [0.0]
         initial_time = dateutil.parser.isoparse(self.timestamps[0])
@@ -78,11 +95,24 @@ class SingleGraphGenerator:
 
     @staticmethod
     def __adjust_basic_plot_settings():
+        """
+        Sets the basic settings for the plot environment.
+        """
         plt.grid(True, "both", "y")  # turn on y-axis grid
         plt.minorticks_on()  # turn on ticks
 
     def __partition_data(self, initial_data, number_blocks=8):
+        """
+        Partitions the data into multiple blocks. Used only for min-max-median graphs.
+        :param initial_data: data before separation into blocks
+        :param number_blocks: number of blocks, 8 by default
+        """
+
         def calculate_block_number():
+            """
+            Calculates in which block a value with its timestamp belongs.
+            :return:
+            """
             result = int((time_value * number_blocks) // full_time)
 
             if result == number_blocks:  # the last value should be part of the last block
@@ -105,6 +135,9 @@ class SingleGraphGenerator:
         return resulting_data, interval_length
 
     def __set_title(self):
+        """
+        Sets the title of the plot.
+        """
         plt.title(self.title, fontweight="bold", fontsize=9)
 
     @staticmethod
@@ -134,7 +167,7 @@ class SingleGraphGenerator:
     @staticmethod
     def __set_y_limit(limits: list):
         """
-        Sets the y-limit of the plot to the two values given in limits.
+        Sets the y-limit of the plot to the two values given in limits if not both are 0.
         :param limits: list of the two y-limits (min- and max-limit)
         """
         if limits:
