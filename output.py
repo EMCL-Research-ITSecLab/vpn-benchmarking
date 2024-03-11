@@ -89,6 +89,23 @@ class HandleInput:
 @click.argument("output_type", type=str)
 @click.argument("path", type=pathlib.Path)
 def cli(output_type, path, full, detailed, median, normal):
+    """
+    Takes arguments from the command line, asks the user for the values for which graphs should be generated and
+    calls the InputHandler with the arguments and user inputs.
+
+    With output_type, the user can specify which kind of output he wants to generate. The output_type 'graphs' uses
+    the flags -f, -d, -m and -n to limit the scope of what graphs should be generated. The pairs -f, -d and -n, -m
+    specify the y-limits and the type of graph, 'normal' graphs with all values or min-max-median graphs with 8
+    intervals, respectively. At least one option of each pair has to be set, possibly both. All different combinations
+    that are checked create a graph, for example if flags -f, -d and -m are set, the program generates full and detailed
+    min-max-median graphs, but no 'normal' graphs.
+    :param output_type: type of the output, for example as 'graphs'
+    :param path: path of the file or directory of the data
+    :param full: True if full graphs should be generated, False otherwise
+    :param detailed: True if detailed graphs should be generated, False otherwise
+    :param median: True if median graphs should be generated, False otherwise
+    :param normal: True if normal graphs should be generated, False otherwise
+    """
     questions = [
         inquirer.Checkbox(
             "values",
