@@ -2,6 +2,8 @@ import json
 import os.path
 from pathlib import Path
 
+import dateutil.parser
+
 from src.SingleGraphGenerator import *
 from src.ValueType import *
 from src.messages import *
@@ -45,7 +47,7 @@ def validate_data(data, file_name: str) -> bool:
             raise KeyError
 
     def check_timestamp():
-        datetime.fromisoformat(dictionary["time"])
+        dateutil.parser.isoparse(dictionary["time"])
 
     def check_name():
         if not isinstance(dictionary["name"], str):
@@ -104,8 +106,8 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
 
     def generate_graphs(self, full: bool, median: bool):
         def calculate_full_time() -> float:
-            initial_time = datetime.fromisoformat(self.value_lists["time"][0])
-            last_time = datetime.fromisoformat(self.value_lists["time"][len(self.value_lists["time"]) - 1])
+            initial_time = dateutil.parser.isoparse(self.value_lists["time"][0])
+            last_time = dateutil.parser.isoparse(self.value_lists["time"][len(self.value_lists["time"]) - 1])
             return (last_time - initial_time).total_seconds()
 
         graph_dir_path = os.path.join("data_graphs", self.short_file_name)
@@ -168,7 +170,7 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
             role_and_vpn_option = tmp_split_name[0]
 
             try:
-                datetime.fromisoformat(
+                dateutil.parser.isoparse(
                     f"{tmp_split_name[1]}:{tmp_split_name[2]}:{tmp_split_name[3]}"
                 )
             except Exception as err:

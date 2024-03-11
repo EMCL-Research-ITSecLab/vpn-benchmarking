@@ -1,6 +1,6 @@
-from datetime import datetime
-
+import dateutil.parser
 import matplotlib.pyplot as plt
+
 from src.messages import *
 
 
@@ -68,10 +68,10 @@ class SingleGraphGenerator:
         :return: list of absolute timestamps starting from 0.0
         """
         timestamps = [0.0]
-        initial_time = datetime.fromisoformat(self.timestamps[0])
+        initial_time = dateutil.parser.isoparse(self.timestamps[0])
 
         for i in range(1, len(self.timestamps)):
-            cur_time = datetime.fromisoformat(self.timestamps[i])
+            cur_time = dateutil.parser.isoparse(self.timestamps[i])
             timestamps.append((cur_time - initial_time).total_seconds())
 
         return timestamps
