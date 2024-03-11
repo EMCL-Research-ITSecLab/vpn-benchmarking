@@ -2,8 +2,9 @@ import json
 import os.path
 from pathlib import Path
 
-from SingleGraphGenerator import *
-from ValueType import *
+from src.SingleGraphGenerator import *
+from src.ValueType import *
+from src.messages import *
 
 
 def validate_data(data, file_name: str) -> bool:
@@ -62,10 +63,10 @@ def validate_data(data, file_name: str) -> bool:
 
         return True
     except KeyError:
-        messages.print_warn(f"File {file_name} has incorrect or no data!")
+        print_warn(f"File {file_name} has incorrect or no data!")
         return False
     except ValueError:
-        messages.print_warn(f"File {file_name} has incorrect timestamp format!")
+        print_warn(f"File {file_name} has incorrect timestamp format!")
         return False
     except Exception as err:
         print(f"{err=}")
@@ -86,14 +87,14 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
         self.value_types = value_types
 
         if not os.path.isfile(file_path):
-            messages.print_warn(f"{file_path} is not a file.")
-            return
+            print_warn(f"{file_path} is not a file.")
+            raise FileNotFoundError
 
         self.file_path = file_path
         self.file_name = os.path.basename(file_path)
         if self.file_name[-5:] != ".json":
-            messages.print_warn(f"{file_path} is not a JSON file.")
-            return
+            print_warn(f"{file_path} is not a JSON file.")
+            raise FileNotFoundError
         self.short_file_name = self.file_name[:-5]
 
         if not self.__load_data_from_file():
@@ -148,10 +149,14 @@ class SingleFileGraphHandler:  # TODO: should maybe inherit from DataOutput
         #     full_min-max-median
 
     def __save_figure(self, file_path, file_name):
+        print_log(f"Saving file {file_name}...")
+
         Path(file_path).mkdir(parents=True, exist_ok=True)
         plt.savefig(os.path.join(file_path, file_name))
         plt.clf()
         self.__clean_up()
+
+        print_log("File saved.")
 
     def __get_title(self, value_type, full_time: float, median: bool) -> str:
         def check_filename_format() -> bool:
@@ -257,32 +262,25 @@ class MultiFileGraphHandler:
         """
 
         if not (os.path.isdir(path) or os.path.isfile(path)):
-            messages.print_warn(f"{path} is not a valid path.")
+            print_warn(f"{path} is not a valid path.")
             return
 
         self.path = path
         self.value_types = value_types
 
     def generate_graphs(self, full: bool, median: bool):
+        print_log("Start generating graphs...")
         if os.path.isdir(self.path):
             for file_name in os.listdir(self.path):
                 single_file_handler = SingleFileGraphHandler(os.path.join(self.path, file_name), self.value_types)
                 single_file_handler.generate_graphs(full, median)
 
                 del single_file_handler
+        elif os.path.isfile(self.path):
+            single_file_handler = SingleFileGraphHandler(os.path.join(self.path), self.value_types)
+            single_file_handler.generate_graphs(full, median)
 
-    def generate_different_graphs(self, detailed_full: [bool, bool], normal_median: [bool, bool]):
-        if detailed_full == [False, False] or normal_median == [False, False]:
-            return
-
-        if detailed_full[0] and normal_median[0]:
-            self.generate_graphs(False, False)
-
-        if detailed_full[0] and normal_median[1]:
-            self.generate_graphs(False, True)
-
-        if detailed_full[1] and normal_median[0]:
-            self.generate_graphs(True, False)
-
-        if detailed_full[1] and normal_median[1]:
-            self.generate_graphs(True, True)
+            del single_file_handler
+        else:
+            raise ValueError
+        print_log("Graphs generated.")

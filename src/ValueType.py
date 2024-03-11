@@ -1,4 +1,4 @@
-import messages
+from src.messages import *
 
 
 def get_smallest_bytes_unit(n):
@@ -9,7 +9,7 @@ def get_smallest_bytes_unit(n):
             else:
                 return f"{unit}iB"
         n = n / 1024
-    messages.print_err("Number of bytes is too large!")
+    print_err("Number of bytes is too large!")
 
 
 class ValueType:
@@ -20,15 +20,15 @@ class ValueType:
         self.median = median
 
     def get_category_string(self):
-        messages.print_err("ValueType.get_category_string(self): NOT IMPLEMENTED")
+        print_err("ValueType.get_category_string(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
     def get_name_string(self):
-        messages.print_err("ValueType.get_name_string(self): NOT IMPLEMENTED")
+        print_err("ValueType.get_name_string(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
     def get_description(self):
-        messages.print_err("ValueType.get_description(self): NOT IMPLEMENTED")
+        print_err("ValueType.get_description(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
     def get_x_label(self, interval_length=None) -> str:
@@ -38,18 +38,18 @@ class ValueType:
         return "time [s]"
 
     def get_y_label(self):
-        messages.print_err("ValueType.get_y_label(self): NOT IMPLEMENTED")
+        print_err("ValueType.get_y_label(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
     def get_x_limit(self, max_value) -> list:
         if not self.median:
             return [0, max_value]
 
-        messages.print_err("x-limit for median graphs is automatically set.")
+        print_err("x-limit for median graphs is automatically set.")
         raise ValueError
 
     def get_y_limit(self):
-        messages.print_err("ValueType.get_y_limit(self): NOT IMPLEMENTED")
+        print_err("ValueType.get_y_limit(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
     def get_adjusted_values(self) -> list:

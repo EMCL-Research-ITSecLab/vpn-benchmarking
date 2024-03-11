@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import matplotlib.pyplot as plt
+from src.messages import *
 
 
 class SingleGraphGenerator:
@@ -20,6 +21,8 @@ class SingleGraphGenerator:
         self.title = title
 
     def plot_graph(self):
+        print_log("Plotting graph...")
+
         values = self.value_instance.get_adjusted_values()
         max_timestamp = max(self.__get_timestamps_as_absolute_difference())
 
@@ -43,6 +46,7 @@ class SingleGraphGenerator:
             self.__set_title()
 
         self.__plot(values)
+        print_log("Graph plotted.")
 
     def __plot(self, values):
         if self.median:

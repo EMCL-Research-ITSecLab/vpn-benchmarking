@@ -32,4 +32,4 @@ class Exchange:
         :return: False since not implemented
         """
         messages.print_err("Exchange.run(self): NOT IMPLEMENTED")
-        return False
+        raise NotImplementedError

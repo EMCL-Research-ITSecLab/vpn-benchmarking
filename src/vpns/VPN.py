@@ -37,7 +37,7 @@ class VPN:
         :return: False since not implemented
         """
         messages.print_err("VPN.open(self): NOT IMPLEMENTED")
-        return False
+        raise NotImplementedError
 
     def close(self) -> bool:
         """
@@ -45,7 +45,7 @@ class VPN:
         :return: False since not implemented
         """
         messages.print_err("VPN.close(self): NOT IMPLEMENTED")
-        return False
+        raise NotImplementedError
 
     def generate_keys(self) -> bool:
         """
@@ -53,7 +53,7 @@ class VPN:
         :return: False since not implemented
         """
         messages.print_err("VPN.generate_keys(self): NOT IMPLEMENTED")
-        return False
+        raise NotImplementedError
 
     def share_pubkeys(self, remote_path) -> bool:
         """
@@ -62,4 +62,4 @@ class VPN:
         :return: False since not implemented
         """
         messages.print_err("VPN.share_pubkeys(self, remote_path): NOT IMPLEMENTED")
-        return False
+        raise NotImplementedError
