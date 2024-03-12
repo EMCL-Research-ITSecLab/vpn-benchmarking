@@ -9,7 +9,7 @@ To install the necessary dependencies, you can create a `venv` environment and u
 $ sudo python install_requirements.py
 ```
 
-Alternatively, you can use the framework without a virtual environment. In that case, you will have to install the necessary modules yourself: `psutil`, `click`, `inquirer`, `numpy`, `pycurl`.
+If you use a `venv` environment, use `bin/python` on the commands. Alternatively to using a virtual environment, you can use the framework without a virtual environment. In that case, you will have to install the necessary modules yourself: `psutil`, `click`, `inquirer`, `numpy`, `pycurl`.
 
 Set the device's role in the exchange by executing:
 ```
