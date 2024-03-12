@@ -46,18 +46,14 @@ class HandleInput:
             helpers.messages.print_err("Inputs are not valid. Please start again.")
             return False
 
-        if not self.__create_instance():
-            return False
+        self.__create_instance()
 
         if self.operation == "keygen":
-            if not self.__handle_keygen():
-                return False
+            self.__handle_keygen()
         elif self.operation == "keysend":
-            if not self.__handle_keysend():
-                return False
+            self.__handle_keysend()
         elif self.operation == "exchange":
-            if not self.__handle_exchange():
-                return False
+            self.__handle_exchange()
 
         return True
 
@@ -78,7 +74,7 @@ class HandleInput:
             )
             return False
 
-        if self.exchange_type not in ("http"):
+        if not self.exchange_type == "http":
             helpers.messages.print_err(
                 "Invalid EXCHANGE_TYPE argument. Has to be http."
             )
@@ -170,7 +166,8 @@ def cli(role, vpn_option, exchange_type, operation, iterations, directory, auto)
     handler = HandleInput(
         role, vpn_option, exchange_type, operation, iterations, directory, auto
     )
-    handler.execute()
+    if not handler.execute():
+        messages.print_err("Execution failed.")
 
 
 if __name__ == "__main__":
