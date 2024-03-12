@@ -94,33 +94,18 @@ The `--auto` option works as described in the baseline HTTP exchange above.
 
 To generate the data for later visualization, just follow the steps in the above chapter 'Usage for Performance Measurements'.
 
-### Output graphs
+### Output diagrams
 
-To visualize the stored data, use
+To visualize the stored data using graphs, use
 ```
-$ python DataOutput.py DIRECTORY|FILE [--compare COMPARE_NR]
+$ python output.py OUTPUT_TYPE DIRECTORY|FILE [-d] [-f] [-n] [-m]
 ```
-where `DIRECTORY|FILE` is either the folder containing the `.json` files or the `.json` file itself. Note, that the format of each file has to be:
-```
-ROLE-VPN_OPTION:TIMESTAMP.json
-```
+where `DIRECTORY|FILE` is either the folder containing the `.json` files or the `.json` file itself, and `OUTPUT_TYPE` is the type of diagram to be created. The base version of the framework can create graphs (for this, set `OUTPUT_TYPE` to `graphs`).
 
-`ROLE`: Role of the device (by default either `server` or `client`)
+At least one of the flags `-d` (detailed) `-f` (full) has to be set, this also applies to the flags `-n` (normal) and `-m` (min/max/median).  A detailed graph only shows the range on relative graphs where values are present, a full graph shows the entire range from 0 to 100 percent. A normal graph displays all values, while a min/max/median graph splits the data into 8 intervals, and shows the value range as well as the median.
 
-`VPN_OPTION`: VPN name (by default either `novpn` or `rosenpass`)
+After executing the command, you will have to determine what graphs should be created. Here you can choose the value types you want to generate graphs for.
 
-`TIMESTAMP`: Timestamp, must be in ISO Format: `YYYY-MM-DD HH:MM:SS.mmmmmm`
+## Expanding the framework
 
-`COMPARE_NR`: Number of graphs to compare (`1 < COMPARE_NR < 7`). When comparing graphs, it is only possible to compare the normal graphs, not the min/max/median graphs.
-
-After executing the command, you will have to determine what graphs should be created. Here you can choose `all`, `cpu_percent`, `ram_percent`, `bytes_recv`, `bytes_sent`, `pps_recv` and `pps_sent`, or multiple of them by ticking the boxes.
-
-You will also be asked if you want to generate the full relative graphs (0 to 100 percent) or only the part where values are present. You can also choose both.
-
-You can also choose to create min/max/median graphs.
-
-## Using the framework with different VPNs/different exchange types
-
-Currently, the framework provides the class `HTTP` in the `helpers/exchanges` directory for exchange types and the classes `NoVPN` and `Rosenpass` in the `helpers/vpns` directory for different VPNs.
-
-To implement new VPNs or new exchanges, simply add new classes inheriting from the classes `VPN`/`Exchange` and implement their functions. Additionally, you will have to adjust the methods `__check_values` and `__create_instance` in the `HandleInput` class in `main.py`. Add the name of your added functionality and the corresponding creation of `Server`/`Client` by inputting your new class.
+Currently, the framework provides the class `HTTP` in the `helpers/exchanges` directory for exchange types and the classes `NoVPN` and `Rosenpass` in the `helpers/vpns` directory for different VPNs. You can implement new classes to extend the base exchange types and VPNs.
