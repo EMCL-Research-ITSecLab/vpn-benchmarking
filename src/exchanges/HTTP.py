@@ -28,9 +28,9 @@ class HTTP(Exchange):
         :return: True for success, False otherwise
         """
         if self.role == "server":
-            self.__run_server(self.open_server_address, self.open_server_port)
+            return self.__run_server(self.open_server_address, self.open_server_port)
         elif self.role == "client":
-            self.__run_client(self.open_server_address, self.open_server_port, self.interface)
+            return self.__run_client(self.open_server_address, self.open_server_port, self.interface)
 
         return False  # if role was not server or client
 
