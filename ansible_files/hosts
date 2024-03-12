@@ -1,5 +1,0 @@
-[senders]
-server ansible_host=999.999.999.999 ansible_user=server
-
-[receivers]
-client ansible_host=888.888.888.888 ansible_user=client
