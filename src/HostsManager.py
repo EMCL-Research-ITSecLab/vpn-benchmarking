@@ -7,7 +7,8 @@ import click
 from src import messages
 from src.messages import print_warn, print_log
 
-hosts_path = "../hosts.json"  # hosts file path, should not be changed
+hosts_path = "hosts.json"  # hosts file path, should not be changed
+ansible_path = "ansible_files"
 
 
 class HostsManager:
@@ -76,9 +77,9 @@ class HostsManager:
             print_warn("Did not create a new hosts file.")
             return
 
-        print_log(f"File {hosts_path} was created and filled.")
+        print_log(f"File {os.path.basename(hosts_path)} was created and filled.")
 
-        if os.path.exists("../ansible_files/hosts"):
+        if os.path.exists(os.path.join(ansible_path, "hosts")):
             if click.confirm(
                     "\nDerive ansible hosts file (this will overwrite the existing file)?"
             ):
@@ -119,11 +120,12 @@ class HostsManager:
         :param c_ip_addr: IP address of the client
         :return:
         """
-        if os.path.exists("../ansible_files/hosts"):
-            os.remove("../ansible_files/hosts")
+        ansible_hosts_path = os.path.join(ansible_path, "hosts")
+        if os.path.exists(ansible_hosts_path):
+            os.remove(ansible_hosts_path)
 
-        Path("../ansible_files").mkdir(parents=True, exist_ok=True)
-        with open("../ansible_files/hosts", "a") as file:
+        Path(ansible_path).mkdir(parents=True, exist_ok=True)
+        with open(ansible_hosts_path, "a") as file:
             file.write("[senders]\n")
             file.write(f"server ansible_host={s_ip_addr} ansible_user={s_user}\n\n")
             file.write("[receivers]\n")
