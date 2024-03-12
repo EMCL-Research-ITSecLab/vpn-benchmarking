@@ -13,10 +13,10 @@ Alternatively, you can use the framework without a virtual environment. In that 
 
 Set the device's role in the exchange by executing:
 ```
-user@server:~$ sudo python set_role.py server
+user@server:~$ python set_role.py server
 ```
 ```
-user@client:~$ sudo python set_role.py client
+user@client:~$ python set_role.py client
 ```
 
 This will set up the needed folder structures.
