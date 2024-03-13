@@ -150,7 +150,7 @@ class Rosenpass(VPN):
                 os.path.join(key_path, file_name),
                 remote_user,
                 remote_address,
-                os.path.join(remote_path, key_path, file_name),
+                os.path.join(remote_path, key_path),
             )
             if not success:
                 return False
