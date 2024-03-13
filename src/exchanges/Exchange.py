@@ -26,10 +26,10 @@ class Exchange:
 
         self.role = role
 
-    def run(self) -> bool:
+    def run(self):
         """
         Executes the exchange with the set parameters. Implementation is done in inheriting classes.
-        :return: False since not implemented
+        :return: raises NotImplementedError in base implementation
         """
         messages.print_err("Exchange.run(self): NOT IMPLEMENTED")
         raise NotImplementedError

@@ -83,7 +83,7 @@ class HTTP(Exchange):
         if interface:
             c.setopt(pycurl.INTERFACE, interface)
 
-        c.setopt(c.TIMEOUT, 2)
+        c.setopt(pycurl.TIMEOUT, 2)
         c.setopt(pycurl.WRITEDATA, buffer)
 
         try:
