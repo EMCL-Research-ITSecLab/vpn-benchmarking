@@ -171,7 +171,7 @@ class Rosenpass(VPN):
         Executes the command for starting the server key exchange.
         :return: True for success, False otherwise
         """
-        messages.print_log("Starting process for Rosenpass key exchange...")
+        messages.print_log("Starting Rosenpass key exchange...")
 
         server_sk_dir = os.path.join(key_path, "server.rosenpass-secret")
         client_pk_dir = os.path.join(key_path, "client.rosenpass-public")
@@ -200,7 +200,6 @@ class Rosenpass(VPN):
             self.__clean_up()
             return None
 
-        messages.print_log("Rosenpass key exchange successfully started.")
         return process
 
     def __start_rosenpass_key_exchange_on_client(self):
@@ -208,7 +207,7 @@ class Rosenpass(VPN):
         Executes the command for starting the client key exchange.
         :return: True for success, False otherwise
         """
-        messages.print_log("Starting process for Rosenpass key exchange...")
+        messages.print_log("Starting Rosenpass key exchange...")
 
         client_sk_dir = os.path.join(key_path, "client.rosenpass-secret")
         server_pk_dir = os.path.join(key_path, "server.rosenpass-public")
@@ -237,7 +236,6 @@ class Rosenpass(VPN):
             self.__clean_up()
             return None
 
-        messages.print_log("Rosenpass key exchange successfully started.")
         return process
 
     def __assign_ip_addr_to_interface(self) -> bool:
@@ -247,7 +245,6 @@ class Rosenpass(VPN):
         interface after invalid attempt.
         :return: True for success, False otherwise
         """
-        messages.print_log("Assigning IP address to rosenpass0...")
 
         if self.role == "server":
             number = 1  # fe80::1
@@ -291,7 +288,6 @@ class Rosenpass(VPN):
             )
             return False
 
-        messages.print_log("IP address assigned.")
         return True
 
     def __clean_up(self):
@@ -301,15 +297,11 @@ class Rosenpass(VPN):
         if self.process:
             self.process.kill()
 
-        messages.print_log("Terminating all running Rosenpass processes...")
-
         try:
             for line in os.popen("ps ax | grep rosenpass | grep -v grep"):
                 fields = line.split()
                 if "main.py" not in line:
                     pid = fields[0]
                     os.kill(int(pid), signal.SIGKILL)
-            messages.print_log("Rosenpass processes terminated.")
         except Exception as err:  # no Rosenpass processes running
-            print(f"{err=}")
-            messages.print_log("Nothing to terminate.")
+            return
