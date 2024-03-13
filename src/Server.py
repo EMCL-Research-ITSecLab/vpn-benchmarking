@@ -44,7 +44,8 @@ class Server:
 
             # do one exchange
             monitor.poll("Server.run(): before doing next round of exchange")
-            if not self.exchange.run():
+            return_code = self.exchange.run()
+            if return_code != 0:
                 return False
 
             # close the VPN
