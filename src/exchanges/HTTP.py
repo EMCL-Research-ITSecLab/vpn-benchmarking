@@ -71,7 +71,6 @@ class HTTP(Exchange):
         buffer = BytesIO()  # buffer for storing response
 
         url = f"http://{address}:{port}"
-        messages.print_log(f"Sending packet to {url}...")
 
         # set Curl parameters
         c = pycurl.Curl()
@@ -82,15 +81,14 @@ class HTTP(Exchange):
         if interface:
             c.setopt(pycurl.INTERFACE, interface)
 
-        c.setopt(pycurl.TIMEOUT, 10)
+        c.setopt(c.TIMEOUT_MS, 500)
         c.setopt(pycurl.WRITEDATA, buffer)
 
         try:
             c.perform()
             response_code = c.getinfo(pycurl.RESPONSE_CODE)
             c.close()
-        except Exception as err:
-            print(f"{err=}")
+        except pycurl.error:
             return False
 
         if response_code == 200:

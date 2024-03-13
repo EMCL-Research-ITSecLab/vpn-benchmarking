@@ -51,6 +51,7 @@ class Client:
             remaining_attempts = 50
             slept = False
 
+            messages.print_log(f"Sending packet to {self.vpn.open_server_address}...")
             while True:
                 if remaining_attempts > 0:  # still attempts left, normal case
                     if not self.exchange.run():

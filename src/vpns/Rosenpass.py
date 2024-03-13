@@ -186,7 +186,7 @@ class Rosenpass(VPN):
                     "dev",
                     "rosenpass0",
                     "listen",
-                    opening_port,
+                    f"{opening_port}",
                     "peer",
                     client_pk_dir,  # client keys
                     "allowed-ips",

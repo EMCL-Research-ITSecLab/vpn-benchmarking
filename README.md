@@ -11,16 +11,6 @@ $ sudo python install_requirements.py
 
 If you use a `venv` environment, use `bin/python` on the commands. Alternatively to using a virtual environment, you can use the framework without a virtual environment. In that case, you will have to install the necessary modules yourself: `psutil`, `click`, `inquirer`, `numpy`, `pycurl`.
 
-Set the device's role in the exchange by executing:
-```
-user@server:~$ python set_role.py server
-```
-```
-user@client:~$ python set_role.py client
-```
-
-This will set up the needed folder structures.
-
 ### Setting the hosts
 To define the host data, execute the command
 ```
