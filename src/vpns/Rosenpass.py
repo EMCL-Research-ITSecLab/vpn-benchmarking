@@ -193,6 +193,7 @@ class Rosenpass(VPN):
                     "fe80::/64",
                 ],
                 stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
         except Exception as err:
             messages.print_err("Rosenpass key exchange was not successful!")
@@ -229,6 +230,7 @@ class Rosenpass(VPN):
                     "fe80::/64",
                 ],
                 stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
         except Exception as err:
             messages.print_err("Rosenpass key exchange was not successful!")
