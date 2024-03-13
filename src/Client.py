@@ -57,7 +57,7 @@ class Client:
                 if remaining_attempts > 0:  # still attempts left, normal case
                     return_code = self.exchange.run()
                     if return_code == 0:
-                        i -= 1  # only go to next round when return_code is 0 (success)
+                        i += 1  # only go to next round when return_code is 0 (success)
                         break
                     elif return_code == 1:
                         remaining_attempts -= 1
