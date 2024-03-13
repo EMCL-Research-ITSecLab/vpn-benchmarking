@@ -22,25 +22,26 @@ class HTTP(Exchange):
         """
         super().__init__(role, open_server_address, 80, interface)
 
-    def run(self) -> bool:
+    def run(self) -> int:
         """
         Decides what is executed based on the role.
-        :return: True for success, False otherwise
+        :return: 0 for success, 1 for an error that can be solved by running again, 2 for an error that requires
+        reopening the interface
         """
         if self.role == "server":
             return self.__run_server(self.open_server_address, self.open_server_port)
         elif self.role == "client":
             return self.__run_client(self.open_server_address, self.open_server_port, self.interface)
 
-        return False  # if role was not server or client
+        return 1  # if role was not server or client
 
     @staticmethod
-    def __run_server(address, port) -> bool:
+    def __run_server(address, port) -> int:
         """
         Creates the IPv6 HTTP Server and waits for one request. Closes afterward.
         :param address: address for opening the server
         :param port: port for opening the server
-        :return: True for success, False otherwise
+        :return: 0 for success, 1 otherwise
         """
         try:
             server = HTTPServerV6((address, port), HTTP.RequestHandler)
@@ -50,23 +51,24 @@ class HTTP(Exchange):
 
             messages.print_log("Closing server.")
             server.server_close()
-            return True
+            return 0
         except Exception as err:
             messages.print_err(
                 "Something went wrong while running the HTTP exchange (server)."
             )
             print(f"{err=}")
-            return False
+            return 1
 
     @staticmethod
-    def __run_client(address, port, interface) -> bool:
+    def __run_client(address, port, interface) -> int:
         """
         Generates the GET packet for the server. Specifies the interface to be used for sending, if a VPN is used.
         Expects '200 OK' response.
         :param address: address on which the server runs
         :param port: open server port
         :param interface: interface to be used for transmission, has to exist
-        :return: True for success, False otherwise
+        :return: 0 for success, 1 for an error that can be solved by running again, 2 for an error that requires
+        reopening the interface
         """
         buffer = BytesIO()  # buffer for storing response
 
@@ -81,19 +83,23 @@ class HTTP(Exchange):
         if interface:
             c.setopt(pycurl.INTERFACE, interface)
 
-        c.setopt(c.TIMEOUT_MS, 500)
+        c.setopt(c.TIMEOUT, 2)
         c.setopt(pycurl.WRITEDATA, buffer)
 
         try:
             c.perform()
             response_code = c.getinfo(pycurl.RESPONSE_CODE)
             c.close()
-        except pycurl.error:
-            return False
+        except pycurl.error as e:
+            if "28" in str(e):  # 28 is the error code for timeouts
+                return 2
+            return 1
 
         if response_code == 200:
             messages.print_log("Request successful!")
-            return True
+            return 0
+
+        return 1
 
     class RequestHandler(BaseHTTPRequestHandler):
         """

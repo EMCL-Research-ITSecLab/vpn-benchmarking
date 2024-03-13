@@ -38,7 +38,8 @@ class Client:
         :param monitor: monitor for handling the polls
         :return: True for success, False otherwise
         """
-        for i in range(number):
+        i = 0
+        while i < number:
             messages.print_log(f"Starting exchange {i + 1}...")
 
             # open the VPN
@@ -54,9 +55,13 @@ class Client:
             messages.print_log(f"Sending packet to {self.vpn.open_server_address}...")
             while True:
                 if remaining_attempts > 0:  # still attempts left, normal case
-                    if not self.exchange.run():
+                    return_code = self.exchange.run()
+                    if return_code == 0:
+                        i -= 1  # only go to next round when return_code is 0 (success)
+                        break
+                    elif return_code == 1:
                         remaining_attempts -= 1
-                    else:
+                    else:  # error has occurred that requires starting VPN again
                         break
                 elif not slept:  # if no more attempts but did not sleep yet
                     time.sleep(2)
