@@ -147,10 +147,10 @@ class Rosenpass(VPN):
         try:
             file_name = f"{self.role}.rosenpass-public"
             success = helpers.send_file_to_host(
-                os.path.join(key_path),
+                os.path.join(key_path, file_name),
                 remote_user,
                 remote_address,
-                os.path.join(remote_path, key_path, file_name),
+                os.path.join(remote_path, key_path),
             )
             if not success:
                 return False
