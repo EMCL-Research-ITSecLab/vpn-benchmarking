@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from src.messages import *
 
 
-class SingleGraphGenerator:
+class PlotGenerator:
     """
     Plots a graph from given data.
     """

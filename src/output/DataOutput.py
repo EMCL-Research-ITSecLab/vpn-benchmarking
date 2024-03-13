@@ -1,7 +1,6 @@
 import os
 
-from src.GraphHandler import *
-from src.messages import *
+from src.output.GraphHandler import *
 
 
 class DataOutput:

@@ -3,7 +3,7 @@ import pathlib
 import click
 import inquirer
 
-from src.DataOutput import *
+from src.output.DataOutput import *
 from src.messages import *
 
 

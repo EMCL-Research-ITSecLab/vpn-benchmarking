@@ -4,9 +4,8 @@ from pathlib import Path
 
 import dateutil.parser
 
-from src.SingleGraphGenerator import *
-from src.ValueType import *
-from src.messages import *
+from src.output.PlotGenerator import *
+from src.output.ValueType import *
 
 
 def validate_data(data, file_name: str) -> bool:
@@ -170,7 +169,7 @@ class SingleFileGraphHandler:
 
             title = self.__get_title(value_type, calculate_full_time(), median)
 
-            generator = SingleGraphGenerator(
+            generator = PlotGenerator(
                 value_type=value_type,
                 timestamps=self.value_lists["time"],
                 values=self.value_lists[name_string],
