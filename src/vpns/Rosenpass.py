@@ -107,6 +107,7 @@ class Rosenpass(VPN):
                     "genkey",
                     sk_path,
                 ],
+                stderr=subprocess.PIPE,
             )
             subprocess.check_output(
                 [
@@ -115,6 +116,7 @@ class Rosenpass(VPN):
                     sk_path,
                     pk_path,
                 ],
+                stderr=subprocess.PIPE,
             )
 
             messages.print_log(f"Generated keys for the {self.role}.")
