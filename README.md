@@ -8,15 +8,18 @@ different VPNs (like Wireguard or Rosenpass).
 
 ### Installing libraries
 
-To install the necessary dependencies, you can create a `venv` environment and use:
-
+To install the necessary dependencies, you can create a Python `venv` environment with the command
+```
+$ python -m venv . && source bin/activate
+```
+and use:
 ```
 $ sudo python install_requirements.py
 ```
 
 If you use a `venv` environment, use `bin/python` on the commands. Alternatively to using a virtual environment, you can
 use the framework without a virtual environment. In that case, you will have to install the necessary modules
-yourself: `psutil`, `click`, `inquirer`, `numpy`, `pycurl`.
+yourself: `psutil`, `click`, `inquirer`, `numpy`, `pycurl`, `dateutil`, `matplotlib`.
 
 ### Setting the hosts
 
