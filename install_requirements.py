@@ -21,6 +21,10 @@ def install_requirements() -> None:
         successful = False
     if not install_psutil():
         successful = False
+    if not install_dateutil():
+        successful = False
+    if not install_matplotlib():
+        successful = False
 
     if successful:
         print_log("All dependencies installed.")
@@ -43,6 +47,30 @@ def install_psutil() -> bool:
         except FileNotFoundError:
             print("failed.")
             return False
+
+    print("done.")
+    return True
+
+
+def install_dateutil() -> bool:
+    print("Install dateutil... ", end="", flush=True)
+    try:
+        subprocess.check_output(["bin/pip", "install", "python-dateutil"])
+    except FileNotFoundError:
+        print("failed.")
+        return False
+
+    print("done.")
+    return True
+
+
+def install_matplotlib() -> bool:
+    print("Install matplotlib... ", end="", flush=True)
+    try:
+        subprocess.check_output(["sudo", "bin/pip", "install", "matplotlib"])
+    except FileNotFoundError:
+        print("failed.")
+        return False
 
     print("done.")
     return True
