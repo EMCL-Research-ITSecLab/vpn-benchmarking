@@ -142,9 +142,11 @@ class AbsoluteValueType(ValueType):
         Returns the y-limits. If max is 0 or not set, returns None
         :return: list of min and max limit or None
         """
-        if not max(self.values):
+        values = self.get_adjusted_values()
+
+        if not max(values):
             return None
-        return [0, 1.05 * max(self.values)]
+        return [0, 1.05 * max(values)]
 
 
 class CPUPercent(RelativeValueType):
@@ -243,7 +245,7 @@ class RecvBytes(AbsoluteValueType):
         Adjusts the values to fit to the calculated smallest unit.
         :return: list of adjusted values
         """
-        values = self.values
+        values = self.values.copy()
 
         while max(values) > 1024:
             for v in range(len(values)):
@@ -288,7 +290,7 @@ class SentBytes(AbsoluteValueType):
         Adjusts the values to fit to the calculated smallest unit.
         :return: list of adjusted values
         """
-        values = self.values
+        values = self.values.copy()
 
         while max(values) > 1024:
             for v in range(len(values)):
