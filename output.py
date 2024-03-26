@@ -4,7 +4,6 @@ import click
 import inquirer
 
 from src.output.DataOutput import *
-from src.messages import *
 
 
 class HandleInput:

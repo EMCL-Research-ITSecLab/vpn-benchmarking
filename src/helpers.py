@@ -3,7 +3,7 @@ import subprocess
 import src.messages as messages
 
 """
-Any functions that are universal in a way that they can be used by multiple classes can be put here.
+Contains any functions that are universal in a way that they can be used by multiple classes can be put here.
 """
 
 

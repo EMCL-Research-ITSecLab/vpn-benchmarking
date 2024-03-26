@@ -31,7 +31,7 @@ class VPN:
         else:
             self.role = role
 
-    def open(self) -> bool:
+    def open(self):
         """
         Opens the VPN with the set parameters. Implementation is done in inheriting classes.
         :return: False since not implemented
@@ -39,7 +39,7 @@ class VPN:
         messages.print_err("VPN.open(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
-    def close(self) -> bool:
+    def close(self):
         """
         Closes the VPN. Implementation is done in inheriting classes.
         :return: False since not implemented
@@ -47,7 +47,7 @@ class VPN:
         messages.print_err("VPN.close(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
-    def generate_keys(self) -> bool:
+    def generate_keys(self):
         """
         Generates the keys needed for a VPN exchange. Implementation is done in inheriting classes.
         :return: False since not implemented
@@ -55,7 +55,7 @@ class VPN:
         messages.print_err("VPN.generate_keys(self): NOT IMPLEMENTED")
         raise NotImplementedError
 
-    def share_pubkeys(self, remote_path) -> bool:
+    def share_pubkeys(self, remote_path):
         """
         Sends the before generated public keys to the other host's remote_path.
         :param remote_path: working directory on the remote host, place keys into this directory

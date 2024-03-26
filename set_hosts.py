@@ -3,10 +3,6 @@ import click
 from src.HostsManager import HostsManager
 
 
-# hosts = {"hosts": []}
-# hosts_path = "hosts.json"
-
-
 @click.command()
 @click.option("--server", default="", help="server: [user]@[ip_address]")
 @click.option("--client", default="", help="client: [user]@[ip_address]")
