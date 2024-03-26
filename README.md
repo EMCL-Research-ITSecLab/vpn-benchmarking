@@ -6,13 +6,16 @@ different VPNs (like Wireguard or Rosenpass).
 
 ## Usage for Performance Measurements
 
-### Installing libraries
+### Installing dependencies
 
-To install the necessary dependencies, you can create a Python `venv` environment with the command
+To install the necessary dependencies, you should create a Python `venv` environment with the command
+
 ```
 $ python -m venv . && source bin/activate
 ```
+
 and use:
+
 ```
 $ sudo python install_requirements.py
 ```
@@ -34,16 +37,16 @@ on all hosts.
 `USER` and `IP_ADDRESS` describe the user and the IP address on the respective host.
 Note, that both options `--server` and `--client` have to be set on both hosts.
 
-After setting the hosts, you will be asked if you want to set the same hosts for the ansible hosts file. This can be
+After setting the hosts, you will be asked if you want to set the same hosts for the Ansible hosts file. This can be
 used in the next step, to install Rosenpass on the hosts.
 
 ### Install latest Rosenpass version
 
 For setting up the environment if you want to measure the performance of Rosenpass, either install Rosenpass from their
-official GitHub page, or use Ansible install Rosenpass on the remote host:
+official GitHub page, or use Ansible to install Rosenpass on the remote host:
 
 ```
-user@host:~/ansible_files$ ansible-playbook install_rosenpass.yml --ask-become-pass
+~/ansible_files$ ansible-playbook install_rosenpass.yml --ask-become-pass
 ```
 
 You will be asked to enter the password for the remote machine.
@@ -95,11 +98,11 @@ Now the keys and hosts are ready to start and monitor exchanges. Start the serve
 Start the baseline HTTP exchange, by running the following commands:
 
 ```
-user@server:~$ python main.py server novpn http exchange -i/--iterations ITERATIONS [--auto]
+user@server:~$ python main.py server novpn http exchange [-i/--iterations ITERATIONS] [--auto]
 ```
 
 ```
-user@client:~$ python main.py client novpn http exchange -i/--iterations ITERATIONS [--auto]
+user@client:~$ python main.py client novpn http exchange [-i/--iterations ITERATIONS] [--auto]
 ```
 
 The `--auto` option lets the software save the hardware/network performance every 0.1 seconds automatically,
@@ -111,11 +114,11 @@ without breaks in the execution stopping the values from being saved.
 Start the HTTP exchange with Rosenpass VPN, by running the following commands:
 
 ```
-user@server:~$ sudo python main.py server rosenpass http exchange -i/--iterations ITERATIONS [--auto]
+user@server:~$ sudo python main.py server rosenpass http exchange [-i/--iterations ITERATIONS] [--auto]
 ```
 
 ```
-user@client:~$ sudo python main.py client rosenpass http exchange -i/--iterations ITERATIONS [--auto]
+user@client:~$ sudo python main.py client rosenpass http exchange [-i/--iterations ITERATIONS] [--auto]
 ```
 
 Enter a number as `ITERATIONS` and the exchange will be repeated as often as you entered, using the previously generated
@@ -152,6 +155,7 @@ types you want to generate graphs for.
 
 ## Expanding the framework
 
-Currently, the framework provides the class `HTTP` in the `helpers/exchanges` directory for exchange types and the
-classes `NoVPN` and `Rosenpass` in the `helpers/vpns` directory for different VPNs. You can implement new classes to
-extend the base exchange types and VPNs.
+Currently, the framework provides the class `HTTP` in the `src/exchanges` directory for exchange types and the
+classes `NoVPN` and `Rosenpass` in the `src/vpns` directory for different VPNs. You can implement new classes to
+extend the base exchange types and VPNs. Additionally, you can expand the framework's visualization capabilities by
+extending the `src/bin` directory.
