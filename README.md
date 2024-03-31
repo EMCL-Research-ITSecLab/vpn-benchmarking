@@ -158,4 +158,4 @@ types you want to generate graphs for.
 Currently, the framework provides the class `HTTP` in the `src/exchanges` directory for exchange types and the
 classes `NoVPN` and `Rosenpass` in the `src/vpns` directory for different VPNs. You can implement new classes to
 extend the base exchange types and VPNs. Additionally, you can expand the framework's visualization capabilities by
-extending the `src/bin` directory.
+extending the `src/bin` directory, and the monitored value types by extending `src/output/ValueType.py`.
