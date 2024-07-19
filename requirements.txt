@@ -1,0 +1,7 @@
+psutil
+click
+numpy
+pycurl
+python-dateutil
+matplotlib
+inquirer
