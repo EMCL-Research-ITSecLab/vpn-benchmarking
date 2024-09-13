@@ -169,6 +169,24 @@ class SingleFileGraphHandler:
 
             title = self.__get_title(value_type, calculate_full_time(), median)
 
+            # Replace outliers with 0
+            if name_string == "pps_recv" or name_string == "pps_sent":
+                self.value_lists[name_string] = [0 if i > 100000 else i for i in self.value_lists[name_string]]
+
+            # Replace outliers with 0 increase, add the following increases
+            if name_string == "bytes_recv" or name_string == "bytes_sent":
+                result = []
+                result.append(self.value_lists[name_string][0])
+                for i in range(1,len(self.value_lists[name_string])):
+                    if self.value_lists[name_string][i] > result[-1] + 1000000: # if first outlier detected
+                        if self.value_lists[name_string][i] - self.value_lists[name_string][i-1] < 1000000: # if not outlier
+                            result.append(result[-1] + self.value_lists[name_string][i] - self.value_lists[name_string][i-1]) # add increase
+                        else:
+                            result.append(result[-1]) # Replace false data with the last data, increase == 0
+                    else:
+                        result.append(self.value_lists[name_string][i]) # add until first outlier detected
+                self.value_lists[name_string] = result    
+
             generator = PlotGenerator(
                 value_type=value_type,
                 timestamps=self.value_lists["time"],

@@ -67,8 +67,7 @@ user@server:~$ python main.py server VPN_OPTION EXCHANGE_TYPE keygen
 user@client:~$ python main.py client VPN_OPTION EXCHANGE_TYPE keygen
 ```
 
-with `VPN_OPTION` being the VPN you want to use (currently you can use `novpn` (baseline)
-and `rosenpass`). `EXCHANGE_TYPE` describes what kind of exchange should be executed (currently you can use `http` for
+with `VPN_OPTION` being the VPN you want to use (currently you can use `novpn` (baseline), `rosenpass`, `wg`, `openvpn`, and `openvpnstatic`). `EXCHANGE_TYPE` describes what kind of exchange should be executed (currently you can use `http` for
 sending a specified number of GET packets from the client to the server).
 
 Make sure to not use `sudo` on these commands, since this will limit the read rights for the keys folder and lead to an
@@ -152,6 +151,11 @@ splits the data into 8 intervals, and shows the value range as well as the media
 
 After executing the command, you will have to determine what graphs should be created. Here you can choose the value
 types you want to generate graphs for.
+
+## Constructing NixOS SD Card image to facilitate the deployment of the framework to Raspberry Pis
+
+The `nixos` directory contains the nix [configuration](https://github.com/EMCL-Research-ITSecLab/vpn-benchmarking/blob/nixos/nixos/configuration.nix). Optionally, under `users.users.root.openssh.authorizedKeys.keys` a ssh key can be set up for easier access to the Raspberry Pis, additionally the`initialPassword` should be changed. With the help of [this guide](https://github.com/lucernae/nixos-pi?tab=readme-ov-file#building-on-x8664-machine) and the additional configuration [vpn-benchmarking](https://github.com/EMCL-Research-ITSecLab/vpn-benchmarking/blob/nixos/nixos/vpn-benchmarking.nix) a NixOS SD Card image can be constructed to deploy the framework on Raspberry Pis. The `rev` and `sha256` entries have to be changed according to the version of the VPN Benchmarking Framework you want to be build. Using this method the chapter [Installing depencies](https://github.com/EMCL-Research-ITSecLab/vpn-benchmarking/tree/nixos#installing-dependencies) can be skipped, since all the necessary dependencies are already installed during the construction of the NixOS SD Card image. The Python `venv` environment is created and the [requirements](https://github.com/EMCL-Research-ITSecLab/vpn-benchmarking/blob/nixos/src/requirements.txt) file is used to install the necessary modules. Note, that this version does not currently support the `rosenpass` `VPN_OPTION`.
+
 
 ## Expanding the framework
 
